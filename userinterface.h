@@ -7,7 +7,7 @@ class UserInterface
 {
 public:
     UserInterface();
-
+    ~UserInterface();
     void draw(Level* lvl);
 };
 

@@ -19,12 +19,9 @@ DungeonCrawler::~DungeonCrawler() {
 }
 
 void DungeonCrawler::play() {
-    logging::Logger::instance().set("/tmp/DungeonCrawler.log", 2);
-    logging::Logger::instance().log(logging::Logger::INFO, "DungeonCrawler start");
+    logging::Logger::instance()->set(logging::INFO, "/tmp/DungeonCrawler.log");
+    logging::Logger::instance()->log(logging::INFO, "DungeonCrawler start");
 
-    initscr();   // Init the screen
-    noecho();    // Do not display text input
-    cbreak();    // Do not wait for enter on input
 
     //create character
     characters.push_back(new Character('C'));
@@ -35,7 +32,7 @@ void DungeonCrawler::play() {
 
     bool running = true;
     while(running) {
-        logging::Logger::instance().log(logging::Logger::INFO, "running");
+        logging::Logger::instance()->log(logging::INFO, "running");
         UI->draw(current);
         for(Character* c : characters) {
             int key = c->move();
@@ -47,60 +44,59 @@ void DungeonCrawler::play() {
         }
     }
 
-    logging::Logger::instance().log(logging::Logger::INFO, "Game has been Exited");
+    logging::Logger::instance()->log(logging::INFO, "Game has been Exited");
 
-    endwin();
 }
 
 void DungeonCrawler::move(int row, int col,int key, Character* c, Level* level) {
-    logging::Logger::instance().log(logging::Logger::INFO, "inside move");
+    //logging::Logger::instance()->log(logging::INFO, "inside move");
 
     switch(key){
         case '1':
             if(row+1 < current->getHeight() && col -1 >= 0)
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() - 1));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 1");
+            logging::Logger::instance()->log(logging::INFO, "Input 1");
             break;
         case '2':
             if(row+1 < current->getHeight()) {
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol()));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 2");
+            logging::Logger::instance()->log(logging::INFO, "Input 2");
             break;
         case '3':
             if(row+1 < current->getHeight() && col+1 < current->getWidth())
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() + 1));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 3");
+            logging::Logger::instance()->log(logging::INFO, "Input 3");
             break;
         case '4':
             if(col-1 >= 0)
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() - 1));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 4");
+            logging::Logger::instance()->log(logging::INFO, "Input 4");
             break;
         case '6':
             if(col+1 < current->getWidth())
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() + 1));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 6");
+            logging::Logger::instance()->log(logging::INFO, "Input 6");
             break;
         case '7':
             if(row-1 >= 0 && col-1 >= 0)
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow() -1, c->getTile()->getCol() - 1));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 7");
+            logging::Logger::instance()->log(logging::INFO, "Input 7");
             break;
         case '8':
             if(row-1 >= 0)
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol()));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 8");
+            logging::Logger::instance()->log(logging::INFO, "Input 8");
             break;
         case '9':
             if(row-1 >= 0 && col + 1 < current->getWidth())
             c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol() + 1));
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 9");
+            logging::Logger::instance()->log(logging::INFO, "Input 9");
             break;
         case '5':
-            logging::Logger::instance().log(logging::Logger::INFO, "Input 5");
+            logging::Logger::instance()->log(logging::INFO, "Input 5");
             break;
         default:
-                logging::Logger::instance().log(logging::Logger::WARN, "Falsch Eingabe");
+                logging::Logger::instance()->log(logging::WARN, "Falsch Eingabe");
 
         }
     }

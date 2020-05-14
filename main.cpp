@@ -2,7 +2,7 @@
 #include "dungeoncrawler.h"
 #include "logger.h"
 
-logging::Logger logging::Logger::m_inst;
+logging::Logger *logging::Logger::m_inst = nullptr;
 
 int main()
 {

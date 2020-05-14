@@ -3,7 +3,10 @@
 
 UserInterface::UserInterface()
 {
-
+    initscr();   // Init the screen
+    noecho();    // Do not display text input
+    cbreak();    // Do not wait for enter on input
+    curs_set(0); // Let the cursor disappear
 }
 
 void UserInterface::draw(Level *lvl) {
@@ -14,4 +17,8 @@ void UserInterface::draw(Level *lvl) {
         }
     }
 
+}
+
+UserInterface::~UserInterface(){
+    endwin();
 }

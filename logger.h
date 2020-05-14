@@ -29,48 +29,53 @@ using std::chrono::system_clock;
 
 namespace logging {
 
+enum debug_level{
+   ERROR = 0, WARN = 1, INFO = 2
+};
+
 class Logger {
 public:
 
-    static const int ERROR, WARN, INFO;
+    //static const int ERROR, WARN, INFO;
 
     //Deactivate Copy Constructer
     Logger(const Logger&) = delete;
 
     //Create Public Static Instance
-    static Logger& instance() {
+    static Logger* instance() {
+        if(!m_inst){
+            m_inst = new Logger();
+        }
         return m_inst;
     }
 
     //Declare set Function
-    void set(const std::string &name, int maxLogLevel);
+    void set(debug_level level,const std::string &name);
+
+    void open();
+    void close();
 
 
-    template <typename T> void log(const int &level, const T &info) {
-      //Get System Time
-      auto time = system_clock::to_time_t(system_clock::now());
-      //Check if Loglevel is within the declared MaxLogLevel and is Valid
-      if(level <= m_LogLevel && level >= 0)
-          switch (level) {
-              case 0: m_file << "[" << "ERROR " << std::put_time(std::localtime(&time), "%F %T] ") << info << std::endl;
-                      break;
-              case 1: m_file << "[" << "WARN " << std::put_time(std::localtime(&time), "%F %T] ") << info << std::endl;
-                      break;
-              case 2: m_file << "[" << "INFO " << std::put_time(std::localtime(&time), "%F %T] ") << info << std::endl;
-                      break;
-          }
+    template <typename T> void log(debug_level level,const T &info){
+        if(level <= m_LogLevel){
+            open();
+            auto time = system_clock::to_time_t(system_clock::now());
+            m_file << "[" << level << std::put_time(std::localtime(&time), "%F %T]" ) << info << std::endl;
+        }
     }
 
-private:
 
-    //Private Con and Destructer so we can achieve the Singleton Pattern
+private:
+    //consturtor i private (protected)
     Logger();
     ~Logger();
+
     ofstream m_file;
     int m_LogLevel;
     string m_name;
 
-    static Logger m_inst;
+    //defina a private static attribute of class
+    static Logger *m_inst;
     };
 }
 

@@ -85,12 +85,14 @@ Character* Tile::getCharacter() const{
 Floor::Floor(const int row, const int col) : Tile('.', row, col){}
 
 Floor* Floor::onEnter(Tile *fromTile){
-    logging::Logger::instance().log(2, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
+    //Debug
+    //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
 }
 
 Floor* Floor::onLeave(Tile *destTile){
-    logging::Logger::instance().log(2, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
+    //Debug
+    //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
 }
 
@@ -102,12 +104,14 @@ Floor* Floor::onLeave(Tile *destTile){
 Wall::Wall(const int row, const int col) : Tile('#', row, col){}
 
 Wall* Wall::onEnter(Tile *fromTile){
-    logging::Logger::instance().log(2, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
+    //Debug
+    //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return nullptr;
 }
 
 Wall* Wall::onLeave(Tile *destTile){
-    logging::Logger::instance().log(2, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
+    //Debug
+    //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
 }
 
@@ -117,15 +121,17 @@ Wall* Wall::onLeave(Tile *destTile){
 /// \brief Portal::Portal
 ///
 Portal::Portal(const int row, const int col) : Tile('O', row, col){}
-Portal::Portal(const int row, const int col, Portal* portalDestination) : Tile('O', row, col), m_destination(portalDestination){};
+//Portal::Portal(const int row, const int col, Portal* portalDestination) : Tile('O', row, col), m_destination(portalDestination){};
 
 Portal* Portal::onEnter(Tile *fromTile){
-    logging::Logger::instance().log(2, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
+    //Debug
+    //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return m_destination;
 }
 
 Portal* Portal::onLeave(Tile *destTile){
-    logging::Logger::instance().log(2, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
+    //Debug
+    //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
 }
 

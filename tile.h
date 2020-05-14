@@ -89,7 +89,7 @@ private:
 public:
 
     Portal(const int row, const int col);
-    Portal(const int row, const int col, Portal* portalDestination = nullptr);
+    //Portal(const int row, const int col, Portal* portalDestination = nullptr);
 
     virtual Portal* onEnter(Tile* fromTile);
     virtual Portal* onLeave(Tile* destTile);
