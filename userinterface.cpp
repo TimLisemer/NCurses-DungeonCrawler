@@ -1,6 +1,6 @@
 #include "userinterface.h"
 #include <ncurses.h>
-
+//14.05.2020
 UserInterface::UserInterface()
 {
     initscr();   // Init the screen

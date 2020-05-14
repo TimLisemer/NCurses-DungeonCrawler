@@ -2,7 +2,7 @@
 #include "character.h"
 #include "logger.h"
 
-
+//14.05.2020
 Tile::Tile(char icon, int row, int col) : m_icon(icon), m_row(row), m_col(col){}
 
 char Tile::getIcon() const{

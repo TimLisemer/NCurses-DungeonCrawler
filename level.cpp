@@ -1,5 +1,5 @@
 #include "level.h"
-
+//14.05.2020
 Level::Level() : m_height(20), m_width(20) {
     //create rows
     m_world = new Tile**[m_height];

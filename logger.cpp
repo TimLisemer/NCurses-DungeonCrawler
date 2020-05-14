@@ -1,5 +1,5 @@
 #include "logger.h"
-
+//14.05.2020
 namespace logging {
 
 Logger::~Logger() {}

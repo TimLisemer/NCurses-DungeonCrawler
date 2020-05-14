@@ -2,7 +2,7 @@
 #include "tile.h"
 #include <ncurses.h>
 #include "logger.h"
-
+//14.05.2020
 Character::Character(char icon) : m_icon(icon)
 {
 

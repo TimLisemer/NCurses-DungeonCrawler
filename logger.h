@@ -9,7 +9,7 @@
  * loggable argument as parameter. This argument must have a << operator to
  * write to a stream.
  */
-
+//14.05.2020
 #ifndef LOGGER_H
 #define LOGGER_H
 
