@@ -33,12 +33,15 @@ Level::Level() : m_height(20), m_width(20) {
 
 //free allocated  space
 Level::~Level() {
+    //delete single tiles
     for(int i = 0; i < m_height; i++) {
         for(int j = 0; j < m_width; j++) {
             delete m_world[i][j];
         }
+        //delete single array
         delete[] m_world[i];
     }
+    //delete array of arrays
     delete[] m_world;
 }
 
