@@ -58,12 +58,11 @@ bool Tile::moveTo(Tile* destTile){
 
 
 Tile* Tile::onEnter(Tile *fromTile) {
-    //muss ich noch durchlesen
-    //return this;
+    return this;
 }
 
 Tile* Tile::onLeave(Tile *toTile) {
-    //return this;
+    return this;
 }
 
 
@@ -124,13 +123,13 @@ Portal::Portal(const int row, const int col) : Tile('O', row, col){}
 Portal* Portal::onEnter(Tile *fromTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
-    return this;
+    return m_destination;
 }
 
 Portal* Portal::onLeave(Tile *destTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
-    return m_destination;
+    return this;
 }
 
 
