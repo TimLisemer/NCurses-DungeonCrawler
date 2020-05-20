@@ -58,6 +58,7 @@ bool Tile::moveTo(Tile* destTile){
 
 
 Tile* Tile::onEnter(Tile *fromTile) {
+    //muss ich noch durchlesen
     //return this;
 }
 
