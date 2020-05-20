@@ -3,7 +3,7 @@
 #include "logger.h"
 
 
-Tile::Tile(char icon, int row, int col) : m_icon(icon), m_row(row), m_col(col){}
+Tile::Tile(char icon, int row, int col) : m_icon(icon), m_row(row), m_col(col), m_character(nullptr){}
 
 char Tile::getIcon() const{
     if(hasCharacter()){
@@ -36,7 +36,6 @@ void Tile::setCharacter(Character *character) {
 
 bool Tile::moveTo(Tile* destTile){
     if(hasCharacter()){
-
         Tile* abandonedTile = onLeave(destTile);
         if(abandonedTile != nullptr){
 
@@ -59,15 +58,11 @@ bool Tile::moveTo(Tile* destTile){
 
 
 Tile* Tile::onEnter(Tile *fromTile) {
-
-    //Muss hier was rein???
-
+    //return this;
 }
 
 Tile* Tile::onLeave(Tile *toTile) {
-
-    //Muss hier was rein???
-
+    //return this;
 }
 
 
@@ -128,13 +123,13 @@ Portal::Portal(const int row, const int col) : Tile('O', row, col){}
 Portal* Portal::onEnter(Tile *fromTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
-    return m_destination;
+    return this;
 }
 
 Portal* Portal::onLeave(Tile *destTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
-    return this;
+    return m_destination;
 }
 
 

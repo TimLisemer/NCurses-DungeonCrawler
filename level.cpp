@@ -9,8 +9,6 @@ Level::Level() : m_height(20), m_width(20) {
         m_world[i] = new Tile*[m_width];
     }
 
-
-
     //create elements
     for(int i = 0; i < m_height; i++) {
         for(int d = 0; d < m_width; d++) {
@@ -22,9 +20,11 @@ Level::Level() : m_height(20), m_width(20) {
         }
     }
 
+    delete m_world[3][3];
     Portal* p = new Portal(3, 3);
     m_world[3][3] = p;
     Portal* p2 = new Portal(7, 7);
+    delete m_world[7][7];
     m_world[7][7] = p2;
     p->setDestination(p2);
     p2->setDestination(p);
