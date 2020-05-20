@@ -4,8 +4,7 @@
 
 logging::Logger *logging::Logger::m_inst = nullptr;
 
-int main()
-{
+int main(){
 
     DungeonCrawler Game = DungeonCrawler();
     Game.play();

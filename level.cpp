@@ -37,9 +37,9 @@ Level::~Level() {
         for(int j = 0; j < m_width; j++) {
             delete m_world[i][j];
         }
-        delete m_world[i];
+        delete[] m_world[i];
     }
-    delete m_world;
+    delete[] m_world;
 }
 
 Level::Level(int hoehe, int breite) : m_height(hoehe), m_width(breite) {

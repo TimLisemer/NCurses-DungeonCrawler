@@ -36,14 +36,14 @@ public:
 
     virtual Tile* onLeave(Tile* toTile);
 
+    virtual ~Tile() = 0;
+
 private:
+    const char m_icon;
     const int m_row;
     const int m_col;
-    const char m_icon;
     Character* m_character;
 };
-
-
 
 
 ///
@@ -97,33 +97,6 @@ public:
     Portal* getDestination() const;
     void setDestination(Portal* destination);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif // TILE_H

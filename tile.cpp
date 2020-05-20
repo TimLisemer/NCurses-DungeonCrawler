@@ -76,7 +76,9 @@ Character* Tile::getCharacter() const{
 }
 
 
+Tile::~Tile(){
 
+}
 
 
 ///

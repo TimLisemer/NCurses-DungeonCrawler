@@ -9,7 +9,9 @@ public:
     Level();
     Level(int m_height, int m_width);
     Level(const Level &rhs) = delete;
+
     ~Level();
+
 
     Tile* getTile(int row, int col);
 
