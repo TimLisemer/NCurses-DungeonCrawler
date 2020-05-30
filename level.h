@@ -2,9 +2,11 @@
 #define LEVEL_H
 #include "tile.h"
 
+class Tile;
+class Character;
 
-class Level
-{
+class Level {
+
 public:
     Level();
     Level(int m_height, int m_width);

@@ -8,10 +8,10 @@
 using std::vector;
 using std::string;
 
+class Character;
+
 class Tile{
 public:
-
-    Tile();
 
     explicit
 
