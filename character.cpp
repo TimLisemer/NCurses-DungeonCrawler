@@ -3,10 +3,7 @@
 #include <ncurses.h>
 #include "logger.h"
 
-Character::Character(char icon) : m_icon(icon)
-{
-
-}
+Character::Character(const char icon, Controller* controller) : m_icon(icon), m_controller(controller){}
 
 char Character::getIcon() const {
     return m_icon;
@@ -20,11 +17,6 @@ Tile* Character::getTile() {
     return m_position;
 }
 
-int Character::move() {
-    mvaddstr(0,25, "1-9 to Move, press 0 to close");
-    int key = getch();
-    //return the key, check in main game loop if the game should continue
-    //Debug
-    //logging::Logger::instance()->log(logging::INFO, "return " + std::to_string(key));
-    return key;
+int Character::move(){
+    return m_controller->move();
 }

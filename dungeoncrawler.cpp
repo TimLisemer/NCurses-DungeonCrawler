@@ -24,7 +24,7 @@ void DungeonCrawler::play() {
 
 
     //create character
-    characters.push_back(new Character('C'));
+    characters.push_back(new Character('C', UI));
     //place character on level
     current->placeCharacter(characters.at(0), m_startRow, m_starCol);
     //set character tile to zero
