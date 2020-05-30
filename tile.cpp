@@ -4,6 +4,7 @@
 
 
 Tile::Tile(char icon, int row, int col) : m_icon(icon), m_row(row), m_col(col), m_character(nullptr){}
+Tile::Tile(int row, int col) : m_row(row), m_col(col), m_character(nullptr){}
 
 char Tile::getIcon() const{
     if(hasCharacter()){
@@ -11,6 +12,10 @@ char Tile::getIcon() const{
     }else{
         return m_icon;
     }
+}
+
+void Tile::setIcon(const char Icon){
+    m_icon = Icon;
 }
 
 
@@ -80,14 +85,15 @@ Tile::~Tile(){
 /// \brief Floor::Floor
 ///
 Floor::Floor(const int row, const int col) : Tile('.', row, col){}
+Floor::Floor(const char icon, const int row, const int col) : Tile(icon, row, col){}
 
-Floor* Floor::onEnter(Tile *fromTile){
+Tile* Floor::onEnter(Tile *fromTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
 }
 
-Floor* Floor::onLeave(Tile *destTile){
+Tile* Floor::onLeave(Tile *destTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
@@ -99,14 +105,15 @@ Floor* Floor::onLeave(Tile *destTile){
 /// \brief Wall::Wall
 ///
 Wall::Wall(const int row, const int col) : Tile('#', row, col){}
+Wall::Wall(const char icon, int row, const int col) : Tile(icon, row, col){}
 
-Wall* Wall::onEnter(Tile *fromTile){
+Tile* Wall::onEnter(Tile *fromTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return nullptr;
 }
 
-Wall* Wall::onLeave(Tile *destTile){
+Tile* Wall::onLeave(Tile *destTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
@@ -118,15 +125,16 @@ Wall* Wall::onLeave(Tile *destTile){
 /// \brief Portal::Portal
 ///
 Portal::Portal(const int row, const int col) : Tile('O', row, col){}
+Portal::Portal(const char icon, const int row, const int col) : Tile(icon, row, col){}
 //Portal::Portal(const int row, const int col, Portal* portalDestination) : Tile('O', row, col), m_destination(portalDestination){};
 
-Portal* Portal::onEnter(Tile *fromTile){
+Tile* Portal::onEnter(Tile *fromTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return m_destination;
 }
 
-Portal* Portal::onLeave(Tile *destTile){
+Tile* Portal::onLeave(Tile *destTile){
     //Debug
     //logging::Logger::instance()->log(logging::INFO, "Left tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return this;
@@ -141,8 +149,128 @@ void Portal::setDestination(Portal* destination){
     m_destination = destination;
 }
 
+///
+/// \brief Passive::Passive
+///
+Passive::Passive(){}
+
+Passive::~Passive(){
+    delete this;
+}
+
+void Passive::notify(){}
 
 
+
+///
+/// \brief Active::Active
+///
+Active::Active(){}
+
+
+void Active::activate(){
+    for(auto p : m_PassiveList){
+        p->notify();
+    }
+}
+
+
+void Active::attach(Passive* passive){
+    m_PassiveList.push_back(passive);
+}
+
+
+//Bin ich komplett behindert oder mach ich das hier übertrieben kompliziert???
+void Active::detach(Passive* passive){
+    vector<Passive*> tempPassiveList;
+    for(auto p : m_PassiveList){
+        if(p != passive){
+            tempPassiveList.push_back(p);
+        }
+    }
+    m_PassiveList = tempPassiveList;
+}
+
+Active::~Active(){
+    delete this;
+}
+
+
+///
+/// \brief Door::Door
+///
+Door::Door(const int row, const int col) : Tile(row, col), Floor(row, col), Wall(row, col) {
+    changeState(false);
+}
+
+void Door::setIcon(const char Icon){
+    Floor::setIcon(Icon);
+    Wall::setIcon(Icon);
+}
+
+void Door::changeState(bool state){
+    m_state = state;
+    if(state){
+        setIcon('/');
+    }else{
+        setIcon('X');
+    }
+}
+
+Tile* Door::onEnter(Tile *fromTile){
+    if(m_state){
+        return Floor::onEnter(fromTile);
+    }else{
+        return Wall::onEnter(fromTile);
+    }
+}
+
+Tile* Door::onLeave(Tile *destTile){
+    if(m_state){
+        return Floor::onLeave(destTile);
+    }else{
+        return Wall::onLeave(destTile);
+    }
+}
+
+
+void Door::notify(){
+    changeState(!m_state);
+}
+
+
+///
+/// \brief Switch::Switch
+///
+Switch::Switch(const int row, const int col) : Tile(row, col), Floor(row, col){
+    changeState(false);
+}
+
+void Switch::changeState(bool state){
+    m_state = state;
+    if(state){
+        setIcon('!');
+        Switch::activate();
+    }else{
+        setIcon('?');
+    }
+}
+
+
+Tile* Switch::onEnter(Tile *fromTile){
+    if(!m_state){
+        changeState(true);
+    }
+    return Floor::onEnter(fromTile);
+}
+
+void Switch::attach(Passive *passive){
+    Active::attach(passive);
+}
+
+void Switch::detach(Passive *passive){
+    Active::detach(passive);
+}
 
 
 

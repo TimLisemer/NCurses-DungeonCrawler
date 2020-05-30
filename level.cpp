@@ -23,12 +23,24 @@ Level::Level() : m_height(20), m_width(20) {
     delete m_world[3][3];
     Portal* p = new Portal(3, 3);
     m_world[3][3] = p;
-    Portal* p2 = new Portal(7, 7);
     delete m_world[7][7];
+    Portal* p2 = new Portal(7, 7);
     m_world[7][7] = p2;
     p->setDestination(p2);
     p2->setDestination(p);
 
+    delete m_world[15][11];
+    delete m_world[15][12];
+    delete m_world[15][13];
+    m_world[15][11] = new Wall(15, 11);
+    Door* d1 = new Door(15, 12);
+    m_world[15][12] = d1;
+    m_world[15][13] = new Wall(15, 13);
+
+    delete m_world[12][9];
+    Switch* S1 = new Switch(12, 9);
+    m_world[12][9] = S1;
+    S1->attach(d1);
 }
 
 //free allocated  space
