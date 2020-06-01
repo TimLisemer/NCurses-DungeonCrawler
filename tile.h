@@ -133,7 +133,8 @@ public:
 
     explicit
     Active();
-    ~Active();
+    virtual ~Active() = 0;
+    //~Active();
 
     virtual void attach(Passive* passive);
     virtual void detach(Passive* passive);
