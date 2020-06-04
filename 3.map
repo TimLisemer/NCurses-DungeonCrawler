@@ -1,0 +1,617 @@
+Map Information
+	- version: 1.3
+	- rows: 10
+	- cols: 20
+Wall
+	- col: 0
+	- row: 0
+Wall
+	- col: 1
+	- row: 0
+Wall
+	- col: 2
+	- row: 0
+Wall
+	- col: 3
+	- row: 0
+Wall
+	- col: 4
+	- row: 0
+Wall
+	- col: 5
+	- row: 0
+Wall
+	- col: 6
+	- row: 0
+Wall
+	- col: 7
+	- row: 0
+Wall
+	- col: 8
+	- row: 0
+Wall
+	- col: 9
+	- row: 0
+Wall
+	- col: 10
+	- row: 0
+Wall
+	- col: 11
+	- row: 0
+Wall
+	- col: 12
+	- row: 0
+Wall
+	- col: 13
+	- row: 0
+Wall
+	- col: 14
+	- row: 0
+Wall
+	- col: 15
+	- row: 0
+Wall
+	- col: 16
+	- row: 0
+Wall
+	- col: 17
+	- row: 0
+Wall
+	- col: 18
+	- row: 0
+Wall
+	- col: 19
+	- row: 0
+Wall
+	- col: 0
+	- row: 1
+Portal
+	- col: 1
+	- destcol: 2
+	- destrow: 5
+	- row: 1
+Floor
+	- col: 2
+	- row: 1
+Floor
+	- col: 3
+	- row: 1
+Floor
+	- col: 4
+	- row: 1
+Floor
+	- col: 5
+	- row: 1
+Floor
+	- col: 6
+	- row: 1
+Wall
+	- col: 7
+	- row: 1
+Wall
+	- col: 8
+	- row: 1
+Wall
+	- col: 9
+	- row: 1
+Wall
+	- col: 10
+	- row: 1
+Floor
+	- col: 11
+	- row: 1
+Floor
+	- col: 12
+	- row: 1
+Floor
+	- col: 13
+	- row: 1
+Floor
+	- col: 14
+	- row: 1
+Floor
+	- col: 15
+	- row: 1
+Floor
+	- col: 16
+	- row: 1
+Floor
+	- col: 17
+	- row: 1
+Floor
+	- col: 18
+	- row: 1
+Wall
+	- col: 19
+	- row: 1
+Wall
+	- col: 0
+	- row: 2
+Floor
+	- col: 1
+	- row: 2
+Floor
+	- col: 2
+	- row: 2
+Floor
+	- col: 3
+	- row: 2
+Floor
+	- col: 4
+	- row: 2
+Floor
+	- col: 5
+	- row: 2
+Floor
+	- col: 6
+	- row: 2
+Door
+	- col: 7
+	- row: 2
+Floor
+	- col: 8
+	- row: 2
+Floor
+	- col: 9
+	- row: 2
+Wall
+	- col: 10
+	- row: 2
+Floor
+	- col: 11
+	- row: 2
+Floor
+	- col: 12
+	- row: 2
+Floor
+	- col: 13
+	- row: 2
+Floor
+	- col: 14
+	- row: 2
+Floor
+	- col: 15
+	- row: 2
+Floor
+	- col: 16
+	- row: 2
+Floor
+	- col: 17
+	- row: 2
+Floor
+	- col: 18
+	- row: 2
+Wall
+	- col: 19
+	- row: 2
+Wall
+	- col: 0
+	- row: 3
+Wall
+	- col: 1
+	- row: 3
+Wall
+	- col: 2
+	- row: 3
+Wall
+	- col: 3
+	- row: 3
+Wall
+	- col: 4
+	- row: 3
+Wall
+	- col: 5
+	- row: 3
+Wall
+	- col: 6
+	- row: 3
+Wall
+	- col: 7
+	- row: 3
+Wall
+	- col: 8
+	- row: 3
+Door
+	- col: 9
+	- row: 3
+Wall
+	- col: 10
+	- row: 3
+Floor
+	- col: 11
+	- row: 3
+Floor
+	- col: 12
+	- row: 3
+Floor
+	- col: 13
+	- row: 3
+Floor
+	- col: 14
+	- row: 3
+Floor
+	- col: 15
+	- row: 3
+Floor
+	- col: 16
+	- row: 3
+Floor
+	- col: 17
+	- row: 3
+Floor
+	- col: 18
+	- row: 3
+Wall
+	- col: 19
+	- row: 3
+Wall
+	- col: 0
+	- row: 4
+Floor
+	- col: 1
+	- row: 4
+Floor
+	- col: 2
+	- row: 4
+Floor
+	- col: 3
+	- row: 4
+Wall
+	- col: 4
+	- row: 4
+Floor
+	- col: 5
+	- row: 4
+Floor
+	- col: 6
+	- row: 4
+Floor
+	- col: 7
+	- row: 4
+Floor
+	- col: 8
+	- row: 4
+Floor
+	- col: 9
+	- row: 4
+Wall
+	- col: 10
+	- row: 4
+Floor
+	- col: 11
+	- row: 4
+Floor
+	- col: 12
+	- row: 4
+Floor
+	- col: 13
+	- row: 4
+Floor
+	- col: 14
+	- row: 4
+Floor
+	- col: 15
+	- row: 4
+Floor
+	- col: 16
+	- row: 4
+Floor
+	- col: 17
+	- row: 4
+Floor
+	- col: 18
+	- row: 4
+Wall
+	- col: 19
+	- row: 4
+Wall
+	- col: 0
+	- row: 5
+Floor
+	- col: 1
+	- row: 5
+Portal
+	- col: 2
+	- destcol: 1
+	- destrow: 1
+	- row: 5
+Floor
+	- col: 3
+	- row: 5
+Wall
+	- col: 4
+	- row: 5
+Floor
+	- col: 5
+	- row: 5
+Switch
+	- col: 6
+	- destcols: 9
+	- destrows: 3
+	- row: 5
+Floor
+	- col: 7
+	- row: 5
+Floor
+	- col: 8
+	- row: 5
+Floor
+	- col: 9
+	- row: 5
+Wall
+	- col: 10
+	- row: 5
+Wall
+	- col: 11
+	- row: 5
+Wall
+	- col: 12
+	- row: 5
+Wall
+	- col: 13
+	- row: 5
+Wall
+	- col: 14
+	- row: 5
+Floor
+	- col: 15
+	- row: 5
+Wall
+	- col: 16
+	- row: 5
+Wall
+	- col: 17
+	- row: 5
+Wall
+	- col: 18
+	- row: 5
+Wall
+	- col: 19
+	- row: 5
+Wall
+	- col: 0
+	- row: 6
+Floor
+	- col: 1
+	- row: 6
+Floor
+	- col: 2
+	- row: 6
+Floor
+	- col: 3
+	- row: 6
+Wall
+	- col: 4
+	- row: 6
+Floor
+	- col: 5
+	- row: 6
+Floor
+	- col: 6
+	- row: 6
+Floor
+	- col: 7
+	- row: 6
+Floor
+	- col: 8
+	- row: 6
+Floor
+	- col: 9
+	- row: 6
+Wall
+	- col: 10
+	- row: 6
+Floor
+	- col: 11
+	- row: 6
+Floor
+	- col: 12
+	- row: 6
+Floor
+	- col: 13
+	- row: 6
+Floor
+	- col: 14
+	- row: 6
+Floor
+	- col: 15
+	- row: 6
+Floor
+	- col: 16
+	- row: 6
+Floor
+	- col: 17
+	- row: 6
+Floor
+	- col: 18
+	- row: 6
+Wall
+	- col: 19
+	- row: 6
+Wall
+	- col: 0
+	- row: 7
+Wall
+	- col: 1
+	- row: 7
+Wall
+	- col: 2
+	- row: 7
+Wall
+	- col: 3
+	- row: 7
+Wall
+	- col: 4
+	- row: 7
+Floor
+	- col: 5
+	- row: 7
+Floor
+	- col: 6
+	- row: 7
+Floor
+	- col: 7
+	- row: 7
+Floor
+	- col: 8
+	- row: 7
+Floor
+	- col: 9
+	- row: 7
+Door
+	- col: 10
+	- row: 7
+Floor
+	- col: 11
+	- row: 7
+Floor
+	- col: 12
+	- row: 7
+Floor
+	- col: 13
+	- row: 7
+Floor
+	- col: 14
+	- row: 7
+Switch
+	- col: 15
+	- destcols: 10 7
+	- destrows: 7 2
+	- row: 7
+Floor
+	- col: 16
+	- row: 7
+Floor
+	- col: 17
+	- row: 7
+Floor
+	- col: 18
+	- row: 7
+Wall
+	- col: 19
+	- row: 7
+Wall
+	- col: 0
+	- row: 8
+Wall
+	- col: 1
+	- row: 8
+Wall
+	- col: 2
+	- row: 8
+Wall
+	- col: 3
+	- row: 8
+Wall
+	- col: 4
+	- row: 8
+Floor
+	- col: 5
+	- row: 8
+Floor
+	- col: 6
+	- row: 8
+Floor
+	- col: 7
+	- row: 8
+Floor
+	- col: 8
+	- row: 8
+Floor
+	- col: 9
+	- row: 8
+Wall
+	- col: 10
+	- row: 8
+Floor
+	- col: 11
+	- row: 8
+Floor
+	- col: 12
+	- row: 8
+Floor
+	- col: 13
+	- row: 8
+Floor
+	- col: 14
+	- row: 8
+Floor
+	- col: 15
+	- row: 8
+Floor
+	- col: 16
+	- row: 8
+Floor
+	- col: 17
+	- row: 8
+Floor
+	- col: 18
+	- row: 8
+Wall
+	- col: 19
+	- row: 8
+Wall
+	- col: 0
+	- row: 9
+Wall
+	- col: 1
+	- row: 9
+Wall
+	- col: 2
+	- row: 9
+Wall
+	- col: 3
+	- row: 9
+Wall
+	- col: 4
+	- row: 9
+Wall
+	- col: 5
+	- row: 9
+Wall
+	- col: 6
+	- row: 9
+Wall
+	- col: 7
+	- row: 9
+Wall
+	- col: 8
+	- row: 9
+Wall
+	- col: 9
+	- row: 9
+Wall
+	- col: 10
+	- row: 9
+Wall
+	- col: 11
+	- row: 9
+Wall
+	- col: 12
+	- row: 9
+Wall
+	- col: 13
+	- row: 9
+Wall
+	- col: 14
+	- row: 9
+Wall
+	- col: 15
+	- row: 9
+Wall
+	- col: 16
+	- row: 9
+Wall
+	- col: 17
+	- row: 9
+Wall
+	- col: 18
+	- row: 9
+Wall
+	- col: 19
+	- row: 9
+Character
+	- col: 11
+	- controller: ConsoleController
+	- icon: @
+	- row: 4

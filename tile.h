@@ -4,19 +4,29 @@
 #include <vector>
 
 #include "character.h"
+#include "level.h"
 
 using std::vector;
 using std::string;
 
 class Character;
+class Level;
 
 class Tile{
+
+private:
+    Level* m_level;
+    char m_icon;
+    const int m_row;
+    const int m_col;
+    Character* m_character;
+
 public:
 
     explicit
 
-    Tile(char icon, int row, int col);
-    Tile(int row, int col);
+    Tile(char icon, int row, int col, Level* level);
+    Tile(int row, int col, Level* level);
 
     char getIcon() const;
     void setIcon(const char Icon);
@@ -29,6 +39,8 @@ public:
 
     bool hasCharacter() const;
 
+    Level* getLevel() const;
+
     virtual void setCharacter(Character* m_character);
     Character* getCharacter() const;
 
@@ -40,11 +52,6 @@ public:
 
     virtual ~Tile() = 0;
 
-private:
-    char m_icon;
-    const int m_row;
-    const int m_col;
-    Character* m_character;
 };
 
 
@@ -55,9 +62,10 @@ class Floor : public virtual Tile{
 
 public:
 
-    Floor(const int row, const int col);
-    Floor(const char icon, const int row, const int col);
+    Floor(const int row, const int col, Level* level);
+    Floor(const char icon, const int row, const int col, Level* level);
 
+    //TODO Remove
     virtual Tile* onEnter(Tile* fromTile);
     virtual Tile* onLeave(Tile* destTile);
 
@@ -71,9 +79,9 @@ public:
 class Wall : public virtual Tile{
 
 public:
-    Wall(const int row, const int col);
-    Wall(const char icon, const int row, const int col);
-
+    Wall(const int row, const int col, Level* level);
+    Wall(const char icon, const int row, const int col, Level* level);
+    //TODO REMOVE
     virtual Tile* onEnter(Tile* fromTile);
     virtual Tile* onLeave(Tile* destTile);
 };
@@ -88,18 +96,21 @@ class Portal : public Tile{
 private:
 
     //if type == Portal --> destination == destination Portal
-    Portal* m_destination;
+    Portal* m_destination = nullptr;
+    int m_destRow, m_destCol;
 
 public:
 
-    Portal(const int row, const int col);
-    Portal(const char icon, const int row, const int col);
-    //Portal(const int row, const int col, Portal* portalDestination = nullptr);
+    Portal(const int row, const int col, Level* level);
+    Portal(const int row, const int col, const int destRow, const int destCol, Level* level);
+
+    Portal(const char icon, const int row, const int col, Level* level);
+    Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level);
 
     virtual Tile* onEnter(Tile* fromTile);
     virtual Tile* onLeave(Tile* destTile);
 
-    Portal* getDestination() const;
+    Tile* getDestination();
     void setDestination(Portal* destination);
 };
 
@@ -134,7 +145,6 @@ public:
     explicit
     Active();
     virtual ~Active() = 0;
-    //~Active();
 
     virtual void attach(Passive* passive);
     virtual void detach(Passive* passive);
@@ -159,12 +169,13 @@ private:
 
 public:
 
-    Door(const int row, const int col);
+    Door(const int row, const int col, Level* level);
 
     void setIcon(const char Icon);
     void changeState(bool state);
     virtual void notify();
 
+    //TODO REMOVE
     virtual Tile* onEnter(Tile* fromTile);
     virtual Tile* onLeave(Tile* destTile);
 
@@ -183,12 +194,15 @@ private:
 
     //false = Switch Disabled | true = Switch enabled
     bool m_state = false;
+    vector<int> m_destRows;
+    vector<int> m_destCols;
 
     //const char m_enabled = '!', m_disabled = '?';
 
 public:
 
-    Switch(const int row, const int col);
+    Switch(const int row, const int col, Level* level);
+    Switch(const int row, const int col, const vector<int> m_destRows, const vector<int> m_destCols, Level* level);
 
     void changeState(bool state);
 

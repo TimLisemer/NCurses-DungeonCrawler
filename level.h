@@ -1,6 +1,10 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 #include "tile.h"
+#include <fstream>
+#include "node.h"
+
+using std::ifstream;
 
 class Tile;
 class Character;
@@ -9,24 +13,25 @@ class Level {
 
 public:
     Level();
-    Level(int m_height, int m_width);
+    Level(const int m_height, const int m_width);
     Level(const Level &rhs) = delete;
 
     ~Level();
 
 
-    Tile* getTile(int row, int col);
+    Tile* getTile(const int row, const int col);
 
-    const Tile *getTile(int row, int col) const;
+    const Tile *getTile(const int row, const int col) const;
 
     int getHeight() const;
-
     int getWidth() const;
 
-    void placeCharacter(Character *c, int row, int col);
+    Tile*** getWorld() const;
+
+    void placeCharacter(Character *c, const int row, const int col);
 
 private:
-    const int m_height, m_width;
+    int m_height, m_width;
     Tile*** m_world;
 };
 

@@ -19,10 +19,10 @@ public:
     void move(int row, int col,int key, Character* c, Level* level);
 
 private:
-    const int m_startRow = 1, m_starCol = 1;
-    UserInterface* UI;
-    Level* current;
-    std::vector<Character*> characters;
+    const int m_startRow = 4, m_starCol = 11;
+    UserInterface* m_ui;
+    Level* m_level;
+    std::vector<Character*> m_characters;
 };
 
 #endif // DUNGEONCRAWLER_H

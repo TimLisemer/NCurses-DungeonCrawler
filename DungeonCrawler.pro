@@ -12,6 +12,7 @@ SOURCES += \
         level.cpp \
         logger.cpp \
         main.cpp \
+        node.cpp \
         tile.cpp \
         userinterface.cpp
 
@@ -20,5 +21,6 @@ HEADERS += \
     dungeoncrawler.h \
     level.h \
     logger.h \
+    node.h \
     tile.h \
     userinterface.h
