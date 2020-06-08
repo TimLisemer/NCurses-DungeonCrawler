@@ -23,14 +23,10 @@ void DungeonCrawler::play() {
     logging::Logger::instance()->log(logging::INFO, "DungeonCrawler start");
 
 
-    //TODO Remove Charakter
-
     //create character
     m_characters.push_back(new Character('C', m_ui));
     //place character on level
-    m_level->placeCharacter(m_characters.at(0), m_startRow, m_starCol);
-    //set character tile to zero
-    m_characters.at(0)->setTile(m_level->getTile(m_startRow,m_starCol));
+    m_level->placeCharacter(m_characters.at(0));
 
     bool running = true;
     while(running) {
@@ -96,7 +92,7 @@ void DungeonCrawler::move(int row, int col,int key, Character* c, Level* level) 
             logging::Logger::instance()->log(logging::INFO, "Input 5");
             break;
         default:
-                logging::Logger::instance()->log(logging::WARN, "Falsch Eingabe");
+                logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
 
         }
     }

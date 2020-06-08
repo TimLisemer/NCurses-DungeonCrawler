@@ -64,11 +64,6 @@ public:
 
     Floor(const int row, const int col, Level* level);
     Floor(const char icon, const int row, const int col, Level* level);
-
-    //TODO Remove
-    virtual Tile* onEnter(Tile* fromTile);
-    virtual Tile* onLeave(Tile* destTile);
-
 };
 
 
@@ -83,7 +78,6 @@ public:
     Wall(const char icon, const int row, const int col, Level* level);
     //TODO REMOVE
     virtual Tile* onEnter(Tile* fromTile);
-    virtual Tile* onLeave(Tile* destTile);
 };
 
 
@@ -108,7 +102,6 @@ public:
     Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level);
 
     virtual Tile* onEnter(Tile* fromTile);
-    virtual Tile* onLeave(Tile* destTile);
 
     Tile* getDestination();
     void setDestination(Portal* destination);
@@ -165,8 +158,6 @@ private:
     //false = Door Closed | true = Door open
     bool m_state = false;
 
-    //const char m_opened = '/', m_closed = 'X';
-
 public:
 
     Door(const int row, const int col, Level* level);
@@ -174,11 +165,8 @@ public:
     void setIcon(const char Icon);
     void changeState(bool state);
     virtual void notify();
-
-    //TODO REMOVE
     virtual Tile* onEnter(Tile* fromTile);
     virtual Tile* onLeave(Tile* destTile);
-
 
 
 };

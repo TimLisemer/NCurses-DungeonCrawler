@@ -90,14 +90,7 @@ Tile::~Tile(){
 ///
 Floor::Floor(const int row, const int col, Level* level) : Tile('.', row, col, level){}
 Floor::Floor(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level){}
-//TODO
-Tile* Floor::onEnter(Tile *fromTile){
-    return this;
-}
 
-Tile* Floor::onLeave(Tile *destTile){
-    return this;
-}
 
 ///
 /// \brief Wall::Wall
@@ -111,10 +104,6 @@ Tile* Wall::onEnter(Tile *fromTile){
     return nullptr;
 }
 
-Tile* Wall::onLeave(Tile *destTile){
-    return this;
-}
-
 ///
 /// \brief Portal::Portal
 ///
@@ -126,15 +115,8 @@ Portal::Portal(const char icon, const int row, const int col, const int destRow,
 
 
 Tile* Portal::onEnter(Tile *fromTile){
-
     return getDestination();
 }
-
-Tile* Portal::onLeave(Tile *destTile){
-
-    return this;
-}
-
 
 Tile* Portal::getDestination(){
     if(m_destination == nullptr){
@@ -249,7 +231,7 @@ Switch::Switch(const int row, const int col, const vector<int> destRows, const v
         throw new std::invalid_argument("Different size for destRows and destCols for Switch");
     }else{
         for(size_t i = 0; i < destRows.size(); i++){
-            Door* d = dynamic_cast<Door*>(getLevel()->getWorld()[destRows[i]][destCols[i]]);
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
             if(d == nullptr) throw std::invalid_argument("tile.cpp invalid dynamic cast");
             attach(d);
         }

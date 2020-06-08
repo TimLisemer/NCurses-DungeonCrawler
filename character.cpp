@@ -13,10 +13,18 @@ void Character::setTile(Tile *tile) {
     m_position = tile;
 }
 
-Tile* Character::getTile() {
+Tile* Character::getTile() const{
     return m_position;
 }
 
 int Character::move(){
     return m_controller->move();
+}
+
+void Character::setName(const string name){
+    m_name = name;
+}
+
+string Character::getName() const{
+    return m_name;
 }
