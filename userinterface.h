@@ -1,8 +1,11 @@
 #ifndef USERINTERFACE_H
 #define USERINTERFACE_H
 #include "level.h"
+#include "logger.h"
+
 
 class Level;
+class Character;
 
 class Controller{
 
@@ -11,7 +14,6 @@ public:
     explicit
     Controller();
     virtual ~Controller();
-
     virtual int move();
 
 };
@@ -25,7 +27,7 @@ public:
     ~UserInterface();
     void draw(Level* lvl);
 
-    virtual int move();
+    virtual int move(int row, int col, Character* c, Level* level);
 };
 
 #endif // USERINTERFACE_H

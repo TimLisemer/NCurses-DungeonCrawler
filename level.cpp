@@ -5,11 +5,8 @@ inline bool instanceof(const T*) {
    return std::is_base_of<Base, T>::value;
 }
 
-Level::Level() {
+Level::Level(UserInterface* ui) {
 
-/*TODO
- * Insert Charakter
- */
     //Map Insert
     ifstream file("../Do12x-Team5MASTER-master/3.map");
     if (!file.good()) {
@@ -24,18 +21,15 @@ Level::Level() {
     break;
     }
 
-    //get height
+
+    m_characters = std::vector<Character*>();
+
     for (const auto &n : nodes) {
         if (n.name == "Map Information") {
             m_height = n.get<int>("rows");
             m_width = n.get<int>("cols");
-        }else if (n.name == "Character") {
-            m_startRow = n.get<int>("row");
-            m_starCol = n.get<int>("col");
-            m_CharacterName = n.get<string>("controller");
         }
     }
-
 
     //create rows
     m_world = new Tile**[m_height];
@@ -85,6 +79,17 @@ Level::Level() {
         }
     }
 
+
+    for (const auto &n : nodes) {
+        if (n.name == "Character") {
+            Character* c = nullptr;
+            if(n.get<string>("controller") == "ConsoleController"){
+                c = new Character(n.get<char>("icon"), ui);
+            }
+            placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
+        }
+    }
+
 }
 
 
@@ -100,6 +105,11 @@ Level::~Level() {
     }
     //delete array of arrays
     delete[] m_world;
+
+    //delete all characters
+    for(auto* c: m_characters){
+        delete c;
+    }
 }
 
 int Level::getHeight() const {
@@ -118,8 +128,12 @@ const Tile* Level::getTile(const int row, const int col) const {
     return m_world[row][col];
 }
 
-void Level::placeCharacter(Character *c) {
-    m_world[m_startRow][m_starCol]->setCharacter(c);
-    c->setName(m_CharacterName);
-    c->setTile(getTile(m_startRow, m_starCol));
+void Level::placeCharacter(Character *c, int row, int col) {
+    m_world[row][col]->setCharacter(c);
+    c->setTile(getTile(row, col));
+    m_characters.push_back(c);
+}
+
+vector<Character*> Level::getCharacters() const{
+    return m_characters;
 }

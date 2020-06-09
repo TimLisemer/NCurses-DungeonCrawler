@@ -11,17 +11,19 @@ class Character{
 
 public:
     Character(const char icon, Controller* controller);
+    Character(const Character &character) = delete;
+    ~Character();
+
     char getIcon() const;
+    void setIcon(const char icon);
     Tile* getTile() const;
     void setTile(Tile* tile);
+    Controller* getController() const;
+    void setController(Controller* controller);
     int move();
 
-    void setName(const string name);
-    string getName() const;
-
 private:
-    const char m_icon;
-    string m_name;
+    char m_icon;
     Tile* m_position;
     Controller* m_controller;
 };

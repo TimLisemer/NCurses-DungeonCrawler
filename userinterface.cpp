@@ -34,11 +34,59 @@ UserInterface::~UserInterface(){
 
 
 
-int UserInterface::move() {
+int UserInterface::move(int row, int col, Character* c, Level* level) {
+
     mvaddstr(0,25, "1-9 to Move, press 0 to close");
     int key = getch();
-    //return the key, check in main game loop if the game should continue
-    //Debug
-    //logging::Logger::instance()->log(logging::INFO, "return " + std::to_string(key));
+
+    switch(key){
+        case '1':
+            if(row+1 < level->getHeight() && col -1 >= 0)
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() - 1));
+            logging::Logger::instance()->log(logging::INFO, "Input 1");
+            break;
+        case '2':
+            if(row+1 < level->getHeight()) {
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol()));
+            logging::Logger::instance()->log(logging::INFO, "Input 2");
+            break;
+        case '3':
+            if(row+1 < level->getHeight() && col+1 < level->getWidth())
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() + 1));
+            logging::Logger::instance()->log(logging::INFO, "Input 3");
+            break;
+        case '4':
+            if(col-1 >= 0)
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() - 1));
+            logging::Logger::instance()->log(logging::INFO, "Input 4");
+            break;
+        case '6':
+            if(col+1 < level->getWidth())
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() + 1));
+            logging::Logger::instance()->log(logging::INFO, "Input 6");
+            break;
+        case '7':
+            if(row-1 >= 0 && col-1 >= 0)
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() -1, c->getTile()->getCol() - 1));
+            logging::Logger::instance()->log(logging::INFO, "Input 7");
+            break;
+        case '8':
+            if(row-1 >= 0)
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol()));
+            logging::Logger::instance()->log(logging::INFO, "Input 8");
+            break;
+        case '9':
+            if(row-1 >= 0 && col + 1 < level->getWidth())
+            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol() + 1));
+            logging::Logger::instance()->log(logging::INFO, "Input 9");
+            break;
+        case '5':
+            logging::Logger::instance()->log(logging::INFO, "Input 5");
+            break;
+        default:
+                logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
+
+        }
+    }
     return key;
 }
