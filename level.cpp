@@ -21,9 +21,7 @@ Level::Level(UserInterface* ui) {
     break;
     }
 
-
-    m_characters = std::vector<Character*>();
-
+    //Load Map Information
     for (const auto &n : nodes) {
         if (n.name == "Map Information") {
             m_height = n.get<int>("rows");
@@ -39,7 +37,7 @@ Level::Level(UserInterface* ui) {
         m_world[i] = new Tile*[m_width];
     }
 
-    //create elements
+    //create static elements
     for (size_t i = 0; i < nodes.size(); i++) {
         Node n = nodes.at(i);
         if (n.name == "Floor") {
@@ -61,7 +59,7 @@ Level::Level(UserInterface* ui) {
         }
     }
 
-
+    //Create Dynamic Elements (Switch / Portal)
     for (size_t i = 0; i < nodes.size(); i++) {
         Node n = nodes.at(i);
         if (n.name == "Portal") {
@@ -80,11 +78,13 @@ Level::Level(UserInterface* ui) {
     }
 
 
+    //Load Characters
+    m_characters = std::vector<Character*>();
     for (const auto &n : nodes) {
         if (n.name == "Character") {
             Character* c = nullptr;
             if(n.get<string>("controller") == "ConsoleController"){
-                c = new Character(n.get<char>("icon"), ui);
+                c = new Character(ui, n.get<char>("icon"), 5, 5);
             }
             placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
         }

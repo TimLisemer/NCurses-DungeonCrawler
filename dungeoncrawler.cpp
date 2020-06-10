@@ -36,7 +36,6 @@ void DungeonCrawler::play() {
                 }
                 m_ui->move(c->getTile()->getRow(), c->getTile()->getCol(), c, level);
             }
-
         }
     }
     logging::Logger::instance()->log(logging::INFO, "Game has been Exited");

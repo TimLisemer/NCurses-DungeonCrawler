@@ -85,11 +85,21 @@ Tile::~Tile(){
 }
 
 
+
+
+
+
+
 ///
 /// \brief Floor::Floor
 ///
 Floor::Floor(const int row, const int col, Level* level) : Tile('.', row, col, level){}
 Floor::Floor(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level){}
+
+
+
+
+
 
 
 ///
@@ -103,6 +113,12 @@ Tile* Wall::onEnter(Tile *fromTile){
     //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return nullptr;
 }
+
+
+
+
+
+
 
 ///
 /// \brief Portal::Portal
@@ -129,6 +145,13 @@ void Portal::setDestination(Portal* destination){
     m_destination = destination;
 }
 
+
+
+
+
+
+
+
 ///
 /// \brief Passive::Passive
 ///
@@ -139,6 +162,8 @@ Passive::~Passive(){
 }
 
 void Passive::notify(){}
+
+
 
 
 
@@ -172,6 +197,15 @@ void Active::detach(Passive* passive){
 Active::~Active(){
     delete this;
 }
+
+
+
+
+
+
+
+
+
 
 
 ///
@@ -217,6 +251,14 @@ void Door::notify(){
 }
 
 
+
+
+
+
+
+
+
+
 ///
 /// \brief Switch::Switch
 ///
@@ -232,7 +274,7 @@ Switch::Switch(const int row, const int col, const vector<int> destRows, const v
     }else{
         for(size_t i = 0; i < destRows.size(); i++){
             Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
-            if(d == nullptr) throw std::invalid_argument("tile.cpp invalid dynamic cast");
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
             attach(d);
         }
     }

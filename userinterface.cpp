@@ -22,7 +22,7 @@ void UserInterface::draw(Level *lvl) {
     //draw line by line, start top left
     for(int i = 0; i < lvl->getHeight(); i++) {
         for(int j = 0; j < lvl->getWidth(); j++) {
-            mvaddch(i,j,lvl->getTile(i,j)->getIcon());
+            mvaddch(i + 11,j + 25,lvl->getTile(i,j)->getIcon());
         }
     }
 
@@ -36,7 +36,14 @@ UserInterface::~UserInterface(){
 
 int UserInterface::move(int row, int col, Character* c, Level* level) {
 
-    mvaddstr(0,25, "1-9 to Move, press 0 to close");
+    mvaddstr(2,25, "1-9 to Move, press 0 to close");
+    string icon(1, c->getIcon());
+    mvaddstr(4,25, std::string("Active Player    : " + icon).c_str());
+    mvaddstr(5,25, std::string("Stats: Strenght  : " + std::to_string(c->getStrenght())).c_str());
+    mvaddstr(6,25, std::string("       Stamina   : " + std::to_string(c->getStamina())).c_str());
+    mvaddstr(7,25, std::string("       Hitpoints : " + std::to_string(c->getHitPoints())).c_str());
+    mvaddstr(8,25, std::string("       Backpack  : " + std::to_string(0)).c_str());                     //////////// Einfügen
+
     int key = getch();
 
     switch(key){

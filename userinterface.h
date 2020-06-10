@@ -2,7 +2,7 @@
 #define USERINTERFACE_H
 #include "level.h"
 #include "logger.h"
-
+using std::string;
 
 class Level;
 class Character;

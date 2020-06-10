@@ -9,6 +9,7 @@ LIBS += -L/usr/share/licenses/ncurses -lncurses
 SOURCES += \
         character.cpp \
         dungeoncrawler.cpp \
+        item.cpp \
         level.cpp \
         logger.cpp \
         main.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     character.h \
     dungeoncrawler.h \
+    item.h \
     level.h \
     logger.h \
     node.h \
