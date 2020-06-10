@@ -9,6 +9,10 @@ Character::Character(Controller* controller, const char icon, const int strenght
 Character::~Character(){
     delete m_position;
     delete m_controller;
+
+    for(size_t i = 0; i < m_items.size(); i++){
+        delete m_items.at(i);
+    }
 }
 
 
@@ -34,7 +38,6 @@ void Character::setController(Controller *controller){
 int Character::move(){
     return m_controller->move();
 }
-
 
 
 char Character::getIcon() const {
@@ -67,12 +70,18 @@ int Character::getHitPoints() const{
     return m_hitPoints;
 }
 
-int Character::getMaxHP() const{
-    return 20 + (m_hitPoints*5);
-}
-
 void Character::setHitPoints(const int hitPoints){
     m_hitPoints = hitPoints;
+}
+
+
+int Character::getMaxHP() const{
+    return (20 + (m_stamina*5)) * m_maxHpMultiplier;
+}
+
+
+void Character::setMaxHpMultiplier(const int multiplier){
+    m_maxHpMultiplier = multiplier;
 }
 
 

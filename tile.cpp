@@ -6,6 +6,15 @@
 Tile::Tile(char icon, int row, int col, Level* level) : m_level(level), m_icon(icon), m_row(row), m_col(col), m_character(nullptr){}
 Tile::Tile(int row, int col, Level* level) : m_level(level), m_row(row), m_col(col), m_character(nullptr){}
 
+
+Tile::~Tile(){
+
+    delete m_level;
+    delete m_character;
+
+}
+
+
 char Tile::getIcon() const{
     if(hasCharacter()){
         return getCharacter()->getIcon();
@@ -79,10 +88,6 @@ Character* Tile::getCharacter() const{
     return m_character;
 }
 
-
-Tile::~Tile(){
-
-}
 
 
 

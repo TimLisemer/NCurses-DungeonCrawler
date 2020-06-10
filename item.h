@@ -18,6 +18,8 @@ public:
 
     Item(const std::string &name);
 
+    virtual ~Item() = 0;
+
     virtual void onEquip(Character *c);
     virtual void onDrop(Character *c, Tile *tile);
     virtual std::string getName() const;

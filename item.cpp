@@ -6,6 +6,10 @@
 ///
 Item::Item(const std::string &name) : m_name(name){}
 
+Item::~Item(){
+
+}
+
 void Item::onEquip(Character *c){
 
     //To Do
@@ -67,11 +71,15 @@ int Armor::getStaBonus() const{
 }
 
 void Armor::onEquip(Character *c){
+    //c->addToInventory(this);          //Muss vllt an ne andere stelle keine ahnung ob das equippen = zum inventar hinzufügen bedeutet
+    c->setMaxHpMultiplier((20 + (c->getStamina() + m_staBonus) * 5) / (20 + (c->getStamina() * 5)));
 
 }
 
 void Armor::onDrop(Character *c, Tile *tile){
-
+    /////////////Tile einbinden
+    //c->removeFromInventory(this);     /Muss vllt an ne andere stelle keine ahnung ob das equippen = zum inventar hinzufügen bedeutet
+    c->setMaxHpMultiplier(1);
 }
 
 

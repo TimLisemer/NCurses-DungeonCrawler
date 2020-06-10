@@ -2,10 +2,14 @@
 #define CHARACTER_H
 
 #include "userinterface.h"
+#include "item.h"
+
+
 using std::string;
 
 class Tile;
 class Controller;
+class Item;
 
 class Character{
 
@@ -35,12 +39,17 @@ public:
     void setHitPoints(const int hitPoints);
 
     int getMaxHP() const;
+    void setMaxHpMultiplier(const int multiplier);
+
+    void addToInventory(Item* item);
 
 private:
 
     Tile* m_position;
     Controller* m_controller;
+    vector<Item*> m_items;
 
+    int m_maxHpMultiplier = 1;
     char m_icon;
     int m_strenght;
     int m_stamina;

@@ -16,10 +16,11 @@ class Tile{
 
 private:
     Level* m_level;
+    Character* m_character;
+
     char m_icon;
     const int m_row;
     const int m_col;
-    Character* m_character;
 
 public:
 
@@ -27,6 +28,10 @@ public:
 
     Tile(char icon, int row, int col, Level* level);
     Tile(int row, int col, Level* level);
+
+    virtual ~Tile() = 0;
+
+
 
     char getIcon() const;
     void setIcon(const char Icon);
@@ -49,8 +54,6 @@ public:
     virtual Tile* onEnter(Tile* fromTile);
 
     virtual Tile* onLeave(Tile* toTile);
-
-    virtual ~Tile() = 0;
 
 };
 
