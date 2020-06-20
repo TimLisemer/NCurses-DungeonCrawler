@@ -85,6 +85,12 @@ void Character::setMaxHpMultiplier(const int multiplier){
 }
 
 
+void Character::addToInventory(Item *item){
+    item->onEquip(this);
+    m_items.push_back(item);
+}
+
+
 
 
 

@@ -3,8 +3,8 @@
 #include "logger.h"
 
 
-Tile::Tile(char icon, int row, int col, Level* level) : m_level(level), m_icon(icon), m_row(row), m_col(col), m_character(nullptr){}
-Tile::Tile(int row, int col, Level* level) : m_level(level), m_row(row), m_col(col), m_character(nullptr){}
+Tile::Tile(char icon, int row, int col, Level* level, Item* item) : m_level(level), m_character(nullptr), m_item(item), m_icon(icon), m_row(row), m_col(col) {}
+Tile::Tile(int row, int col, Level* level, Item* item) : m_level(level), m_character(nullptr), m_item(item), m_row(row), m_col(col){}
 
 
 Tile::~Tile(){
@@ -19,7 +19,11 @@ char Tile::getIcon() const{
     if(hasCharacter()){
         return getCharacter()->getIcon();
     }else{
-        return m_icon;
+        if(hasItem()){
+            return '*';
+        }else{
+            return m_icon;
+        }
     }
 }
 
@@ -76,6 +80,7 @@ bool Tile::moveTo(Tile* destTile){
 
 
 Tile* Tile::onEnter(Tile *fromTile) {
+    pickupItem();
     return this;
 }
 
@@ -89,6 +94,29 @@ Character* Tile::getCharacter() const{
 }
 
 
+Item* Tile::getItem() const{
+    return m_item;
+}
+
+void Tile::setItem(Item *item){
+    m_item = item;
+}
+
+bool Tile::hasItem() const{
+    if(getItem() == nullptr){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+void Tile::pickupItem(){
+    if(hasItem()){
+        getCharacter()->addToInventory(getItem());
+        setItem(nullptr);
+    }
+}
+
 
 
 
@@ -98,8 +126,13 @@ Character* Tile::getCharacter() const{
 ///
 /// \brief Floor::Floor
 ///
-Floor::Floor(const int row, const int col, Level* level) : Tile('.', row, col, level){}
-Floor::Floor(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level){}
+Floor::Floor(const int row, const int col, Level* level) : Tile('.', row, col, level, nullptr){}
+Floor::Floor(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){}
+
+
+
+Floor::Floor(const int row, const int col, Level* level, Item* item) : Tile('.', row, col, level, item){}
+Floor::Floor(const char icon, const int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){}
 
 
 
@@ -110,12 +143,15 @@ Floor::Floor(const char icon, const int row, const int col, Level* level) : Tile
 ///
 /// \brief Wall::Wall
 ///
-Wall::Wall(const int row, const int col, Level* level) : Tile('#', row, col, level){}
-Wall::Wall(const char icon, int row, const int col, Level* level) : Tile(icon, row, col, level){}
-//TODO
+Wall::Wall(const int row, const int col, Level* level) : Tile('#', row, col, level, nullptr){}
+Wall::Wall(const char icon, int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){}
+
+
+Wall::Wall(const int row, const int col, Level* level, Item* item) : Tile('#', row, col, level, item){}
+Wall::Wall(const char icon, int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){}
+
 Tile* Wall::onEnter(Tile *fromTile){
-    //Debug
-    //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
+    pickupItem();
     return nullptr;
 }
 
@@ -128,14 +164,24 @@ Tile* Wall::onEnter(Tile *fromTile){
 ///
 /// \brief Portal::Portal
 ///
-Portal::Portal(const int row, const int col, Level* level) : Tile('O', row, col, level){}
-Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level) : Tile('O', row, col, level), m_destRow(destRow), m_destCol(destCol){}
+Portal::Portal(const int row, const int col, Level* level) : Tile('O', row, col, level, nullptr){}
+Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level) : Tile('O', row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){}
 
-Portal::Portal(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level){}
-Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level) : Tile(icon, row, col, level), m_destRow(destRow), m_destCol(destCol){}
+Portal::Portal(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){}
+Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level) : Tile(icon, row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){}
+
+
+
+
+Portal::Portal(const int row, const int col, Level* level, Item* item) : Tile('O', row, col, level, item){}
+Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile('O', row, col, level, item), m_destRow(destRow), m_destCol(destCol){}
+
+Portal::Portal(const char icon, const int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){}
+Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile(icon, row, col, level, item), m_destRow(destRow), m_destCol(destCol){}
 
 
 Tile* Portal::onEnter(Tile *fromTile){
+    pickupItem();
     return getDestination();
 }
 
@@ -149,8 +195,6 @@ Tile* Portal::getDestination(){
 void Portal::setDestination(Portal* destination){
     m_destination = destination;
 }
-
-
 
 
 
@@ -216,9 +260,16 @@ Active::~Active(){
 ///
 /// \brief Door::Door
 ///
-Door::Door(const int row, const int col, Level* level) : Tile(row, col, level), Floor(row, col, level), Wall(row, col, level) {
+Door::Door(const int row, const int col, Level* level) : Tile(row, col, level, nullptr), Floor(row, col, level), Wall(row, col, level) {
     changeState(false);
 }
+
+
+Door::Door(const int row, const int col, Level* level, Item* item) : Tile(row, col, level, item), Floor(row, col, level, item), Wall(row, col, level, item) {
+    changeState(false);
+}
+
+
 
 void Door::setIcon(const char Icon){
     Floor::setIcon(Icon);
@@ -235,6 +286,7 @@ void Door::changeState(bool state){
 }
 
 Tile* Door::onEnter(Tile *fromTile){
+    pickupItem();
     if(m_state){
         return Floor::onEnter(fromTile);
     }else{
@@ -267,11 +319,11 @@ void Door::notify(){
 ///
 /// \brief Switch::Switch
 ///
-Switch::Switch(const int row, const int col, Level* level) : Tile(row, col, level), Floor(row, col, level){
+Switch::Switch(const int row, const int col, Level* level) : Tile(row, col, level, nullptr), Floor(row, col, level){
     changeState(false);
 }
 
-Switch::Switch(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level) : Tile(row, col, level), Floor(row, col, level), m_destRows(destRows), m_destCols(destCols){
+Switch::Switch(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level) : Tile(row, col, level, nullptr), Floor(row, col, level), m_destRows(destRows), m_destCols(destCols){
     changeState(false);
 
     if(destRows.size() != destCols.size()){
@@ -285,6 +337,38 @@ Switch::Switch(const int row, const int col, const vector<int> destRows, const v
     }
 }
 
+
+
+
+
+
+Switch::Switch(const int row, const int col, Level* level, Item* item) : Tile(row, col, level, item), Floor(row, col, level){
+    changeState(false);
+}
+
+Switch::Switch(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level, Item* item) : Tile(row, col, level, item), Floor(row, col, level), m_destRows(destRows), m_destCols(destCols){
+    changeState(false);
+
+    if(destRows.size() != destCols.size()){
+        throw new std::invalid_argument("Different size for destRows and destCols for Switch");
+    }else{
+        for(size_t i = 0; i < destRows.size(); i++){
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
+            attach(d);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 void Switch::changeState(bool state){
     m_state = state;
     if(state){
@@ -297,6 +381,7 @@ void Switch::changeState(bool state){
 
 
 Tile* Switch::onEnter(Tile *fromTile){
+    pickupItem();
     if(!m_state){
         changeState(true);
     }

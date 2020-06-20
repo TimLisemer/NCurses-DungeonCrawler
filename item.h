@@ -5,8 +5,8 @@
 #include "character.h"
 
 
-//class Character;
-//class Tile;
+class Character;
+class Tile;
 
 
 ///

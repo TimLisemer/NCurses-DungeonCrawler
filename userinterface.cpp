@@ -25,7 +25,6 @@ void UserInterface::draw(Level *lvl) {
             mvaddch(i + 11,j + 25,lvl->getTile(i,j)->getIcon());
         }
     }
-
 }
 
 UserInterface::~UserInterface(){
@@ -33,10 +32,9 @@ UserInterface::~UserInterface(){
 }
 
 
-
 int UserInterface::move(int row, int col, Character* c, Level* level) {
 
-    mvaddstr(2,25, "1-9 to Move, press 0 to close");
+    mvaddstr(2,25, "1-9 to Move, 0 to close");
     string icon(1, c->getIcon());
     mvaddstr(4,25, std::string("Active Player    : " + icon).c_str());
     mvaddstr(5,25, std::string("Stats: Strenght  : " + std::to_string(c->getStrenght())).c_str());

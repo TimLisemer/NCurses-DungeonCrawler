@@ -1,6 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
-
+#include <vector>
+using std::vector;
 #include "userinterface.h"
 #include "item.h"
 
