@@ -238,6 +238,38 @@ public:
 
 
 
+///
+/// \brief The Lever class
+///
+class Lever : public Floor, Active{
+
+private:
+
+    vector<int> m_destRows;
+    vector<int> m_destCols;
+
+public:
+
+    Lever(const int row, const int col, Level* level);
+    Lever(const int row, const int col, const vector<int> m_destRows, const vector<int> m_destCols, Level* level);
+
+
+    Lever(const int row, const int col, Level* level, Item* item);
+    Lever(const int row, const int col, const vector<int> m_destRows, const vector<int> m_destCols, Level* level, Item* item);
+
+    virtual Tile* onEnter(Tile* fromTile);
+    virtual void attach(Passive* passive);
+    virtual void detach(Passive* passive);
+
+};
+
+
+
+
+
+
+
+
 
 
 

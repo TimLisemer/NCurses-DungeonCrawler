@@ -4,6 +4,7 @@
 using std::vector;
 #include "userinterface.h"
 #include "item.h"
+#include "level.h"
 
 
 using std::string;
@@ -11,12 +12,13 @@ using std::string;
 class Tile;
 class Controller;
 class Item;
+class Level;
 
 class Character{
 
 public:
 
-    Character(Controller* controller, const char icon, const int strenght, const int stamina);
+    Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina);
     Character(const Character &character) = delete;
     ~Character();
 
@@ -24,6 +26,8 @@ public:
     void setTile(Tile* tile);
     Controller* getController() const;
     void setController(Controller* controller);
+
+    int move();
 
     char getIcon() const;
     void setIcon(const char icon);
@@ -43,11 +47,14 @@ public:
     void addToInventory(Item* item);
     int getInventorySize() const;
 
+    Level* getLevel() const;
+
 private:
 
     Tile* m_position;
     Controller* m_controller;
     vector<Item*> m_items;
+    Level* m_level;
 
     int m_maxHpMultiplier = 1;
     char m_icon;

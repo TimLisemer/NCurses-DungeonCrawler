@@ -84,7 +84,7 @@ Level::Level(UserInterface* ui) {
         if (n.name == "Character") {
             Character* c = nullptr;
             if(n.get<string>("controller") == "ConsoleController"){
-                c = new Character(ui, n.get<char>("icon"), 5, 5);
+                c = new Character(ui, this, n.get<char>("icon"), 5, 5);
             }
             placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
         }

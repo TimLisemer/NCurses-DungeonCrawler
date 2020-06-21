@@ -17,7 +17,7 @@ public:
     explicit
     Controller();
     virtual ~Controller();
-    virtual int move(int row, int col, Character* c, Level* level);
+    virtual int move(Character* c);
 
 };
 
@@ -30,7 +30,7 @@ public:
 
     void draw(Level* lvl);
 
-    virtual int move(int row, int col, Character* c, Level* level);
+    virtual int move(Character* c);
 
 private:
 

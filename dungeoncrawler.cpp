@@ -18,7 +18,7 @@ DungeonCrawler::~DungeonCrawler() {
 }
 
 void DungeonCrawler::play() {
-    logging::Logger::instance()->set(logging::INFO, "/tmp/DungeonCrawler.log");
+    logging::Logger::instance()->set(logging::INFO, "../Do12x-Team5MASTER-master/DungeonCrawler.log");
     logging::Logger::instance()->log(logging::INFO, "DungeonCrawler start");
     while(m_running) {
         logging::Logger::instance()->log(logging::INFO, "running");
@@ -27,7 +27,7 @@ void DungeonCrawler::play() {
 
             m_ui->draw(level);
             for(Character* c : level->getCharacters()) {
-                m_ui->move(c->getTile()->getRow(), c->getTile()->getCol(), c, level);
+                c->move();
             }
         }
     }

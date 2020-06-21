@@ -3,19 +3,22 @@
 #include <ncurses.h>
 #include "logger.h"
 
-Character::Character(Controller* controller, const char icon, const int strenght, const int stamina) : m_controller(controller), m_icon(icon), m_strenght(strenght), m_stamina(stamina){}
+Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina) : m_controller(controller), m_level(level), m_icon(icon), m_strenght(strenght), m_stamina(stamina){}
 
 //delete Character
 Character::~Character(){
     delete m_position;
     delete m_controller;
+    delete m_level;
 
     for(size_t i = 0; i < m_items.size(); i++){
         delete m_items.at(i);
     }
 }
 
-
+int Character::move(){
+    return m_controller->move(this);
+}
 
 void Character::setTile(Tile *tile) {
     m_position = tile;
@@ -86,6 +89,11 @@ void Character::addToInventory(Item *item){
 
 int Character::getInventorySize() const{
     return m_items.size();
+}
+
+
+Level* Character::getLevel() const{
+    return m_level;
 }
 
 

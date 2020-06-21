@@ -400,6 +400,55 @@ void Switch::detach(Passive *passive){
 
 
 
+///
+/// \brief Lever::Lever
+///
+Lever::Lever(const int row, const int col, Level* level) : Tile('L', row, col, level, nullptr), Floor('L', row, col, level){}
+
+Lever::Lever(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level) : Tile('L', row, col, level, nullptr), Floor('L', row, col, level), m_destRows(destRows), m_destCols(destCols){
+    if(destRows.size() != destCols.size()){
+        throw new std::invalid_argument("Different size for destRows and destCols for Switch");
+    }else{
+        for(size_t i = 0; i < destRows.size(); i++){
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
+            attach(d);
+        }
+    }
+}
+
+
+
+
+
+
+Lever::Lever(const int row, const int col, Level* level, Item* item) : Tile('L', row, col, level, item), Floor('L', row, col, level){}
+Lever::Lever(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level, Item* item) : Tile('L', row, col, level, item), Floor('L', row, col, level), m_destRows(destRows), m_destCols(destCols){
+    if(destRows.size() != destCols.size()){
+        throw new std::invalid_argument("Different size for destRows and destCols for Switch");
+    }else{
+        for(size_t i = 0; i < destRows.size(); i++){
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
+            attach(d);
+        }
+    }
+}
+
+Tile* Lever::onEnter(Tile *fromTile){
+    pickupItem();
+    Lever::activate();
+    return Floor::onEnter(fromTile);
+}
+
+void Lever::attach(Passive *passive){
+    Active::attach(passive);
+}
+
+void Lever::detach(Passive *passive){
+    Active::detach(passive);
+}
+
 
 
 

@@ -6,7 +6,7 @@ Controller::~Controller(){
     delete this;
 }
 
-int Controller::move(int row, int col, Character* c, Level* level){
+int Controller::move(Character* c){
     return 0;
 }
 
@@ -68,7 +68,10 @@ void UserInterface::setGameMenu(const int menu, Character* c){
 }
 
 
-int UserInterface::move(int row, int col, Character* c, Level* level) {
+int UserInterface::move(Character* c) {
+
+    int row = c->getTile()->getRow(), col = c->getTile()->getRow();
+    Level* level = c->getLevel();
 
     if(m_firstStartup){
         setGameMenu(0, c);
