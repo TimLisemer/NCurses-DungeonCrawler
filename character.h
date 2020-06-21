@@ -58,9 +58,9 @@ private:
 
     int m_maxHpMultiplier = 1;
     char m_icon;
-    int m_strenght;
-    int m_stamina;
-    int m_hitPoints;
+    int m_strenght = 50;
+    int m_stamina = 50;
+    int m_hitPoints = 50;
 };
 
 #endif // CHARACTER_H

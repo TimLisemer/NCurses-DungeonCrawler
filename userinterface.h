@@ -58,7 +58,21 @@ private:
 class StationaryController : public Controller{
 public:
     StationaryController();
-    virtual int move();
+    virtual int move(Character*);
+};
+
+
+
+
+///
+/// \brief The GuardController class
+///
+class GuardController : public Controller{
+public:
+    GuardController(const int pattern);
+    virtual int move(Character*);
+private:
+    vector<int> m_pattern;
 };
 
 #endif // USERINTERFACE_H

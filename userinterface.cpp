@@ -106,42 +106,42 @@ int UserInterface::move(Character* c) {
             switch(key){
                 case '1':
                     if(row+1 < level->getHeight() && col -1 >= 0)
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() - 1));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 1 (DownLeft)");
                     break;
                 case '2':
                     if(row+1 < level->getHeight()) {
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol()));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 2 (Down)");
                     break;
                 case '3':
                     if(row+1 < level->getHeight() && col+1 < level->getWidth())
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() + 1));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 3 (DownRight)");
                     break;
                 case '4':
                     if(col-1 >= 0)
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() - 1));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 4 (Left)");
                     break;
                 case '6':
                     if(col+1 < level->getWidth())
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() + 1));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 6 (Right)");
                     break;
                 case '7':
                     if(row-1 >= 0 && col-1 >= 0)
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() -1, c->getTile()->getCol() - 1));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 7 (UpperLeft)");
                     break;
                 case '8':
                     if(row-1 >= 0)
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol()));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 8 (Up)");
                     break;
                 case '9':
                     if(row-1 >= 0 && col + 1 < level->getWidth())
-                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol() + 1));
+                    setGameMenu(0, c);
                     logging::Logger::instance()->log(logging::INFO, "Input 9 (UpperRight)");
                     break;
                 case '5':
@@ -167,16 +167,30 @@ int UserInterface::move(Character* c) {
 
 
 
-
-
-
-
 StationaryController::StationaryController(){}
 
-int StationaryController::move(){
+int StationaryController::move(Character*){
     return 5;
 }
 
+
+GuardController::GuardController(const int pattern){
+    string textPattern = std::to_string(pattern);
+    for(size_t i = 0; i < textPattern.size(); i++){
+        m_pattern.push_back(textPattern.at(i));
+    }
+}
+
+
+int GuardController::move(Character*){
+    vector<int> newPattern;
+    newPattern.push_back(m_pattern.at(m_pattern.size() - 1));
+    for(size_t i = 0; i < m_pattern.size() -1; i++){
+        newPattern.push_back(m_pattern.at(i));
+    }
+    m_pattern = newPattern;
+    return m_pattern.at(1);
+}
 
 
 

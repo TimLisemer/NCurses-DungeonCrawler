@@ -60,7 +60,6 @@ bool Tile::moveTo(Tile* destTile){
     if(hasCharacter()){
         Tile* abandonedTile = onLeave(destTile);
         if(abandonedTile != nullptr){
-
             Tile* enterTile = destTile->onEnter(abandonedTile);
             if(enterTile != nullptr){
                 getCharacter()->setTile(enterTile);
@@ -85,7 +84,11 @@ Tile* Tile::onEnter(Tile *fromTile) {
 }
 
 Tile* Tile::onLeave(Tile *toTile) {
-    return this;
+    if(toTile->hasCharacter()){
+        return nullptr;
+    }else{
+        return this;
+    }
 }
 
 
@@ -246,9 +249,6 @@ void Active::detach(Passive* passive){
 Active::~Active(){
     delete this;
 }
-
-
-
 
 
 
@@ -454,18 +454,19 @@ void Lever::detach(Passive *passive){
 ///
 /// \brief Trap::Trap
 ///
-Trap::Trap(const int row, const int col, Level* level, const int hitPoints) : Tile(row, col, level, nullptr), Floor(row, col, level), m_hitPoints(hitPoints) {}
-Trap::Trap(const char icon, const int row, const int col, Level* level, const int hitPoints) : Tile(icon, row, col, level, nullptr),Floor(icon, row, col, level), m_hitPoints(hitPoints) {}
+Trap::Trap(const int row, const int col, Level* level, const int hitPoints) : Tile('.', row, col, level, nullptr), Floor('.', row, col, level), m_hitPoints(hitPoints) {}
 
-Trap::Trap(const int row, const int col, Level* level, Item* item, const int hitPoints) : Tile(row, col, level, item), Floor(row, col, level, item), m_hitPoints(hitPoints) {}
-Trap::Trap(const char icon, const int row, const int col, Level* level, Item* item, const int hitPoints) : Tile(icon, row, col, level, item),Floor(icon, row, col, level, item), m_hitPoints(hitPoints) {}
+Trap::Trap(const int row, const int col, Level* level, Item* item, const int hitPoints) : Tile('.', row, col, level, item), Floor('.', row, col, level, item), m_hitPoints(hitPoints) {}
 
 
 Tile* Trap::onEnter(Tile *fromTile){
-    getCharacter()->setHitPoints(getCharacter()->getHitPoints() + m_hitPoints);
+    if(!m_defused){
+        fromTile->getCharacter()->setHitPoints(fromTile->getCharacter()->getHitPoints() - m_hitPoints);
+        m_defused = true;
+        setIcon('T');
+    }
     return Floor::onEnter(fromTile);
 }
-
 
 
 

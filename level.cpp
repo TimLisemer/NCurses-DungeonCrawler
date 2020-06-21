@@ -8,7 +8,7 @@ inline bool instanceof(const T*) {
 Level::Level(UserInterface* ui) {
 
     //Map Insert
-    ifstream file("../Do12x-Team5MASTER-master/3.map");
+    ifstream file("../Do12x-Team5MASTER-master/4.map");
     if (!file.good()) {
     throw std::invalid_argument("File not found!");
     }
@@ -56,10 +56,14 @@ Level::Level(UserInterface* ui) {
             int row = n.get<int>("row");
             int col = n.get<int>("col");
             m_world[row][col] = new Door(row, col, this);
+        }else if (n.name == "Trap") {
+            int row = n.get<int>("row");
+            int col = n.get<int>("col");
+            m_world[row][col] = new Trap(row, col, this, 5);
         }
     }
 
-    //Create Dynamic Elements (Switch / Portal)
+    //Create Dynamic Elements (Switch / Lever / Portal)
     for (size_t i = 0; i < nodes.size(); i++) {
         Node n = nodes.at(i);
         if (n.name == "Portal") {
@@ -74,6 +78,12 @@ Level::Level(UserInterface* ui) {
             vector<int> destrows = n.get<vector<int>>("destrows");
             vector<int> destcols = n.get<vector<int>>("destcols");
             m_world[row][col] = new Switch(row, col, destrows, destcols, this);
+        }else if (n.name == "Lever") {
+            int row = n.get<int>("row");
+            int col = n.get<int>("col");
+            vector<int> destrows = n.get<vector<int>>("destrows");
+            vector<int> destcols = n.get<vector<int>>("destcols");
+            m_world[row][col] = new Lever(row, col, destrows, destcols, this);
         }
     }
 
@@ -85,6 +95,10 @@ Level::Level(UserInterface* ui) {
             Character* c = nullptr;
             if(n.get<string>("controller") == "ConsoleController"){
                 c = new Character(ui, this, n.get<char>("icon"), 5, 5);
+            }else if(n.get<string>("controller") == "StationaryController"){
+                c = new Character(new StationaryController(), this, n.get<char>("icon"), 5, 5);
+            }else if(n.get<string>("controller") == "GuardController"){
+                c = new Character(new GuardController(n.get<int>("pattern")), this, n.get<char>("icon"), 5, 5);
             }
             placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
         }
