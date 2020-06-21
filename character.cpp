@@ -33,13 +33,6 @@ void Character::setController(Controller *controller){
     m_controller = controller;
 }
 
-
-
-int Character::move(){
-    return m_controller->move();
-}
-
-
 char Character::getIcon() const {
     return m_icon;
 }
@@ -91,7 +84,9 @@ void Character::addToInventory(Item *item){
 }
 
 
-
+int Character::getInventorySize() const{
+    return m_items.size();
+}
 
 
 

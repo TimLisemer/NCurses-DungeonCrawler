@@ -25,8 +25,6 @@ public:
     Controller* getController() const;
     void setController(Controller* controller);
 
-    int move();
-
     char getIcon() const;
     void setIcon(const char icon);
 
@@ -43,6 +41,7 @@ public:
     void setMaxHpMultiplier(const int multiplier);
 
     void addToInventory(Item* item);
+    int getInventorySize() const;
 
 private:
 

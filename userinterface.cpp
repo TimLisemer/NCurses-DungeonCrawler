@@ -1,5 +1,4 @@
 #include "userinterface.h"
-#include <ncurses.h>
 
 Controller::Controller(){}
 
@@ -7,7 +6,7 @@ Controller::~Controller(){
     delete this;
 }
 
-int Controller::move(){
+int Controller::move(int row, int col, Character* c, Level* level){
     return 0;
 }
 
@@ -22,7 +21,7 @@ void UserInterface::draw(Level *lvl) {
     //draw line by line, start top left
     for(int i = 0; i < lvl->getHeight(); i++) {
         for(int j = 0; j < lvl->getWidth(); j++) {
-            mvaddch(i + 11,j + 25,lvl->getTile(i,j)->getIcon());
+            mvaddch(i + 13,j + 25,lvl->getTile(i,j)->getIcon());
         }
     }
 }
@@ -31,67 +30,132 @@ UserInterface::~UserInterface(){
     endwin();
 }
 
+void UserInterface::setGameMenu(const int menu, Character* c){
+
+    if(m_HeaderWindow != nullptr){
+        wrefresh(m_HeaderWindow);
+        delwin(m_HeaderWindow);
+    }
+
+    if(menu == 0){
+        //Game Header
+        m_HeaderWindow = newwin(11, 22, 1, 24);
+        m_gameMenu = false;
+        mvaddstr(2,25, "Press 1-9 to Move");
+        mvaddstr(3,25, "Press 0 to Close");
+        mvaddstr(4,25, "Press 5 to Pause");
+        string icon(1, c->getIcon());
+        mvaddstr(6,25, std::string("Active Player    : " + icon).c_str());
+        mvaddstr(7,25, std::string("Stats: Strenght  : " + std::to_string(c->getStrenght())).c_str());
+        mvaddstr(8,25, std::string("       Stamina   : " + std::to_string(c->getStamina())).c_str());
+        mvaddstr(9,25, std::string("       Hitpoints : " + std::to_string(c->getHitPoints())).c_str());
+        mvaddstr(10,25, std::string("       Backpack  : " + std::to_string(c->getInventorySize())).c_str());
+    }else if(menu == 1){
+        //Game Menu
+        m_HeaderWindow = newwin(6, 22, 1, 24);
+        m_gameMenu = true;
+        m_Inventory = false;
+        mvaddstr(2,25, "Gamemenu");
+        mvaddstr(4,25, "q: Quit Game");
+        mvaddstr(5,25, "i: Open Inventory");
+    }else if(menu == 2){
+        //Inventory
+        m_gameMenu = false;
+        m_Inventory = true;
+        m_HeaderWindow = newwin(6, 22, 1, 24);
+        mvaddstr(2,25, "Inventory");
+    }
+}
+
 
 int UserInterface::move(int row, int col, Character* c, Level* level) {
 
-    mvaddstr(2,25, "1-9 to Move, 0 to close");
-    string icon(1, c->getIcon());
-    mvaddstr(4,25, std::string("Active Player    : " + icon).c_str());
-    mvaddstr(5,25, std::string("Stats: Strenght  : " + std::to_string(c->getStrenght())).c_str());
-    mvaddstr(6,25, std::string("       Stamina   : " + std::to_string(c->getStamina())).c_str());
-    mvaddstr(7,25, std::string("       Hitpoints : " + std::to_string(c->getHitPoints())).c_str());
-    mvaddstr(8,25, std::string("       Backpack  : " + std::to_string(0)).c_str());                     //////////// Einfügen
+    if(m_firstStartup){
+        setGameMenu(0, c);
+        m_firstStartup = false;
+    }
 
     int key = getch();
 
-    switch(key){
-        case '1':
-            if(row+1 < level->getHeight() && col -1 >= 0)
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() - 1));
-            logging::Logger::instance()->log(logging::INFO, "Input 1");
-            break;
-        case '2':
-            if(row+1 < level->getHeight()) {
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol()));
-            logging::Logger::instance()->log(logging::INFO, "Input 2");
-            break;
-        case '3':
-            if(row+1 < level->getHeight() && col+1 < level->getWidth())
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() + 1));
-            logging::Logger::instance()->log(logging::INFO, "Input 3");
-            break;
-        case '4':
-            if(col-1 >= 0)
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() - 1));
-            logging::Logger::instance()->log(logging::INFO, "Input 4");
-            break;
-        case '6':
-            if(col+1 < level->getWidth())
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() + 1));
-            logging::Logger::instance()->log(logging::INFO, "Input 6");
-            break;
-        case '7':
-            if(row-1 >= 0 && col-1 >= 0)
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() -1, c->getTile()->getCol() - 1));
-            logging::Logger::instance()->log(logging::INFO, "Input 7");
-            break;
-        case '8':
-            if(row-1 >= 0)
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol()));
-            logging::Logger::instance()->log(logging::INFO, "Input 8");
-            break;
-        case '9':
-            if(row-1 >= 0 && col + 1 < level->getWidth())
-            c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol() + 1));
-            logging::Logger::instance()->log(logging::INFO, "Input 9");
-            break;
-        case '5':
-            logging::Logger::instance()->log(logging::INFO, "Input 5");
-            break;
-        default:
-                logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
+    //Check if Inventory is open to go back to Menu
+    if(m_Inventory){
+        logging::Logger::instance()->log(logging::INFO, "Input <any> (Close Inventory)");
+        setGameMenu(1, c);
+    }else{
+        //Check Close Game Keys
+        if(key == 27 || key == 'q' || key == '0'){
+            //Quit Game
+            logging::Logger::instance()->log(logging::INFO, "Input 0 (Quit Game)");
+            DungeonCrawler::quit();
+        }
+        //Game Menu Keys
+        if(m_gameMenu){
+            if(key == 'i'){
+                //Show Inventory
+                logging::Logger::instance()->log(logging::INFO, "Input i (Show Inventory)");
+                setGameMenu(2, c);
+            }else{
+                //show Game Header
+                setGameMenu(0, c);
+            }
+        }else{
+            //Game Keys
+            switch(key){
+                case '1':
+                    if(row+1 < level->getHeight() && col -1 >= 0)
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() - 1));
+                    logging::Logger::instance()->log(logging::INFO, "Input 1 (DownLeft)");
+                    break;
+                case '2':
+                    if(row+1 < level->getHeight()) {
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol()));
+                    logging::Logger::instance()->log(logging::INFO, "Input 2 (Down)");
+                    break;
+                case '3':
+                    if(row+1 < level->getHeight() && col+1 < level->getWidth())
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() + 1));
+                    logging::Logger::instance()->log(logging::INFO, "Input 3 (DownRight)");
+                    break;
+                case '4':
+                    if(col-1 >= 0)
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() - 1));
+                    logging::Logger::instance()->log(logging::INFO, "Input 4 (Left)");
+                    break;
+                case '6':
+                    if(col+1 < level->getWidth())
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow(), c->getTile()->getCol() + 1));
+                    logging::Logger::instance()->log(logging::INFO, "Input 6 (Right)");
+                    break;
+                case '7':
+                    if(row-1 >= 0 && col-1 >= 0)
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() -1, c->getTile()->getCol() - 1));
+                    logging::Logger::instance()->log(logging::INFO, "Input 7 (UpperLeft)");
+                    break;
+                case '8':
+                    if(row-1 >= 0)
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol()));
+                    logging::Logger::instance()->log(logging::INFO, "Input 8 (Up)");
+                    break;
+                case '9':
+                    if(row-1 >= 0 && col + 1 < level->getWidth())
+                    c->getTile()->moveTo(level->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol() + 1));
+                    logging::Logger::instance()->log(logging::INFO, "Input 9 (UpperRight)");
+                    break;
+                case '5':
+                    if(m_gameMenu){
+                        setGameMenu(0, c);
+                    }else{
+                        setGameMenu(1, c);
+                    }
+                    logging::Logger::instance()->log(logging::INFO, "Input 5 (Open / Close GameMenu)");
+                    break;
+                default:
+                        logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
 
+                }
+            }
         }
     }
     return key;
 }
+

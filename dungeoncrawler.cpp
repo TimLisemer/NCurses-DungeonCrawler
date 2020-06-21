@@ -20,20 +20,13 @@ DungeonCrawler::~DungeonCrawler() {
 void DungeonCrawler::play() {
     logging::Logger::instance()->set(logging::INFO, "/tmp/DungeonCrawler.log");
     logging::Logger::instance()->log(logging::INFO, "DungeonCrawler start");
-
-    bool running = true;
-    while(running) {
+    while(m_running) {
         logging::Logger::instance()->log(logging::INFO, "running");
 
         for(Level* level : m_levels){
 
             m_ui->draw(level);
             for(Character* c : level->getCharacters()) {
-                int key = c->move();
-                if(key == 48) {
-                    running = false;
-                    break;
-                }
                 m_ui->move(c->getTile()->getRow(), c->getTile()->getCol(), c, level);
             }
         }
@@ -41,3 +34,7 @@ void DungeonCrawler::play() {
     logging::Logger::instance()->log(logging::INFO, "Game has been Exited");
 }
 
+
+void DungeonCrawler::quit(){
+    m_running = false;
+}

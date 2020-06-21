@@ -3,6 +3,7 @@
 #include "logger.h"
 
 logging::Logger *logging::Logger::m_inst = nullptr;
+bool DungeonCrawler::m_running = true;
 
 int main(){
 
