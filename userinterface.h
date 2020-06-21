@@ -10,18 +10,21 @@ using std::string;
 class Level;
 class Character;
 
+///
+/// \brief The Controller class
+///
 class Controller{
-
 public:
-
     explicit
     Controller();
     virtual ~Controller();
     virtual int move(Character* c);
-
 };
 
 
+///
+/// \brief The UserInterface class
+///
 class UserInterface : public Controller{
 
 public:
@@ -46,6 +49,16 @@ private:
     //If m_gameMenu == true --> Show Game Menu else show Game Info and Stats
     void setGameMenu(const int menu, Character* c);
 
+};
+
+
+///
+/// \brief The StationaryController class
+///
+class StationaryController : public Controller{
+public:
+    StationaryController();
+    virtual int move();
 };
 
 #endif // USERINTERFACE_H

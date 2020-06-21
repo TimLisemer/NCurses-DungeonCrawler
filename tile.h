@@ -232,12 +232,6 @@ public:
 
 
 
-
-
-
-
-
-
 ///
 /// \brief The Lever class
 ///
@@ -266,8 +260,27 @@ public:
 
 
 
+///
+/// \brief The Trap class
+///
+class Trap : public Floor{
+
+public:
+
+    Trap(const int row, const int col, Level* level, const int hitPoints);
+    Trap(const char icon, const int row, const int col, Level* level, const int hitPoints);
+
+    Trap(const int row, const int col, Level* level, Item* item, const int hitPoints);
+    Trap(const char icon, const int row, const int col, Level* level, Item* item, const int hitPoints);
+
+    virtual Tile* onEnter(Tile* fromTile);
+
+private:
+
+    const int m_hitPoints;
 
 
+};
 
 
 

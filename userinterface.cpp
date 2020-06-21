@@ -162,3 +162,44 @@ int UserInterface::move(Character* c) {
     return key;
 }
 
+
+
+
+
+
+
+
+
+
+StationaryController::StationaryController(){}
+
+int StationaryController::move(){
+    return 5;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

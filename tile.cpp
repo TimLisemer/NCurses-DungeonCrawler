@@ -286,7 +286,6 @@ void Door::changeState(bool state){
 }
 
 Tile* Door::onEnter(Tile *fromTile){
-    pickupItem();
     if(m_state){
         return Floor::onEnter(fromTile);
     }else{
@@ -381,7 +380,6 @@ void Switch::changeState(bool state){
 
 
 Tile* Switch::onEnter(Tile *fromTile){
-    pickupItem();
     if(!m_state){
         changeState(true);
     }
@@ -436,7 +434,6 @@ Lever::Lever(const int row, const int col, const vector<int> destRows, const vec
 }
 
 Tile* Lever::onEnter(Tile *fromTile){
-    pickupItem();
     Lever::activate();
     return Floor::onEnter(fromTile);
 }
@@ -448,6 +445,50 @@ void Lever::attach(Passive *passive){
 void Lever::detach(Passive *passive){
     Active::detach(passive);
 }
+
+
+
+
+
+
+///
+/// \brief Trap::Trap
+///
+Trap::Trap(const int row, const int col, Level* level, const int hitPoints) : Tile(row, col, level, nullptr), Floor(row, col, level), m_hitPoints(hitPoints) {}
+Trap::Trap(const char icon, const int row, const int col, Level* level, const int hitPoints) : Tile(icon, row, col, level, nullptr),Floor(icon, row, col, level), m_hitPoints(hitPoints) {}
+
+Trap::Trap(const int row, const int col, Level* level, Item* item, const int hitPoints) : Tile(row, col, level, item), Floor(row, col, level, item), m_hitPoints(hitPoints) {}
+Trap::Trap(const char icon, const int row, const int col, Level* level, Item* item, const int hitPoints) : Tile(icon, row, col, level, item),Floor(icon, row, col, level, item), m_hitPoints(hitPoints) {}
+
+
+Tile* Trap::onEnter(Tile *fromTile){
+    getCharacter()->setHitPoints(getCharacter()->getHitPoints() + m_hitPoints);
+    return Floor::onEnter(fromTile);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
