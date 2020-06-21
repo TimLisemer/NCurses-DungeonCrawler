@@ -42,7 +42,10 @@ public:
     void setHitPoints(const int hitPoints);
 
     int getMaxHP() const;
-    void setMaxHpMultiplier(const int multiplier);
+    void setMaxHpMultiplier(const double multiplier);
+
+    int getMaxHPBuffer() const;
+    void setMaxHpBuffer(const int buffer);
 
     void addToInventory(Item* item);
     int getInventorySize() const;
@@ -56,7 +59,8 @@ private:
     Controller* m_controller;
     Level* m_level;
 
-    int m_maxHpMultiplier = 1;
+    int m_maxHPBuffer;
+    double m_maxHpMultiplier = 1.0;
     char m_icon;
     int m_strenght;
     int m_stamina;

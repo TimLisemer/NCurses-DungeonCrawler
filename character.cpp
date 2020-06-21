@@ -74,12 +74,22 @@ void Character::setHitPoints(const int hitPoints){
 
 
 int Character::getMaxHP() const{
-    return (20 + (m_stamina*5)) * m_maxHpMultiplier;
+    return ((20 + (m_stamina*5)) * m_maxHpMultiplier) + m_maxHPBuffer;
 }
 
+int Character::getMaxHPBuffer() const{
+    return m_maxHPBuffer;
+}
 
-void Character::setMaxHpMultiplier(const int multiplier){
+void Character::setMaxHpMultiplier(const double multiplier){
     m_maxHpMultiplier = multiplier;
+    if(getHitPoints() > getMaxHP()){
+        setHitPoints(getMaxHP());
+    }
+}
+
+void Character::setMaxHpBuffer(const int buffer){
+    m_maxHPBuffer = buffer;
 }
 
 

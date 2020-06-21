@@ -111,7 +111,7 @@ void UserInterface::setGameMenu(const int menu, Character* c){
         m_gameMenu = false;
         m_Inventory = true;
         m_HeaderWindow = newwin(12, 100, 1, 24);
-        mvaddstr(2,25, "Inventory");
+        mvaddstr(2,25, "Inventory - Press i to close");
         if(c->getInventorySize() > 0){
             if(c->getInventorySize() > 1){
                 mvaddstr(3,25, std::string("1 - " + std::to_string(c->getInventorySize()) + " to Consume / Drop Items").c_str());
@@ -153,6 +153,7 @@ int UserInterface::move(Character* c) {
             //Quit Game
             logging::Logger::instance()->log(logging::INFO, "Input 0 (Quit Game)");
             DungeonCrawler::quit();
+            break;
         }
 
         if(!pause){
@@ -170,7 +171,22 @@ int UserInterface::move(Character* c) {
                     logging::Logger::instance()->log(logging::INFO, "Input i (Consume / Drop Item)");
 
                     try {
-                        c->m_items.at(key - 48 - 1);
+                        Consumable* con = dynamic_cast<Consumable*>(c->m_items.at(key - 48 - 1));
+                        if(con == nullptr){
+                            Item* item = c->m_items.at(key - 48 - 1);
+                            item->onDrop(c, c->getTile());
+                            logging::Logger::instance()->log(logging::INFO, std::string("Dropped Item" + item->getName()));
+                            setGameMenu(0, c);
+                            pause = false;
+                        }else{
+                            if(con->consume(c)){
+                                setGameMenu(0, c);
+                                logging::Logger::instance()->log(logging::INFO, std::string("Consumed Item" + con->getName()));
+                                pause = false;
+                            }else{
+                                logging::Logger::instance()->log(logging::INFO, std::string("Failed to Consume" + c->m_items.at(key - 48 - 1)->getName()));
+                            }
+                        }
                     }  catch(std::invalid_argument){}
 
                 }else{

@@ -32,24 +32,6 @@ private:
 
 
 
-///
-/// \brief The Consumable class
-///
-class Consumable : public Item {
-
-public:
-
-    Consumable(const std::string &name, int amount);
-
-    virtual bool consume(Character *c);
-    virtual int getAmount() const;
-
-private:
-    int m_amount;
-};
-
-
-
 
 ///
 /// \brief The Weapon class
@@ -95,6 +77,26 @@ private:
 
 
 ///
+/// \brief The Consumable class
+///
+class Consumable : public Item {
+
+public:
+
+    Consumable(const std::string &name, int amount);
+
+    virtual bool consume(Character *c);
+
+    virtual int getAmount() const;
+    virtual void setAmount(const int Amount);
+
+private:
+    int m_amount;
+};
+
+
+
+///
 /// \brief The Potion class
 ///
 class Potion : public Consumable {
@@ -102,6 +104,9 @@ class Potion : public Consumable {
 public:
 
     Potion(const std::string &name, int amount, int hp);
+
+    virtual bool consume(Character *c);
+
     int getHP() const;
     void setHP(const int hp);
 
@@ -120,6 +125,9 @@ class Elixir : public Consumable {
 public:
 
     Elixir(const std::string &name, int amount, int hpMax);
+
+    virtual bool consume(Character *c);
+
     int getHpMax() const;
     void setHpMax(const int hpMax);
 
