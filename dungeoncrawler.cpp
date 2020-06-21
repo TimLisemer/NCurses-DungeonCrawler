@@ -1,6 +1,4 @@
 #include "dungeoncrawler.h"
-#include "logger.h"
-#include <ncurses.h>
 
 //Init UI, Level, Character
 DungeonCrawler::DungeonCrawler() {
@@ -18,7 +16,7 @@ DungeonCrawler::~DungeonCrawler() {
 }
 
 void DungeonCrawler::play() {
-    logging::Logger::instance()->set(logging::INFO, "../Do12x-Team5MASTER-master/DungeonCrawler.log");
+    logging::Logger::instance()->set(logging::INFO, "/home/tim/Desktop/PAD2/Praktikum 4/DungeonCrawler.log");
     logging::Logger::instance()->log(logging::INFO, "DungeonCrawler start");
     while(m_running) {
         logging::Logger::instance()->log(logging::INFO, "running");

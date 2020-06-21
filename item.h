@@ -42,11 +42,10 @@ public:
     Consumable(const std::string &name, int amount);
 
     virtual bool consume(Character *c);
+    virtual int getAmount() const;
 
 private:
-
     int m_amount;
-
 };
 
 
@@ -117,6 +116,8 @@ private:
 /// \brief The Elixir class
 ///
 class Elixir : public Consumable {
+
+public:
 
     Elixir(const std::string &name, int amount, int hpMax);
     int getHpMax() const;

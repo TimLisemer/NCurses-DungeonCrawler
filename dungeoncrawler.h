@@ -1,8 +1,11 @@
 #ifndef DUNGEONCRAWLER_H
 #define DUNGEONCRAWLER_H
-#include "userinterface.h"
 #include <vector>
+#include <ncurses.h>
+
+#include "userinterface.h"
 #include "level.h"
+#include "logger.h"
 
 class Level;
 class UserInterface;

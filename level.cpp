@@ -8,7 +8,7 @@ inline bool instanceof(const T*) {
 Level::Level(UserInterface* ui) {
 
     //Map Insert
-    ifstream file("../Do12x-Team5MASTER-master/4.map");
+    ifstream file("../4.map");
     if (!file.good()) {
     throw std::invalid_argument("File not found!");
     }
@@ -84,6 +84,20 @@ Level::Level(UserInterface* ui) {
             vector<int> destrows = n.get<vector<int>>("destrows");
             vector<int> destcols = n.get<vector<int>>("destcols");
             m_world[row][col] = new Lever(row, col, destrows, destcols, this);
+
+        //Items
+        }else if (n.name == "Item") {
+            int row = n.get<int>("row");
+            int col = n.get<int>("col");
+            if(n.get<string>("type") == "Weapon"){
+                m_world[row][col]->setItem(new Weapon(n.get<string>("name"), n.get<int>("strbonus")));
+            }else if(n.get<string>("type") == "Armor"){
+                m_world[row][col]->setItem(new Armor(n.get<string>("name"), n.get<int>("stabonus")));
+            }else if(n.get<string>("type") == "Potion"){
+                m_world[row][col]->setItem(new Potion(n.get<string>("name"), n.get<int>("amount"), n.get<int>("hp")));
+            }else if(n.get<string>("type") == "Elixir"){
+                m_world[row][col]->setItem(new Elixir(n.get<string>("name"), n.get<int>("amount"), n.get<int>("hp")));
+            }
         }
     }
 

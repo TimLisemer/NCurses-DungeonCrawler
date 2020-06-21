@@ -3,7 +3,9 @@
 #include <ncurses.h>
 #include "logger.h"
 
-Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina) : m_controller(controller), m_level(level), m_icon(icon), m_strenght(strenght), m_stamina(stamina){}
+Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina) : m_controller(controller), m_level(level), m_icon(icon), m_strenght(strenght), m_stamina(stamina){
+    setHitPoints(getMaxHP());
+}
 
 //delete Character
 Character::~Character(){
@@ -17,53 +19,7 @@ Character::~Character(){
 }
 
 int Character::move(){
-    int key = m_controller->move(this);
-
-
-    switch(key){
-        case '1':
-            if(getTile()->getRow()+1 < m_level->getHeight() && getTile()->getCol() -1 >= 0)
-            getTile()->moveTo(m_level->getTile(getTile()->getRow() + 1, getTile()->getCol() - 1));
-            break;
-        case '2':
-            if(getTile()->getRow()+1 < m_level->getHeight()) {
-            getTile()->moveTo(m_level->getTile(getTile()->getRow() + 1, getTile()->getCol()));
-            break;
-        case '3':
-            if(getTile()->getRow()+1 < m_level->getHeight() && getTile()->getCol()+1 < m_level->getWidth())
-            getTile()->moveTo(m_level->getTile(getTile()->getRow() + 1, getTile()->getCol() + 1));
-            break;
-        case '4':
-            if(getTile()->getCol()-1 >= 0)
-            getTile()->moveTo(m_level->getTile(getTile()->getRow(), getTile()->getCol() - 1));
-            break;
-        case '6':
-            if(getTile()->getCol()+1 < m_level->getWidth())
-            getTile()->moveTo(m_level->getTile(getTile()->getRow(), getTile()->getCol() + 1));
-            break;
-        case '7':
-            if(getTile()->getRow()-1 >= 0 && getTile()->getCol()-1 >= 0)
-            getTile()->moveTo(m_level->getTile(getTile()->getRow() -1, getTile()->getCol() - 1));
-            break;
-        case '8':
-            if(getTile()->getRow()-1 >= 0)
-            getTile()->moveTo(m_level->getTile(getTile()->getRow() - 1, getTile()->getCol()));
-            break;
-        case '9':
-            if(getTile()->getRow()-1 >= 0 && getTile()->getCol() + 1 < m_level->getWidth())
-            getTile()->moveTo(m_level->getTile(getTile()->getRow() - 1, getTile()->getCol() + 1));
-            break;
-        case '5':
-            break;
-        default:
-                logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
-
-        }
-    }
-
-
-
-    return key;
+    return m_controller->move(this);
 }
 
 void Character::setTile(Tile *tile) {

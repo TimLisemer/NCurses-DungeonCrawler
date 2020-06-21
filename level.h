@@ -1,15 +1,20 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 #include "tile.h"
-#include "userinterface.h"
 #include <fstream>
+
 #include "node.h"
+#include "userinterface.h"
+#include "tile.h"
+#include "character.h"
+
 using std::string;
 using std::ifstream;
 
+
+class UserInterface;
 class Tile;
 class Character;
-class UserInterface;
 
 class Level {
 

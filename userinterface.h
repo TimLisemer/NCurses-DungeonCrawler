@@ -19,6 +19,7 @@ public:
     Controller();
     virtual ~Controller();
     virtual int move(Character* c);
+    virtual bool setTile(Character* c, const int key);
 };
 
 

@@ -46,6 +46,7 @@ public:
 
     void addToInventory(Item* item);
     int getInventorySize() const;
+    vector<Item*> m_items;
 
     Level* getLevel() const;
 
@@ -53,14 +54,13 @@ private:
 
     Tile* m_position;
     Controller* m_controller;
-    vector<Item*> m_items;
     Level* m_level;
 
     int m_maxHpMultiplier = 1;
     char m_icon;
-    int m_strenght = 50;
-    int m_stamina = 50;
-    int m_hitPoints = 50;
+    int m_strenght;
+    int m_stamina;
+    int m_hitPoints;
 };
 
 #endif // CHARACTER_H

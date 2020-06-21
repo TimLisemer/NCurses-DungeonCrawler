@@ -6,9 +6,57 @@ Controller::~Controller(){
     delete this;
 }
 
-int Controller::move(Character* c){
-    return 0;
+int Controller::move(Character *c){
+    return getch();
 }
+
+
+bool Controller::setTile(Character *c, const int key){
+    switch(key){
+        case '1':
+            if(c->getTile()->getRow()+1 < c->getLevel()->getHeight() && c->getTile()->getCol() -1 >= 0)
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() - 1)));
+            break;
+        case '2':
+            if(c->getTile()->getRow()+1 < c->getLevel()->getHeight()) {
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol())));
+            break;
+        case '3':
+            if(c->getTile()->getRow()+1 < c->getLevel()->getHeight() && c->getTile()->getCol()+1 < c->getLevel()->getWidth())
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() + 1)));
+            break;
+        case '4':
+            if(c->getTile()->getCol()-1 >= 0)
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow(), c->getTile()->getCol() - 1)));
+            break;
+        case '6':
+            if(c->getTile()->getCol()+1 < c->getLevel()->getWidth())
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow(), c->getTile()->getCol() + 1)));
+            break;
+        case '7':
+            if(c->getTile()->getRow()-1 >= 0 && c->getTile()->getCol()-1 >= 0)
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() -1, c->getTile()->getCol() - 1)));
+            break;
+        case '8':
+            if(c->getTile()->getRow()-1 >= 0)
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol())));
+            break;
+        case '9':
+            if(c->getTile()->getRow()-1 >= 0 && c->getTile()->getCol() + 1 < c->getLevel()->getWidth())
+            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol() + 1)));
+            break;
+        case '5':
+            return true;
+            break;
+        default:
+            logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
+            return false;
+        }
+    }
+    logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
+    return false;
+}
+
 
 UserInterface::UserInterface() {
     initscr();   // Init the screen
@@ -39,11 +87,11 @@ void UserInterface::setGameMenu(const int menu, Character* c){
 
     if(menu == 0){
         //Game Header
-        m_HeaderWindow = newwin(11, 22, 1, 24);
+        m_HeaderWindow = newwin(11, 26, 1, 24);
         m_gameMenu = false;
         mvaddstr(2,25, "Press 1-9 to Move");
         mvaddstr(3,25, "Press 0 to Close");
-        mvaddstr(4,25, "Press 5 to Pause");
+        mvaddstr(4,25, "Press 5 to open Game Menu");
         string icon(1, c->getIcon());
         mvaddstr(6,25, std::string("Active Player    : " + icon).c_str());
         mvaddstr(7,25, std::string("Stats: Strenght  : " + std::to_string(c->getStrenght())).c_str());
@@ -62,103 +110,86 @@ void UserInterface::setGameMenu(const int menu, Character* c){
         //Inventory
         m_gameMenu = false;
         m_Inventory = true;
-        m_HeaderWindow = newwin(6, 22, 1, 24);
+        m_HeaderWindow = newwin(12, 100, 1, 24);
         mvaddstr(2,25, "Inventory");
+        if(c->getInventorySize() > 0){
+            if(c->getInventorySize() > 1){
+                mvaddstr(3,25, std::string("1 - " + std::to_string(c->getInventorySize()) + " to Consume / Drop Items").c_str());
+            }else{
+                mvaddstr(3,25, "1 to Consume / Drop Item");
+            }
+
+            for(int i = 1; i < c->getInventorySize() + 1; i++){
+                Consumable* con = dynamic_cast<Consumable*>(c->m_items.at(i-1));
+                if(con != nullptr){
+                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items.at(i-1)->getName() + " (" + std::to_string(con->getAmount()) + ")").c_str());
+                }else{
+                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items.at(i-1)->getName()).c_str());
+                }
+            }
+        }else{
+            mvaddstr(4,25, "No Items in Inventory");
+        }
     }
 }
 
 
 int UserInterface::move(Character* c) {
 
-    int row = c->getTile()->getRow(), col = c->getTile()->getRow();
-    Level* level = c->getLevel();
-
     if(m_firstStartup){
         setGameMenu(0, c);
         m_firstStartup = false;
     }
 
-    int key = getch();
+    bool pause = false;
+    bool successfull = false;
+    int key;
 
-    //Check if Inventory is open to go back to Menu
-    if(m_Inventory){
-        logging::Logger::instance()->log(logging::INFO, "Input <any> (Close Inventory)");
-        setGameMenu(1, c);
-    }else{
+    do{
+        key = getch();
+
         //Check Close Game Keys
         if(key == 27 || key == 'q' || key == '0'){
             //Quit Game
             logging::Logger::instance()->log(logging::INFO, "Input 0 (Quit Game)");
             DungeonCrawler::quit();
         }
-        //Game Menu Keys
-        if(m_gameMenu){
-            if(key == 'i'){
-                //Show Inventory
-                logging::Logger::instance()->log(logging::INFO, "Input i (Show Inventory)");
-                setGameMenu(2, c);
-            }else{
-                //show Game Header
+
+        if(!pause){
+            if(key != '5'){
+                successfull = Controller::setTile(c, key);
                 setGameMenu(0, c);
+            }else{
+                logging::Logger::instance()->log(logging::INFO, "Input 5 (Open Game Menu)");
+                pause = true;
+                setGameMenu(1, c);
             }
         }else{
-            //Game Keys
-            switch(key){
-                case '1':
-                    if(row+1 < level->getHeight() && col -1 >= 0)
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 1 (DownLeft)");
-                    break;
-                case '2':
-                    if(row+1 < level->getHeight()) {
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 2 (Down)");
-                    break;
-                case '3':
-                    if(row+1 < level->getHeight() && col+1 < level->getWidth())
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 3 (DownRight)");
-                    break;
-                case '4':
-                    if(col-1 >= 0)
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 4 (Left)");
-                    break;
-                case '6':
-                    if(col+1 < level->getWidth())
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 6 (Right)");
-                    break;
-                case '7':
-                    if(row-1 >= 0 && col-1 >= 0)
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 7 (UpperLeft)");
-                    break;
-                case '8':
-                    if(row-1 >= 0)
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 8 (Up)");
-                    break;
-                case '9':
-                    if(row-1 >= 0 && col + 1 < level->getWidth())
-                    setGameMenu(0, c);
-                    logging::Logger::instance()->log(logging::INFO, "Input 9 (UpperRight)");
-                    break;
-                case '5':
-                    if(m_gameMenu){
-                        setGameMenu(0, c);
-                    }else{
-                        setGameMenu(1, c);
-                    }
-                    logging::Logger::instance()->log(logging::INFO, "Input 5 (Open / Close GameMenu)");
-                    break;
-                default:
-                        logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
+            if(m_Inventory){
+                if((key - 48) >= 1 && (key - 48) <= c->getInventorySize()){
+                    logging::Logger::instance()->log(logging::INFO, "Input i (Consume / Drop Item)");
 
+                    try {
+                        c->m_items.at(key - 48 - 1);
+                    }  catch(std::invalid_argument){}
+
+                }else{
+                    logging::Logger::instance()->log(logging::INFO, "Input i (Close Inventory)");
+                    setGameMenu(1, c);
+                }
+            }else{
+                if(key == 'i'){
+                    logging::Logger::instance()->log(logging::INFO, "Input i (Show Inventory)");
+                    setGameMenu(2, c);
+                }else{
+                    logging::Logger::instance()->log(logging::INFO, "Input i (Close Game Menu)");
+                    setGameMenu(0, c);
+                    pause = false;
                 }
             }
         }
-    }
+    }while (pause || !successfull);
+
     return key;
 }
 
@@ -169,7 +200,8 @@ int UserInterface::move(Character* c) {
 
 StationaryController::StationaryController(){}
 
-int StationaryController::move(Character*){
+int StationaryController::move(Character* c){
+    Controller::setTile(c, 5);
     return 5;
 }
 
@@ -182,14 +214,16 @@ GuardController::GuardController(const int pattern){
 }
 
 
-int GuardController::move(Character*){
+int GuardController::move(Character* c){
     vector<int> newPattern;
     newPattern.push_back(m_pattern.at(m_pattern.size() - 1));
     for(size_t i = 0; i < m_pattern.size() -1; i++){
         newPattern.push_back(m_pattern.at(i));
     }
-    m_pattern = newPattern;
-    return m_pattern.at(1);
+    if(Controller::setTile(c, newPattern.at(1))){
+        m_pattern = newPattern;
+    }
+    return newPattern.at(1);
 }
 
 

@@ -6,19 +6,22 @@
 ///
 Item::Item(const std::string &name) : m_name(name){}
 
-Item::~Item(){
-
-}
+Item::~Item(){}
 
 void Item::onEquip(Character *c){
-
-    //To Do
 
 }
 
 void Item::onDrop(Character *c, Tile *tile){
 
-    //To Do
+    vector<Item*> newItems;
+    for(auto* i : c->m_items){
+        if(i != this){
+            newItems.push_back(i);
+        }
+    }
+    c->m_items = newItems;
+    tile->setItem(this);
 
 }
 
@@ -41,6 +44,10 @@ bool Consumable::consume(Character *c){
     return false;
 }
 
+int Consumable::getAmount() const{
+    return m_amount;
+}
+
 
 ///
 /// \brief Weapon::Weapon
@@ -53,9 +60,20 @@ int Weapon::getStrBonus() const{
 
 void Weapon::onEquip(Character *c){
 
+
+
 }
 
 void Weapon::onDrop(Character *c, Tile *tile){
+
+    vector<Item*> newItems;
+    for(auto* i : c->m_items){
+        if(i != this){
+            newItems.push_back(i);
+        }
+    }
+    c->m_items = newItems;
+    tile->setItem(this);
 
 }
 
@@ -75,7 +93,18 @@ void Armor::onEquip(Character *c){
 }
 
 void Armor::onDrop(Character *c, Tile *tile){
-    c->setMaxHpMultiplier(1);
+    if(!tile->hasItem()){
+        c->setMaxHpMultiplier((20 + (c->getStamina()) * 5) / (20 + (c->getStamina() * 5)));
+
+        vector<Item*> newItems;
+        for(auto* i : c->m_items){
+            if(i != this){
+                newItems.push_back(i);
+            }
+        }
+        c->m_items = newItems;
+        tile->setItem(this);
+    }
 }
 
 

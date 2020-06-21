@@ -79,7 +79,6 @@ bool Tile::moveTo(Tile* destTile){
 
 
 Tile* Tile::onEnter(Tile *fromTile) {
-    pickupItem();
     return this;
 }
 
@@ -87,6 +86,7 @@ Tile* Tile::onLeave(Tile *toTile) {
     if(toTile->hasCharacter()){
         return nullptr;
     }else{
+        pickupItem(toTile);
         return this;
     }
 }
@@ -113,10 +113,10 @@ bool Tile::hasItem() const{
     }
 }
 
-void Tile::pickupItem(){
-    if(hasItem()){
-        getCharacter()->addToInventory(getItem());
-        setItem(nullptr);
+void Tile::pickupItem(Tile* toTile){
+    if(toTile->hasItem()){
+        getCharacter()->addToInventory(toTile->getItem());
+        toTile->setItem(nullptr);
     }
 }
 
@@ -154,7 +154,6 @@ Wall::Wall(const int row, const int col, Level* level, Item* item) : Tile('#', r
 Wall::Wall(const char icon, int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){}
 
 Tile* Wall::onEnter(Tile *fromTile){
-    pickupItem();
     return nullptr;
 }
 
@@ -184,7 +183,6 @@ Portal::Portal(const char icon, const int row, const int col, const int destRow,
 
 
 Tile* Portal::onEnter(Tile *fromTile){
-    pickupItem();
     return getDestination();
 }
 
@@ -249,7 +247,6 @@ void Active::detach(Passive* passive){
 Active::~Active(){
     delete this;
 }
-
 
 
 
@@ -467,7 +464,6 @@ Tile* Trap::onEnter(Tile *fromTile){
     }
     return Floor::onEnter(fromTile);
 }
-
 
 
 

@@ -57,7 +57,7 @@ public:
     Item* getItem() const;
     void setItem(Item* item);
     bool hasItem() const;
-    void pickupItem();
+    void pickupItem(Tile* toTile);
 
 };
 
