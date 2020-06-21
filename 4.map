@@ -1,0 +1,966 @@
+Map Information
+        - version: 1.4
+        - rows: 15
+        - cols: 20
+Wall
+        - col: 0
+        - row: 0
+Wall
+        - col: 1
+        - row: 0
+Wall
+        - col: 2
+        - row: 0
+Wall
+        - col: 3
+        - row: 0
+Wall
+        - col: 4
+        - row: 0
+Wall
+        - col: 5
+        - row: 0
+Wall
+        - col: 6
+        - row: 0
+Wall
+        - col: 7
+        - row: 0
+Wall
+        - col: 8
+        - row: 0
+Wall
+        - col: 9
+        - row: 0
+Wall
+        - col: 10
+        - row: 0
+Wall
+        - col: 11
+        - row: 0
+Wall
+        - col: 12
+        - row: 0
+Wall
+        - col: 13
+        - row: 0
+Wall
+        - col: 14
+        - row: 0
+Wall
+        - col: 15
+        - row: 0
+Wall
+        - col: 16
+        - row: 0
+Wall
+        - col: 17
+        - row: 0
+Wall
+        - col: 18
+        - row: 0
+Wall
+        - col: 19
+        - row: 0
+Wall
+        - col: 0
+        - row: 1
+Floor
+        - col: 1
+        - row: 1
+Floor
+        - col: 2
+        - row: 1
+Floor
+        - col: 3
+        - row: 1
+Floor
+        - col: 4
+        - row: 1
+Floor
+        - col: 5
+        - row: 1
+Floor
+        - col: 6
+        - row: 1
+Floor
+        - col: 7
+        - row: 1
+Floor
+        - col: 8
+        - row: 1
+Floor
+        - col: 9
+        - row: 1
+Floor
+        - col: 10
+        - row: 1
+Floor
+        - col: 11
+        - row: 1
+Floor
+        - col: 12
+        - row: 1
+Floor
+        - col: 13
+        - row: 1
+Floor
+        - col: 14
+        - row: 1
+Floor
+        - col: 15
+        - row: 1
+Floor
+        - col: 16
+        - row: 1
+Floor
+        - col: 17
+        - row: 1
+Floor
+        - col: 18
+        - row: 1
+Wall
+        - col: 19
+        - row: 1
+Wall
+        - col: 0
+        - row: 2
+Floor
+        - col: 1
+        - row: 2
+Floor
+        - col: 2
+        - row: 2
+Floor
+        - col: 3
+        - row: 2
+Floor
+        - col: 4
+        - row: 2
+Floor
+        - col: 5
+        - row: 2
+Floor
+        - col: 6
+        - row: 2
+Floor
+        - col: 7
+        - row: 2
+Floor
+        - col: 8
+        - row: 2
+Floor
+        - col: 9
+        - row: 2
+Floor
+        - col: 10
+        - row: 2
+Floor
+        - col: 11
+        - row: 2
+Floor
+        - col: 12
+        - row: 2
+Floor
+        - col: 13
+        - row: 2
+Floor
+        - col: 14
+        - row: 2
+Floor
+        - col: 15
+        - row: 2
+Floor
+        - col: 16
+        - row: 2
+Floor
+        - col: 17
+        - row: 2
+Floor
+        - col: 18
+        - row: 2
+Wall
+        - col: 19
+        - row: 2
+Wall
+        - col: 0
+        - row: 3
+Floor
+        - col: 1
+        - row: 3
+Floor
+        - col: 2
+        - row: 3
+Floor
+        - col: 3
+        - row: 3
+Floor
+        - col: 4
+        - row: 3
+Floor
+        - col: 5
+        - row: 3
+Floor
+        - col: 6
+        - row: 3
+Floor
+        - col: 7
+        - row: 3
+Floor
+        - col: 8
+        - row: 3
+Floor
+        - col: 9
+        - row: 3
+Floor
+        - col: 10
+        - row: 3
+Floor
+        - col: 11
+        - row: 3
+Floor
+        - col: 12
+        - row: 3
+Floor
+        - col: 13
+        - row: 3
+Floor
+        - col: 14
+        - row: 3
+Floor
+        - col: 15
+        - row: 3
+Floor
+        - col: 16
+        - row: 3
+Floor
+        - col: 17
+        - row: 3
+Floor
+        - col: 18
+        - row: 3
+Wall
+        - col: 19
+        - row: 3
+Wall
+        - col: 0
+        - row: 4
+Wall
+        - col: 1
+        - row: 4
+Wall
+        - col: 2
+        - row: 4
+Wall
+        - col: 3
+        - row: 4
+Wall
+        - col: 4
+        - row: 4
+Floor
+        - col: 5
+        - row: 4
+Floor
+        - col: 6
+        - row: 4
+Floor
+        - col: 7
+        - row: 4
+Floor
+        - col: 8
+        - row: 4
+Floor
+        - col: 9
+        - row: 4
+Floor
+        - col: 10
+        - row: 4
+Floor
+        - col: 11
+        - row: 4
+Floor
+        - col: 12
+        - row: 4
+Floor
+        - col: 13
+        - row: 4
+Floor
+        - col: 14
+        - row: 4
+Floor
+        - col: 15
+        - row: 4
+Floor
+        - col: 16
+        - row: 4
+Floor
+        - col: 17
+        - row: 4
+Floor
+        - col: 18
+        - row: 4
+Wall
+        - col: 19
+        - row: 4
+Wall
+        - col: 0
+        - row: 5
+Floor
+        - col: 1
+        - row: 5
+Floor
+        - col: 2
+        - row: 5
+Floor
+        - col: 3
+        - row: 5
+Wall
+        - col: 4
+        - row: 5
+Floor
+        - col: 5
+        - row: 5
+Floor
+        - col: 6
+        - row: 5
+Floor
+        - col: 7
+        - row: 5
+Floor
+        - col: 8
+        - row: 5
+Floor
+        - col: 9
+        - row: 5
+Floor
+        - col: 10
+        - row: 5
+Floor
+        - col: 11
+        - row: 5
+Floor
+        - col: 12
+        - row: 5
+Floor
+        - col: 13
+        - row: 5
+Floor
+        - col: 14
+        - row: 5
+Trap
+        - col: 15
+        - row: 5
+Floor
+        - col: 16
+        - row: 5
+Floor
+        - col: 17
+        - row: 5
+Floor
+        - col: 18
+        - row: 5
+Wall
+        - col: 19
+        - row: 5
+Wall
+        - col: 0
+        - row: 6
+Floor
+        - col: 1
+        - row: 6
+Switch
+        - col: 2
+        - destcols: 4
+        - destrows: 6
+        - row: 6
+Floor
+        - col: 3
+        - row: 6
+Door
+        - col: 4
+        - row: 6
+Floor
+        - col: 5
+        - row: 6
+Floor
+        - col: 6
+        - row: 6
+Floor
+        - col: 7
+        - row: 6
+Floor
+        - col: 8
+        - row: 6
+Floor
+        - col: 9
+        - row: 6
+Floor
+        - col: 10
+        - row: 6
+Floor
+        - col: 11
+        - row: 6
+Floor
+        - col: 12
+        - row: 6
+Floor
+        - col: 13
+        - row: 6
+Floor
+        - col: 14
+        - row: 6
+Floor
+        - col: 15
+        - row: 6
+Floor
+        - col: 16
+        - row: 6
+Portal
+        - col: 17
+        - destcol: 14
+        - destrow: 11
+        - row: 6
+Floor
+        - col: 18
+        - row: 6
+Wall
+        - col: 19
+        - row: 6
+Wall
+        - col: 0
+        - row: 7
+Floor
+        - col: 1
+        - row: 7
+Floor
+        - col: 2
+        - row: 7
+Floor
+        - col: 3
+        - row: 7
+Wall
+        - col: 4
+        - row: 7
+Floor
+        - col: 5
+        - row: 7
+Floor
+        - col: 6
+        - row: 7
+Floor
+        - col: 7
+        - row: 7
+Floor
+        - col: 8
+        - row: 7
+Floor
+        - col: 9
+        - row: 7
+Floor
+        - col: 10
+        - row: 7
+Floor
+        - col: 11
+        - row: 7
+Floor
+        - col: 12
+        - row: 7
+Floor
+        - col: 13
+        - row: 7
+Floor
+        - col: 14
+        - row: 7
+Trap
+        - col: 15
+        - row: 7
+Floor
+        - col: 16
+        - row: 7
+Floor
+        - col: 17
+        - row: 7
+Floor
+        - col: 18
+        - row: 7
+Wall
+        - col: 19
+        - row: 7
+Wall
+        - col: 0
+        - row: 8
+Wall
+        - col: 1
+        - row: 8
+Wall
+        - col: 2
+        - row: 8
+Wall
+        - col: 3
+        - row: 8
+Wall
+        - col: 4
+        - row: 8
+Wall
+        - col: 5
+        - row: 8
+Wall
+        - col: 6
+        - row: 8
+Wall
+        - col: 7
+        - row: 8
+Wall
+        - col: 8
+        - row: 8
+Wall
+        - col: 9
+        - row: 8
+Wall
+        - col: 10
+        - row: 8
+Wall
+        - col: 11
+        - row: 8
+Wall
+        - col: 12
+        - row: 8
+Wall
+        - col: 13
+        - row: 8
+Wall
+        - col: 14
+        - row: 8
+Wall
+        - col: 15
+        - row: 8
+Wall
+        - col: 16
+        - row: 8
+Wall
+        - col: 17
+        - row: 8
+Wall
+        - col: 18
+        - row: 8
+Wall
+        - col: 19
+        - row: 8
+Wall
+        - col: 0
+        - row: 9
+Portal
+        - col: 1
+        - destcol: 10
+        - destrow: 9
+        - row: 9
+Floor
+        - col: 2
+        - row: 9
+Floor
+        - col: 3
+        - row: 9
+Floor
+        - col: 4
+        - row: 9
+Wall
+        - col: 5
+        - row: 9
+Wall
+        - col: 6
+        - row: 9
+Wall
+        - col: 7
+        - row: 9
+Wall
+        - col: 8
+        - row: 9
+Wall
+        - col: 9
+        - row: 9
+Portal
+        - col: 10
+        - destcol: 1
+        - destrow: 9
+        - row: 9
+Floor
+        - col: 11
+        - row: 9
+Floor
+        - col: 12
+        - row: 9
+Floor
+        - col: 13
+        - row: 9
+Floor
+        - col: 14
+        - row: 9
+Floor
+        - col: 15
+        - row: 9
+Floor
+        - col: 16
+        - row: 9
+Floor
+        - col: 17
+        - row: 9
+Floor
+        - col: 18
+        - row: 9
+Wall
+        - col: 19
+        - row: 9
+Wall
+        - col: 0
+        - row: 10
+Floor
+        - col: 1
+        - row: 10
+Floor
+        - col: 2
+        - row: 10
+Floor
+        - col: 3
+        - row: 10
+Floor
+        - col: 4
+        - row: 10
+Wall
+        - col: 5
+        - row: 10
+Wall
+        - col: 6
+        - row: 10
+Wall
+        - col: 7
+        - row: 10
+Wall
+        - col: 8
+        - row: 10
+Wall
+        - col: 9
+        - row: 10
+Floor
+        - col: 10
+        - row: 10
+Floor
+        - col: 11
+        - row: 10
+Floor
+        - col: 12
+        - row: 10
+Floor
+        - col: 13
+        - row: 10
+Floor
+        - col: 14
+        - row: 10
+Floor
+        - col: 15
+        - row: 10
+Floor
+        - col: 16
+        - row: 10
+Floor
+        - col: 17
+        - row: 10
+Floor
+        - col: 18
+        - row: 10
+Wall
+        - col: 19
+        - row: 10
+Wall
+        - col: 0
+        - row: 11
+Floor
+        - col: 1
+        - row: 11
+Switch
+        - col: 2
+        - destcols: 5
+        - destrows: 11
+        - row: 11
+Floor
+        - col: 3
+        - row: 11
+Floor
+        - col: 4
+        - row: 11
+Door
+        - col: 5
+        - row: 11
+Floor
+        - col: 6
+        - row: 11
+Lever
+        - col: 7
+        - destcols: 5 9
+        - destrows: 11 11
+        - row: 11
+Floor
+        - col: 8
+        - row: 11
+Door
+        - col: 9
+        - row: 11
+Floor
+        - col: 10
+        - row: 11
+Floor
+        - col: 11
+        - row: 11
+Floor
+        - col: 12
+        - row: 11
+Floor
+        - col: 13
+        - row: 11
+Portal
+        - col: 14
+        - destcol: 17
+        - destrow: 6
+        - row: 11
+Floor
+        - col: 15
+        - row: 11
+Floor
+        - col: 16
+        - row: 11
+Floor
+        - col: 17
+        - row: 11
+Floor
+        - col: 18
+        - row: 11
+Wall
+        - col: 19
+        - row: 11
+Wall
+        - col: 0
+        - row: 12
+Floor
+        - col: 1
+        - row: 12
+Floor
+        - col: 2
+        - row: 12
+Floor
+        - col: 3
+        - row: 12
+Floor
+        - col: 4
+        - row: 12
+Wall
+        - col: 5
+        - row: 12
+Wall
+        - col: 6
+        - row: 12
+Wall
+        - col: 7
+        - row: 12
+Wall
+        - col: 8
+        - row: 12
+Wall
+        - col: 9
+        - row: 12
+Floor
+        - col: 10
+        - row: 12
+Floor
+        - col: 11
+        - row: 12
+Floor
+        - col: 12
+        - row: 12
+Floor
+        - col: 13
+        - row: 12
+Floor
+        - col: 14
+        - row: 12
+Floor
+        - col: 15
+        - row: 12
+Floor
+        - col: 16
+        - row: 12
+Floor
+        - col: 17
+        - row: 12
+Floor
+        - col: 18
+        - row: 12
+Wall
+        - col: 19
+        - row: 12
+Wall
+        - col: 0
+        - row: 13
+Floor
+        - col: 1
+        - row: 13
+Floor
+        - col: 2
+        - row: 13
+Floor
+        - col: 3
+        - row: 13
+Floor
+        - col: 4
+        - row: 13
+Wall
+        - col: 5
+        - row: 13
+Wall
+        - col: 6
+        - row: 13
+Wall
+        - col: 7
+        - row: 13
+Wall
+        - col: 8
+        - row: 13
+Wall
+        - col: 9
+        - row: 13
+Floor
+        - col: 10
+        - row: 13
+Floor
+        - col: 11
+        - row: 13
+Floor
+        - col: 12
+        - row: 13
+Floor
+        - col: 13
+        - row: 13
+Floor
+        - col: 14
+        - row: 13
+Floor
+        - col: 15
+        - row: 13
+Floor
+        - col: 16
+        - row: 13
+Floor
+        - col: 17
+        - row: 13
+Floor
+        - col: 18
+        - row: 13
+Wall
+        - col: 19
+        - row: 13
+Wall
+        - col: 0
+        - row: 14
+Wall
+        - col: 1
+        - row: 14
+Wall
+        - col: 2
+        - row: 14
+Wall
+        - col: 3
+        - row: 14
+Wall
+        - col: 4
+        - row: 14
+Wall
+        - col: 5
+        - row: 14
+Wall
+        - col: 6
+        - row: 14
+Wall
+        - col: 7
+        - row: 14
+Wall
+        - col: 8
+        - row: 14
+Wall
+        - col: 9
+        - row: 14
+Wall
+        - col: 10
+        - row: 14
+Wall
+        - col: 11
+        - row: 14
+Wall
+        - col: 12
+        - row: 14
+Wall
+        - col: 13
+        - row: 14
+Wall
+        - col: 14
+        - row: 14
+Wall
+        - col: 15
+        - row: 14
+Wall
+        - col: 16
+        - row: 14
+Wall
+        - col: 17
+        - row: 14
+Wall
+        - col: 18
+        - row: 14
+Wall
+        - col: 19
+        - row: 14
+Character
+        - col: 1
+        - controller: ConsoleController
+        - icon: @
+        - row: 5
+Character
+        - col: 2
+        - controller: GuardController
+        - icon: %
+        - pattern: 664446
+        - row: 2
+Character
+        - col: 15
+        - controller: StationaryController
+        - icon: %
+        - row: 6
+Character
+        - col: 7
+        - controller: GuardController
+        - icon: %
+        - pattern: 36987412
+        - row: 4
+Item
+        - col: 8
+        - name: Beastly Sword of heavenly Destruction
+        - row: 4
+        - strbonus: 10
+        - type: Weapon
+Item
+        - col: 9
+        - name: Ten Ton Tunic
+        - row: 4
+        - stabonus: 8
+        - type: Armor
+Item
+        - amount: 3
+        - col: 8
+        - hp: 5
+        - name: Life Potion +5 HP
+        - row: 3
+        - type: Potion
+Item
+        - amount: 1
+        - col: 9
+        - hp: 20
+        - name: Elixir of better Life +20 Max HP
+        - row: 3
+        - type: Elixir
