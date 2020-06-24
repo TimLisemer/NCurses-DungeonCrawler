@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.12.2, 2020-06-21T07:18:38. -->
+<!-- Written by QtCreator 4.12.2, 2020-06-24T16:00:16. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -306,7 +306,6 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DungeonCrawler2</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/tim/Desktop/PAD2/Praktikum 4/Do12x-Team5MASTER-master/DungeonCrawler.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/tim/Desktop/PAD2/Praktikum 4/Do12x-Team5MASTER-master/DungeonCrawler.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
