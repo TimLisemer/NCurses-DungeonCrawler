@@ -59,11 +59,11 @@ private:
     Controller* m_controller;
     Level* m_level;
 
-    int m_maxHPBuffer;
+    int m_maxHPBuffer = 0;
     double m_maxHpMultiplier = 1.0;
     char m_icon;
-    int m_strenght;
-    int m_stamina;
+    int m_strenght = 0;
+    int m_stamina = 0;
     int m_hitPoints = 0;
 };
 

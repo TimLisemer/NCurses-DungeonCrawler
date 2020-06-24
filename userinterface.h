@@ -17,7 +17,7 @@ class Controller{
 public:
     explicit
     Controller();
-    virtual ~Controller();
+    virtual ~Controller() = default;
     virtual int move(Character* c);
     virtual bool setTile(Character* c, const int key);
 };
@@ -30,7 +30,7 @@ class UserInterface : public Controller{
 
 public:
     UserInterface();
-    ~UserInterface();
+    virtual ~UserInterface();
 
     void draw(Level* lvl);
 

@@ -9,14 +9,13 @@ DungeonCrawler::DungeonCrawler() {
 
 //Delete DC
 DungeonCrawler::~DungeonCrawler() {
-    delete m_ui;
     for (Level* l : m_levels) {
         delete l;
     }
 }
 
 void DungeonCrawler::play() {
-    logging::Logger::instance()->set(logging::INFO, "../DungeonCrawler.log");
+    logging::Logger::instance()->set(logging::INFO, "DungeonCrawler.log");
     logging::Logger::instance()->log(logging::INFO, "DungeonCrawler start");
     while(m_running) {
         logging::Logger::instance()->log(logging::INFO, "running");

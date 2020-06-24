@@ -4,16 +4,12 @@
 #include "logger.h"
 
 Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina) : m_controller(controller), m_level(level), m_icon(icon),
-    m_strenght(strenght), m_stamina(stamina){
-    m_hitPoints = 20 + (m_stamina*5);
+    m_strenght(strenght), m_stamina(stamina), m_hitPoints(20 + (m_stamina*5)){
 }
 
 //delete Character
 Character::~Character(){
-    delete m_position;
     delete m_controller;
-    delete m_level;
-
     for(size_t i = 0; i < m_items.getSize(); i++){
         delete m_items.operator[](i);
     }

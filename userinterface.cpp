@@ -2,10 +2,6 @@
 
 Controller::Controller(){}
 
-Controller::~Controller(){
-    delete this;
-}
-
 int Controller::move(Character *c){
     return getch();
 }
@@ -75,6 +71,7 @@ void UserInterface::draw(Level *lvl) {
 }
 
 UserInterface::~UserInterface(){
+    delwin(m_HeaderWindow);
     endwin();
 }
 

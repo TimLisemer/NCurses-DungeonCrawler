@@ -16,10 +16,11 @@ class Item;
 class Tile{
 
 private:
+
     Level* m_level;
     Character* m_character;
-
     Item* m_item;
+
     char m_icon;
     const int m_row;
     const int m_col;
@@ -31,7 +32,7 @@ public:
     Tile(char icon, int row, int col, Level* level, Item* item);
     Tile(int row, int col, Level* level, Item* item);
 
-    virtual ~Tile() = 0;
+    virtual ~Tile();
 
     char getIcon() const;
     void setIcon(const char Icon);
@@ -114,15 +115,11 @@ public:
     Portal(const char icon, const int row, const int col, Level* level);
     Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level);
 
-
-
     Portal(const int row, const int col, Level* level, Item* item);
     Portal(const int row, const int col, const int destRow, const int destCol, Level* level, Item* item);
 
     Portal(const char icon, const int row, const int col, Level* level, Item* item);
     Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level, Item* item);
-
-
 
     virtual Tile* onEnter(Tile* fromTile);
 
@@ -140,7 +137,6 @@ public:
 
     explicit
     Passive();
-    virtual ~Passive();
 
     virtual void notify();
 
@@ -160,7 +156,6 @@ public:
 
     explicit
     Active();
-    virtual ~Active() = 0;
 
     virtual void attach(Passive* passive);
     virtual void detach(Passive* passive);

@@ -8,10 +8,7 @@ Tile::Tile(int row, int col, Level* level, Item* item) : m_level(level), m_chara
 
 
 Tile::~Tile(){
-
-    delete m_level;
-    delete m_character;
-
+    delete m_item;
 }
 
 
@@ -173,8 +170,6 @@ Portal::Portal(const char icon, const int row, const int col, Level* level) : Ti
 Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level) : Tile(icon, row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){}
 
 
-
-
 Portal::Portal(const int row, const int col, Level* level, Item* item) : Tile('O', row, col, level, item){}
 Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile('O', row, col, level, item), m_destRow(destRow), m_destCol(destCol){}
 
@@ -200,20 +195,12 @@ void Portal::setDestination(Portal* destination){
 
 
 
-
-
 ///
 /// \brief Passive::Passive
 ///
 Passive::Passive(){}
 
-Passive::~Passive(){
-    delete this;
-}
-
 void Passive::notify(){}
-
-
 
 
 
@@ -221,7 +208,6 @@ void Passive::notify(){}
 /// \brief Active::Active
 ///
 Active::Active(){}
-
 
 void Active::activate(){
     for(auto p : m_PassiveList){
@@ -243,13 +229,6 @@ void Active::detach(Passive* passive){
     }
     m_PassiveList = tempPassiveList;
 }
-
-Active::~Active(){
-    delete this;
-}
-
-
-
 
 
 

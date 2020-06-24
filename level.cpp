@@ -8,17 +8,18 @@ inline bool instanceof(const T*) {
 Level::Level(UserInterface* ui) {
 
     //Map Insert
-    ifstream file("../4.map");
+    string LevelPath = "../Praktikum 4/Do12x-Team5MASTER-master/4.map";
+    ifstream file(LevelPath);
     if (!file.good()) {
-    throw std::invalid_argument("File not found!");
+        throw std::invalid_argument("Level File not found! --- Path = " + LevelPath);
     }
     vector<Node> nodes;
     while (true) {
-    Node node;
-    file >> node;
-    nodes.push_back(node);
-    if (file.eof())
-    break;
+        Node node;
+        file >> node;
+        nodes.push_back(node);
+        if (file.eof())
+        break;
     }
 
     //Load Map Information
