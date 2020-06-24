@@ -3,14 +3,27 @@
 #include "logger.h"
 
 
-Tile::Tile(char icon, int row, int col, Level* level) : m_level(level), m_icon(icon), m_row(row), m_col(col), m_character(nullptr){}
-Tile::Tile(int row, int col, Level* level) : m_level(level), m_row(row), m_col(col), m_character(nullptr){}
+Tile::Tile(char icon, int row, int col, Level* level, Item* item) : m_level(level), m_character(nullptr), m_item(item), m_icon(icon), m_row(row), m_col(col) {}
+Tile::Tile(int row, int col, Level* level, Item* item) : m_level(level), m_character(nullptr), m_item(item), m_row(row), m_col(col){}
+
+
+Tile::~Tile(){
+
+    delete m_level;
+    delete m_character;
+
+}
+
 
 char Tile::getIcon() const{
     if(hasCharacter()){
         return getCharacter()->getIcon();
     }else{
-        return m_icon;
+        if(hasItem()){
+            return '*';
+        }else{
+            return m_icon;
+        }
     }
 }
 
@@ -47,7 +60,6 @@ bool Tile::moveTo(Tile* destTile){
     if(hasCharacter()){
         Tile* abandonedTile = onLeave(destTile);
         if(abandonedTile != nullptr){
-
             Tile* enterTile = destTile->onEnter(abandonedTile);
             if(enterTile != nullptr){
                 getCharacter()->setTile(enterTile);
@@ -71,7 +83,12 @@ Tile* Tile::onEnter(Tile *fromTile) {
 }
 
 Tile* Tile::onLeave(Tile *toTile) {
-    return this;
+    if(toTile->hasCharacter()){
+        return nullptr;
+    }else{
+        pickupItem(toTile);
+        return this;
+    }
 }
 
 
@@ -80,61 +97,94 @@ Character* Tile::getCharacter() const{
 }
 
 
-Tile::~Tile(){
-
+Item* Tile::getItem() const{
+    return m_item;
 }
+
+void Tile::setItem(Item *item){
+    m_item = item;
+}
+
+bool Tile::hasItem() const{
+    if(getItem() == nullptr){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+void Tile::pickupItem(Tile* toTile){
+    if(toTile->hasItem()){
+        getCharacter()->addToInventory(toTile->getItem());
+        toTile->setItem(nullptr);
+    }
+}
+
+
+
+
+
 
 
 ///
 /// \brief Floor::Floor
 ///
-Floor::Floor(const int row, const int col, Level* level) : Tile('.', row, col, level){}
-Floor::Floor(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level){}
-//TODO
-Tile* Floor::onEnter(Tile *fromTile){
-    return this;
-}
+Floor::Floor(const int row, const int col, Level* level) : Tile('.', row, col, level, nullptr){}
+Floor::Floor(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){}
 
-Tile* Floor::onLeave(Tile *destTile){
-    return this;
-}
+
+
+Floor::Floor(const int row, const int col, Level* level, Item* item) : Tile('.', row, col, level, item){}
+Floor::Floor(const char icon, const int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){}
+
+
+
+
+
+
 
 ///
 /// \brief Wall::Wall
 ///
-Wall::Wall(const int row, const int col, Level* level) : Tile('#', row, col, level){}
-Wall::Wall(const char icon, int row, const int col, Level* level) : Tile(icon, row, col, level){}
-//TODO
+Wall::Wall(const int row, const int col, Level* level) : Tile('#', row, col, level, nullptr){}
+Wall::Wall(const char icon, int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){}
+
+
+Wall::Wall(const int row, const int col, Level* level, Item* item) : Tile('#', row, col, level, item){}
+Wall::Wall(const char icon, int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){}
+
 Tile* Wall::onEnter(Tile *fromTile){
-    //Debug
-    //logging::Logger::instance()->log(logging::INFO, "Entered tile: " + std::to_string(getRow()) + " - " + std::to_string(getCol()));
     return nullptr;
 }
 
-Tile* Wall::onLeave(Tile *destTile){
-    return this;
-}
+
+
+
+
+
 
 ///
 /// \brief Portal::Portal
 ///
-Portal::Portal(const int row, const int col, Level* level) : Tile('O', row, col, level){}
-Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level) : Tile('O', row, col, level), m_destRow(destRow), m_destCol(destCol){}
+Portal::Portal(const int row, const int col, Level* level) : Tile('O', row, col, level, nullptr){}
+Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level) : Tile('O', row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){}
 
-Portal::Portal(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level){}
-Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level) : Tile(icon, row, col, level), m_destRow(destRow), m_destCol(destCol){}
+Portal::Portal(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){}
+Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level) : Tile(icon, row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){}
+
+
+
+
+Portal::Portal(const int row, const int col, Level* level, Item* item) : Tile('O', row, col, level, item){}
+Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile('O', row, col, level, item), m_destRow(destRow), m_destCol(destCol){}
+
+Portal::Portal(const char icon, const int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){}
+Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile(icon, row, col, level, item), m_destRow(destRow), m_destCol(destCol){}
 
 
 Tile* Portal::onEnter(Tile *fromTile){
-
     return getDestination();
 }
-
-Tile* Portal::onLeave(Tile *destTile){
-
-    return this;
-}
-
 
 Tile* Portal::getDestination(){
     if(m_destination == nullptr){
@@ -147,6 +197,11 @@ void Portal::setDestination(Portal* destination){
     m_destination = destination;
 }
 
+
+
+
+
+
 ///
 /// \brief Passive::Passive
 ///
@@ -157,6 +212,8 @@ Passive::~Passive(){
 }
 
 void Passive::notify(){}
+
+
 
 
 
@@ -192,12 +249,24 @@ Active::~Active(){
 }
 
 
+
+
+
+
+
 ///
 /// \brief Door::Door
 ///
-Door::Door(const int row, const int col, Level* level) : Tile(row, col, level), Floor(row, col, level), Wall(row, col, level) {
+Door::Door(const int row, const int col, Level* level) : Tile(row, col, level, nullptr), Floor(row, col, level), Wall(row, col, level) {
     changeState(false);
 }
+
+
+Door::Door(const int row, const int col, Level* level, Item* item) : Tile(row, col, level, item), Floor(row, col, level, item), Wall(row, col, level, item) {
+    changeState(false);
+}
+
+
 
 void Door::setIcon(const char Icon){
     Floor::setIcon(Icon);
@@ -235,26 +304,66 @@ void Door::notify(){
 }
 
 
+
+
+
+
+
+
+
+
 ///
 /// \brief Switch::Switch
 ///
-Switch::Switch(const int row, const int col, Level* level) : Tile(row, col, level), Floor(row, col, level){
+Switch::Switch(const int row, const int col, Level* level) : Tile(row, col, level, nullptr), Floor(row, col, level){
     changeState(false);
 }
 
-Switch::Switch(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level) : Tile(row, col, level), Floor(row, col, level), m_destRows(destRows), m_destCols(destCols){
+Switch::Switch(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level) : Tile(row, col, level, nullptr), Floor(row, col, level), m_destRows(destRows), m_destCols(destCols){
     changeState(false);
 
     if(destRows.size() != destCols.size()){
         throw new std::invalid_argument("Different size for destRows and destCols for Switch");
     }else{
         for(size_t i = 0; i < destRows.size(); i++){
-            Door* d = dynamic_cast<Door*>(getLevel()->getWorld()[destRows[i]][destCols[i]]);
-            if(d == nullptr) throw std::invalid_argument("tile.cpp invalid dynamic cast");
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
             attach(d);
         }
     }
 }
+
+
+
+
+
+
+Switch::Switch(const int row, const int col, Level* level, Item* item) : Tile(row, col, level, item), Floor(row, col, level){
+    changeState(false);
+}
+
+Switch::Switch(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level, Item* item) : Tile(row, col, level, item), Floor(row, col, level), m_destRows(destRows), m_destCols(destCols){
+    changeState(false);
+
+    if(destRows.size() != destCols.size()){
+        throw new std::invalid_argument("Different size for destRows and destCols for Switch");
+    }else{
+        for(size_t i = 0; i < destRows.size(); i++){
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
+            attach(d);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
 
 void Switch::changeState(bool state){
     m_state = state;
@@ -281,6 +390,98 @@ void Switch::attach(Passive *passive){
 void Switch::detach(Passive *passive){
     Active::detach(passive);
 }
+
+
+
+
+
+///
+/// \brief Lever::Lever
+///
+Lever::Lever(const int row, const int col, Level* level) : Tile('L', row, col, level, nullptr), Floor('L', row, col, level){}
+
+Lever::Lever(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level) : Tile('L', row, col, level, nullptr), Floor('L', row, col, level), m_destRows(destRows), m_destCols(destCols){
+    if(destRows.size() != destCols.size()){
+        throw new std::invalid_argument("Different size for destRows and destCols for Switch");
+    }else{
+        for(size_t i = 0; i < destRows.size(); i++){
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
+            attach(d);
+        }
+    }
+}
+
+
+
+
+
+
+Lever::Lever(const int row, const int col, Level* level, Item* item) : Tile('L', row, col, level, item), Floor('L', row, col, level){}
+Lever::Lever(const int row, const int col, const vector<int> destRows, const vector<int> destCols, Level* level, Item* item) : Tile('L', row, col, level, item), Floor('L', row, col, level), m_destRows(destRows), m_destCols(destCols){
+    if(destRows.size() != destCols.size()){
+        throw new std::invalid_argument("Different size for destRows and destCols for Switch");
+    }else{
+        for(size_t i = 0; i < destRows.size(); i++){
+            Passive* d = dynamic_cast<Passive*>(getLevel()->getTile(destRows[i], destCols[i]));
+            if(d == nullptr) throw std::invalid_argument("tile.cpp - Switch - invalid dynamic cast");
+            attach(d);
+        }
+    }
+}
+
+Tile* Lever::onEnter(Tile *fromTile){
+    Lever::activate();
+    return Floor::onEnter(fromTile);
+}
+
+void Lever::attach(Passive *passive){
+    Active::attach(passive);
+}
+
+void Lever::detach(Passive *passive){
+    Active::detach(passive);
+}
+
+
+
+
+
+
+///
+/// \brief Trap::Trap
+///
+Trap::Trap(const int row, const int col, Level* level, const int hitPoints) : Tile('.', row, col, level, nullptr), Floor('.', row, col, level), m_hitPoints(hitPoints) {}
+
+Trap::Trap(const int row, const int col, Level* level, Item* item, const int hitPoints) : Tile('.', row, col, level, item), Floor('.', row, col, level, item), m_hitPoints(hitPoints) {}
+
+
+Tile* Trap::onEnter(Tile *fromTile){
+    if(!m_defused){
+        fromTile->getCharacter()->setHitPoints(fromTile->getCharacter()->getHitPoints() - m_hitPoints);
+        m_defused = true;
+        setIcon('T');
+    }
+    return Floor::onEnter(fromTile);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
