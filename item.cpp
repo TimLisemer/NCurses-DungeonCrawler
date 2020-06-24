@@ -14,10 +14,10 @@ void Item::onEquip(Character *c){
 
 void Item::onDrop(Character *c, Tile *tile){
 
-    vector<Item*> newItems;
+    List newItems;
     for(auto* i : c->m_items){
         if(i != this){
-            newItems.push_back(i);
+            newItems.pushBack(i);
         }
     }
     c->m_items = newItems;
@@ -51,10 +51,10 @@ void Weapon::onDrop(Character *c, Tile *tile){
     if(!tile->hasItem()){
         c->setStrenght(c->getStrenght() - getStrBonus());
 
-        vector<Item*> newItems;
+        List newItems;
         for(auto* i : c->m_items){
             if(i != this){
-                newItems.push_back(i);
+                newItems.pushBack(i);
             }
         }
         c->m_items = newItems;
@@ -82,10 +82,10 @@ void Armor::onDrop(Character *c, Tile *tile){
     if(!tile->hasItem()){
         c->setMaxHpMultiplier(1.0);
 
-        vector<Item*> newItems;
+        List newItems;
         for(auto* i : c->m_items){
             if(i != this){
-                newItems.push_back(i);
+                newItems.pushBack(i);
             }
         }
         c->m_items = newItems;
@@ -142,10 +142,10 @@ bool Potion::consume(Character *c){
         returner = true;
     }else returner = false;
     if(getAmount() <= 0){
-        vector<Item*> newItems;
+        List newItems;
         for(auto* i : c->m_items){
             if(i != this){
-                newItems.push_back(i);
+                newItems.pushBack(i);
             }
         }
         c->m_items = newItems;
@@ -174,10 +174,10 @@ bool Elixir::consume(Character *c){
     c->setMaxHpBuffer(c->getMaxHPBuffer() + getHpMax());
     setAmount(getAmount() - 1);
     if(getAmount() <= 0){
-        vector<Item*> newItems;
+        List newItems;
         for(auto* i : c->m_items){
             if(i != this){
-                newItems.push_back(i);
+                newItems.pushBack(i);
             }
         }
         c->m_items = newItems;

@@ -120,11 +120,11 @@ void UserInterface::setGameMenu(const int menu, Character* c){
             }
 
             for(int i = 1; i < c->getInventorySize() + 1; i++){
-                Consumable* con = dynamic_cast<Consumable*>(c->m_items.at(i-1));
+                Consumable* con = dynamic_cast<Consumable*>(c->m_items.operator[](i-1));
                 if(con != nullptr){
-                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items.at(i-1)->getName() + " (" + std::to_string(con->getAmount()) + ")").c_str());
+                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items.operator[](i-1)->getName() + " (" + std::to_string(con->getAmount()) + ")").c_str());
                 }else{
-                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items.at(i-1)->getName()).c_str());
+                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items.operator[](i-1)->getName()).c_str());
                 }
             }
         }else{
@@ -171,9 +171,9 @@ int UserInterface::move(Character* c) {
                     logging::Logger::instance()->log(logging::INFO, "Input i (Consume / Drop Item)");
 
                     try {
-                        Consumable* con = dynamic_cast<Consumable*>(c->m_items.at(key - 48 - 1));
+                        Consumable* con = dynamic_cast<Consumable*>(c->m_items.operator[](key - 48 - 1));
                         if(con == nullptr){
-                            Item* item = c->m_items.at(key - 48 - 1);
+                            Item* item = c->m_items.operator[](key - 48 - 1);
                             item->onDrop(c, c->getTile());
                             logging::Logger::instance()->log(logging::INFO, std::string("Dropped Item" + item->getName()));
                             setGameMenu(0, c);
@@ -184,7 +184,7 @@ int UserInterface::move(Character* c) {
                                 logging::Logger::instance()->log(logging::INFO, std::string("Consumed Item" + con->getName()));
                                 pause = false;
                             }else{
-                                logging::Logger::instance()->log(logging::INFO, std::string("Failed to Consume" + c->m_items.at(key - 48 - 1)->getName()));
+                                logging::Logger::instance()->log(logging::INFO, std::string("Failed to Consume" + c->m_items.operator[](key - 48 - 1)->getName()));
                             }
                         }
                     }  catch(std::invalid_argument){}

@@ -10,6 +10,7 @@ SOURCES += \
         character.cpp \
         dungeoncrawler.cpp \
         level.cpp \
+        list.cpp \
         logger.cpp \
         main.cpp \
         node.cpp \
@@ -21,6 +22,7 @@ HEADERS += \
     character.h \
     dungeoncrawler.h \
     level.h \
+    list.h \
     logger.h \
     node.h \
     tile.h \

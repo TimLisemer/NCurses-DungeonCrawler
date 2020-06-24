@@ -3,8 +3,9 @@
 #include <ncurses.h>
 #include "logger.h"
 
-Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina) : m_controller(controller), m_level(level), m_icon(icon), m_strenght(strenght), m_stamina(stamina){
-    setHitPoints(getMaxHP());
+Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina) : m_controller(controller), m_level(level), m_icon(icon),
+    m_strenght(strenght), m_stamina(stamina){
+    m_hitPoints = 20 + (m_stamina*5);
 }
 
 //delete Character
@@ -13,8 +14,8 @@ Character::~Character(){
     delete m_controller;
     delete m_level;
 
-    for(size_t i = 0; i < m_items.size(); i++){
-        delete m_items.at(i);
+    for(size_t i = 0; i < m_items.getSize(); i++){
+        delete m_items.operator[](i);
     }
 }
 
@@ -95,12 +96,12 @@ void Character::setMaxHpBuffer(const int buffer){
 
 void Character::addToInventory(Item *item){
     item->onEquip(this);
-    m_items.push_back(item);
+    m_items.pushBack(item);
 }
 
 
 int Character::getInventorySize() const{
-    return m_items.size();
+    return m_items.getSize();
 }
 
 

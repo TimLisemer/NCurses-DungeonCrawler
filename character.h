@@ -5,6 +5,7 @@ using std::vector;
 #include "userinterface.h"
 #include "item.h"
 #include "level.h"
+#include "list.h"
 
 
 using std::string;
@@ -49,8 +50,7 @@ public:
 
     void addToInventory(Item* item);
     int getInventorySize() const;
-    vector<Item*> m_items;
-
+    List m_items;
     Level* getLevel() const;
 
 private:
@@ -64,7 +64,7 @@ private:
     char m_icon;
     int m_strenght;
     int m_stamina;
-    int m_hitPoints;
+    int m_hitPoints = 0;
 };
 
 #endif // CHARACTER_H

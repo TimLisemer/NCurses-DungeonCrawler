@@ -277,7 +277,7 @@ private:
 
     const int m_hitPoints;
     char m_hiddenIcon;
-    bool m_defused;
+    bool m_defused = false;
 
 
 };

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "character.h"
+#include "list.h"
 
 
 class Character;
