@@ -11,7 +11,7 @@ Character::Character(Controller* controller, Level* level, const char icon, cons
 Character::~Character(){
     delete m_controller;
     for(size_t i = 0; i < m_items.getSize(); i++){
-        delete m_items.operator[](i);
+        delete m_items[i];
     }
 }
 
