@@ -148,7 +148,7 @@ void List::clear() {
    while(current != nullptr) {
       auto* tmp = current;
       current = current->next;
-      delete tmp->item; // TODO: wtf
+      //delete tmp->item; // TODO: wtf
       delete tmp;
    }
 }

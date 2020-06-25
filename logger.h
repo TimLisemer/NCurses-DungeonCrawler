@@ -57,7 +57,7 @@ public:
 
 
     template <typename T> void log(debug_level level,const T &info){
-        if(level <= m_LogLevel){
+        if(level <= m_MaxLogLevel){
             open();
             auto time = system_clock::to_time_t(system_clock::now());
             m_file << "[" << level << std::put_time(std::localtime(&time), "%F %T]" ) << info << std::endl;
@@ -68,10 +68,10 @@ public:
 private:
     //consturtor i private (protected)
     Logger();
-    ~Logger();
+    ~Logger() = default;
 
     ofstream m_file;
-    int m_LogLevel;
+    int m_MaxLogLevel;
     string m_name;
 
     //defina a private static attribute of class
