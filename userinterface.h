@@ -70,10 +70,10 @@ public:
 ///
 class GuardController : public Controller{
 public:
-    GuardController(const int pattern);
+    GuardController(const string pattern);
     virtual int move(Character*);
 private:
-    vector<int> m_pattern;
+    string m_pattern;
 };
 
 #endif // USERINTERFACE_H

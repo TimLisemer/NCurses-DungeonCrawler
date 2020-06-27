@@ -219,32 +219,20 @@ int StationaryController::move(Character* c){
 }
 
 
-GuardController::GuardController(const int pattern){
-    string textPattern = std::to_string(pattern);
-    for(size_t i = 0; i < textPattern.size(); i++){
-        m_pattern.push_back(textPattern.at(i));
-    }
-}
+GuardController::GuardController(const string pattern) : m_pattern(pattern) {}
 
 
 int GuardController::move(Character* c){
-    vector<int> newPattern;
-    newPattern.push_back(m_pattern.at(m_pattern.size() - 1));
-    for(size_t i = 0; i < m_pattern.size() -1; i++){
+    string newPattern;
+    for(size_t i = 1; i < m_pattern.size(); i++){
         newPattern.push_back(m_pattern.at(i));
     }
-    if(Controller::setTile(c, newPattern.at(1))){
+    newPattern.push_back(m_pattern.at(0));
+    if(Controller::setTile(c, newPattern.at(newPattern.size() - 1))){
         m_pattern = newPattern;
     }
-    return newPattern.at(1);
+    return newPattern.at(newPattern.size() - 1);
 }
-
-
-
-
-
-
-
 
 
 

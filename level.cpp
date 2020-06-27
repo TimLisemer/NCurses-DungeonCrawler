@@ -49,10 +49,6 @@ Level::Level(UserInterface* ui) {
             int row = n.get<int>("row");
             int col = n.get<int>("col");
             m_world[row][col] = new Wall(row, col, this);
-        }else if (n.name == "Portal") {
-            int row = n.get<int>("row");
-            int col = n.get<int>("col");
-            m_world[row][col] = new Portal(row, col, this);
         }else if (n.name == "Door") {
             int row = n.get<int>("row");
             int col = n.get<int>("col");
@@ -113,7 +109,7 @@ Level::Level(UserInterface* ui) {
             }else if(n.get<string>("controller") == "StationaryController"){
                 c = new Character(new StationaryController(), this, n.get<char>("icon"), 5, 5);
             }else if(n.get<string>("controller") == "GuardController"){
-                c = new Character(new GuardController(n.get<int>("pattern")), this, n.get<char>("icon"), 5, 5);
+                c = new Character(new GuardController(n.get<string>("pattern")), this, n.get<char>("icon"), 5, 5);
             }
             placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
         }
