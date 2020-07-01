@@ -33,9 +33,9 @@ public:
     void placeCharacter(Character *c, int row, int col);
 
     vector<Tile*> getPath(Tile* from, Tile* to);
-    Character* getHumanCharacter();
+    vector<Character*> getHumanCharacters();
 
-    std::vector<Character*> getCharacters() const;
+    vector<Character*> getCharacters() const;
 
 private:
     int m_height, m_width;

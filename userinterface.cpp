@@ -45,7 +45,6 @@ bool Controller::setTile(Character *c, const int key){
             return true;
             break;
         default:
-            throw new std::invalid_argument("Falsche Eingabe");
             logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
             return false;
         }
@@ -85,7 +84,7 @@ void UserInterface::setGameMenu(const int menu, Character* c){
 
     if(menu == 0){
         //Game Header
-        m_HeaderWindow = newwin(11, 26, 1, 24);
+        m_HeaderWindow = newwin(11, 100, 1, 24);
         m_gameMenu = false;
         mvaddstr(2,25, "Press 1-9 to Move");
         mvaddstr(3,25, "Press 0 to Close");
@@ -94,7 +93,8 @@ void UserInterface::setGameMenu(const int menu, Character* c){
         mvaddstr(6,25, std::string("Active Player    : " + icon).c_str());
         mvaddstr(7,25, std::string("Stats: Strenght  : " + std::to_string(c->getStrenght())).c_str());
         mvaddstr(8,25, std::string("       Stamina   : " + std::to_string(c->getStamina())).c_str());
-        mvaddstr(9,25, std::string("       Hitpoints : " + std::to_string(c->getHitPoints())).c_str());
+        int maxhp = c->getMaxHP();
+        mvaddstr(9,25, std::string("       Hitpoints : " + std::to_string(c->getHitPoints()) + " / " + std::to_string(maxhp)).c_str());
         mvaddstr(10,25, std::string("       Backpack  : " + std::to_string(c->getInventorySize())).c_str());
     }else if(menu == 1){
         //Game Menu
@@ -140,7 +140,6 @@ int UserInterface::move(Character* c) {
     }
 
     bool pause = false;
-    bool successfull = false;
     int key;
 
     do{
@@ -156,7 +155,7 @@ int UserInterface::move(Character* c) {
 
         if(!pause){
             if(key != '5'){
-                successfull = Controller::setTile(c, key);
+                Controller::setTile(c, key);
                 setGameMenu(0, c);
             }else{
                 logging::Logger::instance()->log(logging::INFO, "Input 5 (Open Game Menu)");
@@ -202,7 +201,7 @@ int UserInterface::move(Character* c) {
                 }
             }
         }
-    }while (pause || !successfull);
+    }while (pause);
 
     return key;
 }
@@ -255,7 +254,7 @@ AttackController::~AttackController(){
 
 int AttackController::move(Character *c){
     Tile* currentTile = c->getTile();
-    Tile* destTile = m_level->getPath(currentTile, m_level->getHumanCharacter()->getTile()).at(0);
+    Tile* destTile = m_level->getPath(currentTile, m_level->getHumanCharacters().at(0)->getTile()).at(0);
 
     if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() == destTile->getCol()){
         Controller::setTile(c, '8');

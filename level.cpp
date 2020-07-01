@@ -105,13 +105,13 @@ Level::Level(UserInterface* ui) {
         if (n.name == "Character") {
             Character* c = nullptr;
             if(n.get<string>("controller") == "ConsoleController"){
-                c = new Character(ui, this, n.get<char>("icon"), 5, 5);
+                c = new Character(ui, this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), true);
             }else if(n.get<string>("controller") == "StationaryController"){
-                c = new Character(new StationaryController(), this, n.get<char>("icon"), 5, 5);
+                c = new Character(new StationaryController(), this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), false);
             }else if(n.get<string>("controller") == "GuardController"){
-                c = new Character(new GuardController(n.get<string>("pattern")), this, n.get<char>("icon"), 5, 5);
+                c = new Character(new GuardController(n.get<string>("pattern")), this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), false);
             }else if(n.get<string>("controller") == "AttackController"){
-                c = new Character(new AttackController(this), this, n.get<char>("icon"), 5, 5);
+                c = new Character(new AttackController(this), this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), false);
             }
             placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
         }
@@ -201,14 +201,14 @@ vector<Tile*> Level::getPath(Tile *from, Tile *to){
 }
 
 
-Character* Level::getHumanCharacter(){
+vector<Character*> Level::getHumanCharacters(){
+    vector<Character*> returner;
     for(Character* c : m_characters){
-        UserInterface* ui = dynamic_cast<UserInterface*>(c->getController());
-        if(ui != nullptr){
-            return c;
+        if(c->getHuman()){
+              returner.push_back(c);
         }
     }
-    return nullptr;
+    return returner;
 }
 
 
