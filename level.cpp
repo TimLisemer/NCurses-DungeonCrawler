@@ -8,7 +8,7 @@ inline bool instanceof(const T*) {
 Level::Level(UserInterface* ui) {
 
     //Map Insert
-    string LevelPath = "../Do12x-Team5MASTER-master/4.map";
+    string LevelPath = "../Do12x-Team5MASTER-master/5-studi.map";
     ifstream file(LevelPath);
     if (!file.good()) {
         throw std::invalid_argument("Level File not found! --- Path = " + LevelPath);
@@ -110,6 +110,8 @@ Level::Level(UserInterface* ui) {
                 c = new Character(new StationaryController(), this, n.get<char>("icon"), 5, 5);
             }else if(n.get<string>("controller") == "GuardController"){
                 c = new Character(new GuardController(n.get<string>("pattern")), this, n.get<char>("icon"), 5, 5);
+            }else if(n.get<string>("controller") == "AttackController"){
+                c = new Character(new AttackController(this), this, n.get<char>("icon"), 5, 5);
             }
             placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
         }
@@ -162,3 +164,82 @@ void Level::placeCharacter(Character *c, int row, int col) {
 vector<Character*> Level::getCharacters() const{
     return m_characters;
 }
+
+
+
+////Platzhalter Algorhitmus
+vector<Tile*> Level::getPath(Tile *from, Tile *to){
+
+    vector<Tile*> returner;
+
+    for(int i = 0; i < 10; i++){
+
+        int destRow, destCol;
+
+        if(from->getRow() > to->getRow()){
+            destRow = from->getRow() - 1;
+        }else if(from->getRow() < to->getRow()){
+            destRow = from->getRow() + 1;
+        }else{
+            destRow = from->getRow();
+        }
+
+        if(from->getCol() > to->getCol()){
+            destCol = from->getCol() - 1;
+        }else if(from->getCol() < to->getCol()){
+            destCol = from->getCol() + 1;
+        }else{
+            destCol = from->getCol();
+        }
+
+        returner.push_back(getTile(destRow, destCol));
+
+    }
+
+    return returner;
+
+}
+
+
+Character* Level::getHumanCharacter(){
+    for(Character* c : m_characters){
+        UserInterface* ui = dynamic_cast<UserInterface*>(c->getController());
+        if(ui != nullptr){
+            return c;
+        }
+    }
+    return nullptr;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
