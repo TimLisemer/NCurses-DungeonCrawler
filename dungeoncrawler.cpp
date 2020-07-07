@@ -24,7 +24,19 @@ void DungeonCrawler::play() {
 
             m_ui->draw(level);
             for(Character* c : level->getCharacters()) {
-                c->move();
+                bool keepRunning = false;
+                for(Character* c : level->getHumanCharacters()){
+                    if(c->alive()){
+                        keepRunning = true;
+                    }
+                }
+                if(!keepRunning){
+                    m_running = false;
+                }
+
+                if(c->alive()){
+                    c->move();
+                }
             }
         }
     }

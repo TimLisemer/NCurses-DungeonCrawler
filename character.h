@@ -19,7 +19,7 @@ class Character{
 
 public:
 
-    Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina);
+    Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina, const bool human);
     Character(const Character &character) = delete;
     ~Character();
 
@@ -53,11 +53,18 @@ public:
     List m_items;
     Level* getLevel() const;
 
+    bool getHuman() const;
+    bool alive() const;
+    void Attack(Character* e);
+    void Defense(Character* e);
+
 private:
 
     Tile* m_position;
     Controller* m_controller;
     Level* m_level;
+
+    bool m_Human;
 
     int m_maxHPBuffer = 0;
     double m_maxHpMultiplier = 1.0;

@@ -32,7 +32,10 @@ public:
     int getWidth() const;
     void placeCharacter(Character *c, int row, int col);
 
-    std::vector<Character*> getCharacters() const;
+    vector<Tile*> getPath(Tile* from, Tile* to);
+    vector<Character*> getHumanCharacters();
+
+    vector<Character*> getCharacters() const;
 
 private:
     int m_height, m_width;

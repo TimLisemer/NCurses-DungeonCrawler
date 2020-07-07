@@ -8,7 +8,7 @@ inline bool instanceof(const T*) {
 Level::Level(UserInterface* ui) {
 
     //Map Insert
-    string LevelPath = "../Do12x-Team5MASTER-master/4.map";
+    string LevelPath = "../Do12x-Team5MASTER-master/5-studi.map";
     ifstream file(LevelPath);
     if (!file.good()) {
         throw std::invalid_argument("Level File not found! --- Path = " + LevelPath);
@@ -105,11 +105,13 @@ Level::Level(UserInterface* ui) {
         if (n.name == "Character") {
             Character* c = nullptr;
             if(n.get<string>("controller") == "ConsoleController"){
-                c = new Character(ui, this, n.get<char>("icon"), 5, 5);
+                c = new Character(ui, this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), true);
             }else if(n.get<string>("controller") == "StationaryController"){
-                c = new Character(new StationaryController(), this, n.get<char>("icon"), 5, 5);
+                c = new Character(new StationaryController(), this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), false);
             }else if(n.get<string>("controller") == "GuardController"){
-                c = new Character(new GuardController(n.get<string>("pattern")), this, n.get<char>("icon"), 5, 5);
+                c = new Character(new GuardController(n.get<string>("pattern")), this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), false);
+            }else if(n.get<string>("controller") == "AttackController"){
+                c = new Character(new AttackController(this), this, n.get<char>("icon"), n.get<int>("strength"), n.get<int>("stamina"), false);
             }
             placeCharacter(c, n.get<int>("row"), n.get<int>("col"));
         }
@@ -162,3 +164,82 @@ void Level::placeCharacter(Character *c, int row, int col) {
 vector<Character*> Level::getCharacters() const{
     return m_characters;
 }
+
+
+
+////Platzhalter Algorhitmus
+vector<Tile*> Level::getPath(Tile *from, Tile *to){
+
+    vector<Tile*> returner;
+
+    for(int i = 0; i < 10; i++){
+
+        int destRow, destCol;
+
+        if(from->getRow() > to->getRow()){
+            destRow = from->getRow() - 1;
+        }else if(from->getRow() < to->getRow()){
+            destRow = from->getRow() + 1;
+        }else{
+            destRow = from->getRow();
+        }
+
+        if(from->getCol() > to->getCol()){
+            destCol = from->getCol() - 1;
+        }else if(from->getCol() < to->getCol()){
+            destCol = from->getCol() + 1;
+        }else{
+            destCol = from->getCol();
+        }
+
+        returner.push_back(getTile(destRow, destCol));
+
+    }
+
+    return returner;
+
+}
+
+
+vector<Character*> Level::getHumanCharacters(){
+    vector<Character*> returner;
+    for(Character* c : m_characters){
+        if(c->getHuman()){
+              returner.push_back(c);
+        }
+    }
+    return returner;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

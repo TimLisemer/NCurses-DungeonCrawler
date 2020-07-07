@@ -3,9 +3,8 @@
 #include <ncurses.h>
 #include "logger.h"
 
-Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina) : m_controller(controller), m_level(level), m_icon(icon),
-    m_strenght(strenght), m_stamina(stamina), m_hitPoints(20 + (m_stamina*5)){
-}
+Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina, const bool human) : m_controller(controller), m_level(level), m_icon(icon),
+    m_strenght(strenght), m_stamina(stamina), m_hitPoints(20 + (m_stamina*5)), m_Human(human){}
 
 //delete Character
 Character::~Character(){
@@ -103,6 +102,22 @@ int Character::getInventorySize() const{
 
 Level* Character::getLevel() const{
     return m_level;
+}
+
+bool Character::getHuman() const{
+    return m_Human;
+}
+
+bool Character::alive() const{
+    return m_hitPoints > 0;
+}
+
+void Character::Attack(Character *e){
+    e->Defense(this);
+}
+
+void Character::Defense(Character *e){
+    m_hitPoints = m_hitPoints - e->getStrenght();
 }
 
 

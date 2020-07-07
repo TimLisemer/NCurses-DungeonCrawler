@@ -81,7 +81,18 @@ Tile* Tile::onEnter(Tile *fromTile) {
 
 Tile* Tile::onLeave(Tile *toTile) {
     if(toTile->hasCharacter()){
-        return nullptr;
+        if((getCharacter()->getHuman() && !toTile->getCharacter()->getHuman()) || (!getCharacter()->getHuman() && toTile->getCharacter()->getHuman())){
+            getCharacter()->Attack(toTile->getCharacter());
+            if(toTile->getCharacter()->alive()){
+                toTile->getCharacter()->Attack(getCharacter());
+                return nullptr;
+            }else{
+                pickupItem(toTile);
+                return this;
+            }
+        }else{
+            return nullptr;
+        }
     }else{
         pickupItem(toTile);
         return this;
@@ -111,9 +122,11 @@ bool Tile::hasItem() const{
 }
 
 void Tile::pickupItem(Tile* toTile){
-    if(toTile->hasItem()){
-        getCharacter()->addToInventory(toTile->getItem());
-        toTile->setItem(nullptr);
+    if(getCharacter()->getHuman()){
+        if(toTile->hasItem()){
+            getCharacter()->addToInventory(toTile->getItem());
+            toTile->setItem(nullptr);
+        }
     }
 }
 

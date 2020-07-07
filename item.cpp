@@ -75,7 +75,7 @@ int Armor::getStaBonus() const{
 }
 
 void Armor::onEquip(Character *c){
-    c->setMaxHpMultiplier((20 + (20 + (c->getStamina() + m_staBonus) * 5) / (20 + (c->getStamina() * 5))));
+    c->setMaxHpMultiplier(double(20 + ((c->getStamina() + m_staBonus) * 5)) / double(20 + (c->getStamina() * 5)));
 }
 
 void Armor::onDrop(Character *c, Tile *tile){

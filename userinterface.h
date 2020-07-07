@@ -76,4 +76,19 @@ private:
     string m_pattern;
 };
 
+
+
+
+///
+/// \brief The AttackController class
+///
+class AttackController : public Controller{
+public:
+    AttackController(Level* level);
+    virtual ~AttackController();
+    virtual int move(Character* c);
+private:
+    Level* m_level;
+};
+
 #endif // USERINTERFACE_H
