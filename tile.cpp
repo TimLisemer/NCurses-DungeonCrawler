@@ -85,8 +85,12 @@ Tile* Tile::onLeave(Tile *toTile) {
             getCharacter()->Attack(toTile->getCharacter());
             if(toTile->getCharacter()->alive()){
                 toTile->getCharacter()->Attack(getCharacter());
+                if(!getCharacter()->alive()){
+                    setCharacter(nullptr);
+                }
                 return nullptr;
             }else{
+                toTile->setCharacter(nullptr);
                 pickupItem(toTile);
                 return this;
             }
