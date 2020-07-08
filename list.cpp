@@ -47,7 +47,7 @@ Item* List::Iterator::operator*() const {
 // ReSharper disable once CppMemberFunctionMayBeConst
 Item*& List::operator[](const SizeT& index) {
    auto* tmp = first;
-   for(auto i = 0; i < index; ++i) {
+   for(size_t i = 0; i < index; ++i) {
       tmp = tmp->next;
    }
 

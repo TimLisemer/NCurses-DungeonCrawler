@@ -41,13 +41,12 @@ public:
     void placeCharacter(Character *c, int row, int col);
 
     vector<Character*> getHumanCharacters();
-
     vector<Character*> getCharacters() const;
 
 private:
     struct GraphNode{
-        Tile* position;
-        std::list<GraphNode*> adjazenz_liste;
+        Tile* m_position;
+        std::list<GraphNode*> *adjazenz_liste;
     };
     std::vector<GraphNode*> graph_nodes;
     int m_height, m_width;

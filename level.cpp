@@ -143,6 +143,8 @@ Level::~Level() {
     for(auto* c: m_characters){
         delete c;
     }
+    //for(GraphNode* node : graph_nodes) delete node->adjazenz_liste;
+    for(GraphNode* node : graph_nodes) delete node;
 }
 
 int Level::getHeight() const {
@@ -179,7 +181,8 @@ void Level::createNodes()
     for(int i = 0; i < m_height; i++) {
         for(int j = 0; j < m_width; j++) {
             //initial node creation without adjacency list
-            graph_nodes.push_back(new GraphNode{m_world[i][j], nullptr});
+            graph_nodes.push_back((new GraphNode{m_world[i][j], nullptr}));
+            //graph_nodes.push_back(new GraphNode{m_world[i][j]});
         }
     }
     for(int i = 0; i < m_height; i++) {
@@ -201,8 +204,7 @@ void Level::createNodes()
             if(i > 0 && j > 0)              if(m_world[i-1][j-1]->clearPath()) myList->push_back(graph_nodes.at(m_width*(i-1) + j-1));
 
             //add list to Nodes
-            graph_nodes.at(m_width * i + j)->adjazenz_liste = myList;
-            //graph_nodes.at(i * m_width + j)->adjazenz_liste = myList;
+            graph_nodes.at(i * m_width + j)->adjazenz_liste = myList;
         }
     }
 }
@@ -221,7 +223,7 @@ std::list<int> Level::getPath(Tile* from, Tile* to)
 
     GraphNode* v;
     for(size_t i = 0; i < graph_nodes.size(); i++) {
-        if(graph_nodes.at(i)->position == from) {
+        if(graph_nodes.at(i)->m_position == from) {
             v = graph_nodes.at(i);
             abstand.at(i) = 0; //abstand from = 0;
         }
@@ -235,9 +237,9 @@ std::list<int> Level::getPath(Tile* from, Tile* to)
         v = q.front();
         q.pop();
         for(size_t i = 0; i < q.size(); i++) {
-            size_t row = q.front()->position->getRow();
-            size_t col = q.front()->position->getCol();
-            if(abstand[row*m_width + col] < abstand[v->position->getRow()*breite + v->position->getCol()]) {
+            size_t row = q.front()->m_position->getRow();
+            size_t col = q.front()->m_position->getCol();
+            if(abstand[row*m_width + col] < abstand[v->m_position->getRow()*m_width + v->m_position->getCol()]) {
                 //push old v again and pop new one from queue
                 q.push(v);
                 v = q.front();
@@ -248,12 +250,12 @@ std::list<int> Level::getPath(Tile* from, Tile* to)
             q.pop();
         }
 
-        visited[v->position->getRow()*m_width + v->position->getCol()] = true;
+        visited[v->m_position->getRow()*m_width + v->m_position->getCol()] = true;
 
         //aktualisiere Distanzen
         for(GraphNode* a : *v->adjazenz_liste) {
-            size_t a_index = a->position->getRow()*m_width + a->position->getCol();
-            size_t v_index = v->position->getRow()*m_width + v->position->getCol();
+            size_t a_index = a->m_position->getRow()*m_width + a->m_position->getCol();
+            size_t v_index = v->m_position->getRow()*m_width + v->m_position->getCol();
             if(visited[a_index]) continue; //already done
             if(abstand[a_index] < 0.0) q.push(a); // add new node if not yet in queue, so if dist = infinite
 
@@ -261,10 +263,10 @@ std::list<int> Level::getPath(Tile* from, Tile* to)
             //looks ugly but essentially just checks if the route over node of v_index is shorter
             //if node has negative distance, its not yet found so we just set it
             if((abstand[a_index] >= 0.0 && abstand[a_index] >
-                    abstand[v_index] + std::sqrt(abs(v->position->getRow() - a->position->getRow()) + abs(v->position->getCol() - a->position->getCol())))
+                    abstand[v_index] + std::sqrt(abs(v->m_position->getRow() - a->m_position->getRow()) + abs(v->m_position->getCol() - a->m_position->getCol())))
                     || abstand[a_index] < 0.0)
             {
-                abstand[a_index] = abstand[v_index] + std::sqrt(abs(v->position->getRow() - a->position->getRow()) + abs(v->position->getCol() - a->position->getCol()));
+                abstand[a_index] = abstand[v_index] + std::sqrt(abs(v->m_position->getRow() - a->m_position->getRow()) + abs(v->m_position->getCol() - a->m_position->getCol()));
                 previous[a_index] = v;
             }
         }
@@ -278,14 +280,14 @@ std::list<int> Level::getPath(Tile* from, Tile* to)
     if(!canBeReached) return std::list<int>('x'); //random char
     v = graph_nodes.at(to->getRow()*m_width + to->getCol());
     std::list<int> directions = std::list<int>();
-    while(v->position != from) {
+    while(v->m_position != from) {
         //parse backwards from to-Tile to start
         //this means we need to invert the movements, e.g 8 (up from target) becomes 2 (down from attacker)
-        size_t index = v->position->getRow() *m_width + v->position->getCol();
+        size_t index = v->m_position->getRow() *m_width + v->m_position->getCol();
         GraphNode* prev = previous[index];
 
-        int rowDiff = v->position->getRow() - prev->position->getRow();
-        int colDiff = v->position->getCol() - prev->position->getCol();
+        int rowDiff = v->m_position->getRow() - prev->m_position->getRow();
+        int colDiff = v->m_position->getCol() - prev->m_position->getCol();
         int dir;
 
         if(rowDiff == 0 && colDiff == 0) dir = '5';
