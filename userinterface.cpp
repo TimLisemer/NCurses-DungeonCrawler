@@ -1,304 +1,183 @@
 #include "userinterface.h"
+#include <ncurses.h>
+#include <string>
+#include "list"
+#include "consumable.h"
+#include "armor.h"
+#include "weapon.h"
 
-Controller::Controller(){}
+#define BASE_OFFSET_X 1
+#define BASE_OFFSET_Y 1
+#define STATS_OFFSET_X 25
+#define INV_OFFSET_X STATS_OFFSET_X
+#define CTRLS_OFFSET_X STATS_OFFSET_X + STATS_WIDTH + 1
 
-int Controller::move(Character *c){
-    return getch();
-}
+#define DEFAULT 0
+#define STATS 1
+#define INV 2
+#define LEVEL 3
 
+#define STATS_WIDTH  20
+#define STATS_HEIGHT 7
+#define INV_WIDTH 45
+#define INV_HEIGHT 10
+#define CTRLS_WIDTH INV_WIDTH - STATS_WIDTH
+#define CTRLS_HEIGHT STATS_HEIGHT
+#define LVL_WIDTH 22
+#define LVL_HEIGHT 17
 
-bool Controller::setTile(Character *c, const int key){
-    switch(key){
-        case '1':
-            if(c->getTile()->getRow()+1 < c->getLevel()->getHeight() && c->getTile()->getCol() -1 >= 0)
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() - 1)));
-            break;
-        case '2':
-            if(c->getTile()->getRow()+1 < c->getLevel()->getHeight()) {
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol())));
-            break;
-        case '3':
-            if(c->getTile()->getRow()+1 < c->getLevel()->getHeight() && c->getTile()->getCol()+1 < c->getLevel()->getWidth())
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() + 1, c->getTile()->getCol() + 1)));
-            break;
-        case '4':
-            if(c->getTile()->getCol()-1 >= 0)
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow(), c->getTile()->getCol() - 1)));
-            break;
-        case '6':
-            if(c->getTile()->getCol()+1 < c->getLevel()->getWidth())
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow(), c->getTile()->getCol() + 1)));
-            break;
-        case '7':
-            if(c->getTile()->getRow()-1 >= 0 && c->getTile()->getCol()-1 >= 0)
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() -1, c->getTile()->getCol() - 1)));
-            break;
-        case '8':
-            if(c->getTile()->getRow()-1 >= 0)
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol())));
-            break;
-        case '9':
-            if(c->getTile()->getRow()-1 >= 0 && c->getTile()->getCol() + 1 < c->getLevel()->getWidth())
-            return(c->getTile()->moveTo(c->getLevel()->getTile(c->getTile()->getRow() - 1, c->getTile()->getCol() + 1)));
-            break;
-        case '5':
-            return true;
-            break;
-        default:
-            logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
-            return false;
-        }
-    }
-    logging::Logger::instance()->log(logging::WARN, "Falsche Eingabe");
-    return false;
-}
-
-
-UserInterface::UserInterface() {
-    initscr();   // Init the screen
+UserInterface::UserInterface()
+{
+    initscr(); // Init the screen
     noecho();    // Do not display text input
     cbreak();    // Do not wait for enter on input
-    curs_set(0); // Let the cursor disappear
+
+    curs_set(0); //disable cursor
+
+    //start color needs to be called to use color
+    start_color();
+
+    //init color pairs
+    init_pair(DEFAULT, COLOR_BLACK, COLOR_WHITE);
+    init_pair(STATS, COLOR_BLACK, COLOR_RED);
+    init_pair(INV, COLOR_BLACK, COLOR_GREEN);
+    init_pair(LEVEL, COLOR_BLACK, COLOR_BLUE);
+
+    //initialize windows
+    //create stats win & bg
+    stats = newwin(STATS_HEIGHT,STATS_WIDTH,BASE_OFFSET_Y, BASE_OFFSET_X + STATS_OFFSET_X);
+    wbkgd(stats, COLOR_PAIR(STATS));
+
+    //create inv win & bg
+    inventory = newwin(INV_HEIGHT,INV_WIDTH,BASE_OFFSET_Y + STATS_HEIGHT + 1, BASE_OFFSET_X + INV_OFFSET_X);
+    wbkgd(inventory, COLOR_PAIR(INV));
+
+    //create controls info window
+    ctrls = newwin(CTRLS_HEIGHT, CTRLS_WIDTH, BASE_OFFSET_Y, CTRLS_OFFSET_X);
+    wbkgd(ctrls,COLOR_PAIR(STATS));
+    wclear(ctrls);
+    box(ctrls,0,0);
+
+    mvwaddstr(ctrls,1,1,"Board | Inventory");
+    mvwaddstr(ctrls,2,1,"----------------------");
+    mvwaddstr(ctrls,3,1,"7 8 9 | f -> use/drop");
+    mvwaddstr(ctrls,4,1,"4 5 6 | w/s -> up/down");
+    mvwaddstr(ctrls,5,1,"1 2 3 | 0 -> exit");
+
+    //create lvl window
+    lvl = newwin(LVL_HEIGHT, LVL_WIDTH, BASE_OFFSET_Y, BASE_OFFSET_X);
+    wbkgd(lvl, COLOR_PAIR(LEVEL));
+    wclear(lvl);
+    box(lvl,0,0);
 }
 
-void UserInterface::draw(Level *lvl) {
+UserInterface::~UserInterface() {
+
+}
+
+void UserInterface::draw(Level *level) {
     //draw line by line, start top left
-    for(int i = 0; i < lvl->getHeight(); i++) {
-        for(int j = 0; j < lvl->getWidth(); j++) {
-            mvaddch(i + 13,j + 25,lvl->getTile(i,j)->getIcon());
+    for(int i = 0; i < level->getHoehe(); i++) {
+        for(int j = 0; j < level->getBreite(); j++) {
+            mvwaddch(lvl, i+1, BASE_OFFSET_Y + j,level->getTile(i,j)->getIcon());
         }
     }
+    //refresh windows ctrls and lvl
+    touchwin(ctrls);
+    touchwin(lvl);
+    wrefresh(ctrls);
+    wrefresh(lvl);
 }
 
-UserInterface::~UserInterface(){
-    delwin(m_HeaderWindow);
-    endwin();
+void UserInterface::drawStatusBar(Character *c) {
+    wclear(stats);
+    //ncurses hat sich gewehrt den concat in mvwaddstr zu machen >:(, string auf länge des windows buffern
+    string info = "Icon: ";
+    info += c->getIcon();
+    // if(STATS_WIDTH - info.length()) to prevent negative length exception
+    mvwaddstr(stats,1,1, info.c_str());
+    info = "HP: " + std::to_string(c->getCurrentHP()) + "/" + std::to_string(c->getMaxHP());
+    mvwaddstr(stats,2,1, info.c_str());
+    info = "Stamina: " + std::to_string(c->getStamina());
+    mvwaddstr(stats,3,1,info.c_str());
+    info = "Strength: " + std::to_string(c->getStrength());
+    mvwaddstr(stats,4,1, info.c_str());
+    info = "Position: " + std::to_string(c->getTile()->getRow()) + "-" + std::to_string(c->getTile()->getCol());
+    mvwaddstr(stats,5,1, info.c_str());
+    box(stats,0,0);
+    wrefresh(stats);
 }
 
-void UserInterface::setGameMenu(const int menu, Character* c){
+void UserInterface::drawInventory(Character *c)
+{
+    wbkgd(inventory, COLOR_PAIR(INV));
+    List* items = c->getItems();
+    if(items->empty()) return;
 
-    if(m_HeaderWindow != nullptr){
-        wrefresh(m_HeaderWindow);
-        delwin(m_HeaderWindow);
-    }
+    char d = 'a';
+    List::iterator selected = items->begin();
 
-    if(menu == 0){
-        //Game Header
-        m_HeaderWindow = newwin(11, 100, 1, 24);
-        m_gameMenu = false;
-        mvaddstr(2,25, "Press 1-9 to Move");
-        mvaddstr(3,25, "Press 0 to Close");
-        mvaddstr(4,25, "Press 5 to open Game Menu");
-        string icon(1, c->getIcon());
-        mvaddstr(6,25, std::string("Active Player    : " + icon).c_str());
-        mvaddstr(7,25, std::string("Stats: Strenght  : " + std::to_string(c->getStrenght())).c_str());
-        mvaddstr(8,25, std::string("       Stamina   : " + std::to_string(c->getStamina())).c_str());
-        int maxhp = c->getMaxHP();
-        mvaddstr(9,25, std::string("       Hitpoints : " + std::to_string(c->getHitPoints()) + " / " + std::to_string(maxhp)).c_str());
-        mvaddstr(10,25, std::string("       Backpack  : " + std::to_string(c->getInventorySize())).c_str());
-    }else if(menu == 1){
-        //Game Menu
-        m_HeaderWindow = newwin(6, 22, 1, 24);
-        m_gameMenu = true;
-        m_Inventory = false;
-        mvaddstr(2,25, "Gamemenu");
-        mvaddstr(4,25, "q: Quit Game");
-        mvaddstr(5,25, "i: Open Inventory");
-    }else if(menu == 2){
-        //Inventory
-        m_gameMenu = false;
-        m_Inventory = true;
-        m_HeaderWindow = newwin(12, 100, 1, 24);
-        mvaddstr(2,25, "Inventory - Press i to close");
-        if(c->getInventorySize() > 0){
-            if(c->getInventorySize() > 1){
-                mvaddstr(3,25, std::string("1 - " + std::to_string(c->getInventorySize()) + " to Consume / Drop Items").c_str());
-            }else{
-                mvaddstr(3,25, "1 to Consume / Drop Item");
-            }
+    while(d != '0') {
+        //clear screen
+        wclear(inventory);
+        box(inventory,0,0);
+        wrefresh(inventory);
 
-            for(int i = 1; i < c->getInventorySize() + 1; i++){
-                Consumable* con = dynamic_cast<Consumable*>(c->m_items[i-1]);
-                if(con != nullptr){
-                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items[i-1]->getName() + " (" + std::to_string(con->getAmount()) + ")").c_str());
-                }else{
-                    mvaddstr(4+i,25, std::string(std::to_string(i) + ": " + c->m_items[i-1]->getName()).c_str());
+
+        if(d == 'w') {
+            try {
+                --selected;;
+            }  catch (std::exception& e) { }
+        } else if (d == 's') {
+            List::iterator copy = selected;
+            if(!(++copy == items->end())) ++selected;
+        } else if (d == 'f') {
+            if(dynamic_cast<Consumable*>(*selected)) {
+                //use potion, if stack empty remove potion from items
+                dynamic_cast<Consumable*>(*selected)->onDrop(c, c->getTile());
+                if(dynamic_cast<Consumable*>(*selected)->getAmount() == 0) {
+                    delete *selected; //delete data in now empty slot before it gets removed
+                    items->remove(*selected);
+                    //reset to beginning
+                    selected = items->begin();
                 }
             }
-        }else{
-            mvaddstr(4,25, "No Items in Inventory");
+            else if(!c->getTile()->getItem()) {
+                //remove deletes the element but not the data
+                (*selected)->onDrop(c,c->getTile());
+                items->remove(*selected);
+                //reset to beginning
+                selected = items->begin();
+            }
         }
+        //so we dont get an error handling nullptrs
+        if(items->empty()) break;
+        size_t count = 2;
+        string info = "Inventory:  ";
+        mvwaddstr(inventory,1,1, info.c_str());
+        for(List::iterator it = items->begin(); it != items->end(); ++it) {
+            info = "";
+            if(it == selected) {
+                info = "> ";
+            }
+            info += (*it)->getName();
+            if(dynamic_cast<Consumable*>(*it)) info += " |" + std::to_string(dynamic_cast<Consumable*>(*it)->getAmount()) + "|";
+            mvwaddstr(inventory,count,1, info.c_str());
+            count++;
+        }
+        drawStatusBar(c);
+        wrefresh(stats);
+        wrefresh(inventory);
+        d = getch();
     }
+    //close inv
+    wbkgd(inventory, COLOR_PAIR(DEFAULT));
+    werase(inventory);
+    wrefresh(inventory);
 }
 
-
-int UserInterface::move(Character* c) {
-
-    if(m_firstStartup){
-        setGameMenu(0, c);
-        m_firstStartup = false;
-    }
-
-    bool pause = false;
-    int key;
-
-    do{
-        key = getch();
-
-        //Check Close Game Keys
-        if(key == 27 || key == 'q' || key == '0'){
-            //Quit Game
-            logging::Logger::instance()->log(logging::INFO, "Input 0 (Quit Game)");
-            DungeonCrawler::quit();
-            break;
-        }
-
-        if(!pause){
-            if(key != '5'){
-                Controller::setTile(c, key);
-                setGameMenu(0, c);
-            }else{
-                logging::Logger::instance()->log(logging::INFO, "Input 5 (Open Game Menu)");
-                pause = true;
-                setGameMenu(1, c);
-            }
-        }else{
-            if(m_Inventory){
-                if((key - 48) >= 1 && (key - 48) <= c->getInventorySize()){
-                    logging::Logger::instance()->log(logging::INFO, "Input i (Consume / Drop Item)");
-
-                    try {
-                        Consumable* con = dynamic_cast<Consumable*>(c->m_items[key - 48 - 1]);
-                        if(con == nullptr){
-                            Item* item = c->m_items[key - 48 - 1];
-                            item->onDrop(c, c->getTile());
-                            logging::Logger::instance()->log(logging::INFO, std::string("Dropped Item" + item->getName()));
-                            setGameMenu(0, c);
-                            pause = false;
-                        }else{
-                            if(con->consume(c)){
-                                setGameMenu(0, c);
-                                logging::Logger::instance()->log(logging::INFO, std::string("Consumed Item" + con->getName()));
-                                pause = false;
-                            }else{
-                                logging::Logger::instance()->log(logging::INFO, std::string("Failed to Consume" + c->m_items[key - 48 - 1]->getName()));
-                            }
-                        }
-                    }  catch(std::invalid_argument){}
-
-                }else{
-                    logging::Logger::instance()->log(logging::INFO, "Input i (Close Inventory)");
-                    setGameMenu(1, c);
-                }
-            }else{
-                if(key == 'i'){
-                    logging::Logger::instance()->log(logging::INFO, "Input i (Show Inventory)");
-                    setGameMenu(2, c);
-                }else{
-                    logging::Logger::instance()->log(logging::INFO, "Input i (Close Game Menu)");
-                    setGameMenu(0, c);
-                    pause = false;
-                }
-            }
-        }
-    }while (pause);
-
+int UserInterface::move() {
+    int key = getch();
+    //return the key, check in main game loop if the game should continue
     return key;
 }
-
-
-
-
-
-///
-/// \brief StationaryController::StationaryController
-///
-StationaryController::StationaryController(){}
-
-int StationaryController::move(Character* c){
-    Controller::setTile(c, '5');
-    return '5';
-}
-
-
-
-///
-/// \brief GuardController::GuardController
-///
-GuardController::GuardController(const string pattern) : m_pattern(pattern) {}
-
-
-int GuardController::move(Character* c){
-    string newPattern;
-    for(size_t i = 1; i < m_pattern.size(); i++){
-        newPattern.push_back(m_pattern.at(i));
-    }
-    newPattern.push_back(m_pattern.at(0));
-    if(Controller::setTile(c, newPattern.at(newPattern.size() - 1))){
-        m_pattern = newPattern;
-    }
-    return newPattern.at(newPattern.size() - 1);
-}
-
-
-
-
-
-AttackController::AttackController(Level* level) : m_level(level) {}
-
-AttackController::~AttackController(){
-    delete m_level;
-    Controller::~Controller();
-}
-
-
-int AttackController::move(Character *c){
-    Tile* currentTile = c->getTile();
-    Tile* destTile = m_level->getPath(currentTile, m_level->getHumanCharacters().at(0)->getTile()).at(0);
-
-    if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() == destTile->getCol()){
-        Controller::setTile(c, '8');
-        return '8';
-    }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() == destTile->getCol()){
-        Controller::setTile(c, '2');
-        return '2';
-    }else if(currentTile->getRow() == destTile->getRow() && currentTile->getCol() > destTile->getCol()){
-        Controller::setTile(c, '4');
-        return '4';
-    }else if(currentTile->getRow() == destTile->getRow() && currentTile->getCol() < destTile->getCol()){
-        Controller::setTile(c, '6');
-        return '6';
-
-
-    }else if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() > destTile->getCol()){
-        Controller::setTile(c, '7');
-        return '7';
-    }else if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() < destTile->getCol()){
-        Controller::setTile(c, '9');
-        return '9';
-    }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() > destTile->getCol()){
-        Controller::setTile(c, '1');
-        return '1';
-    }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() < destTile->getCol()){
-        Controller::setTile(c, '3');
-        return '3';
-
-
-    }else{
-        Controller::setTile(c, '5');
-        return '5';
-    }
-
-
-}
-
-
-
-
-
-
-
-
-
-
-

@@ -1,203 +1,177 @@
 #include "list.h"
 #include <stdexcept>
-#include "item.h"
 
-bool List::Iterator::isIndexAtEnd() const {
-   return index >= list->size;
+List::List() = default;
+
+List::~List() { clear(); }
+
+bool List::empty() const { return m_first == nullptr; }
+
+void List::push_back(const data_t &value) {
+    if (m_first == nullptr) {
+        m_first = createElement(value);
+        m_first->prev = nullptr;
+        m_first->next = nullptr;
+        m_last = m_first;
+    } else {
+        auto *tmp = createElement(value);
+        tmp->next = nullptr;
+        tmp->prev = m_last;
+        m_last->next = tmp;
+        m_last = tmp;
+    }
+    m_size++;
 }
 
-List::Iterator::Iterator(List* list, const SizeT& index)
-   : list(list), index(index) {}
-
-List::Iterator& List::Iterator::operator++() {
-   if(isIndexAtEnd()) {
-      throw std::runtime_error(ERR_PLUS_END);
-   }
-   index++;
-   return *this;
+void List::push_front(const data_t &value) {
+    if (m_first == nullptr) {
+        m_first = createElement(value);
+        m_first->prev = nullptr;
+        m_first->next = nullptr;
+        m_last = m_first;
+    } else {
+        auto *tmp = createElement(value);
+        tmp->next = m_first;
+        tmp->prev = nullptr;
+        m_first->prev = tmp;
+        m_first = tmp;
+    }
+    m_size++;
 }
 
-List::Iterator& List::Iterator::operator--() {
-   if(index == 0) {
-      throw std::runtime_error(ERR_MINUS_BEGIN);
-   }
-   if(isIndexAtEnd()) {
-      throw std::runtime_error(ERR_MINUS_END);
-   }
-   index--;
-   return *this;
+void List::pop_back() {
+    if (m_last == nullptr) {
+        throw std::runtime_error("Cannot call pop_back on empty list!");
+    }
+    auto *tmp = m_last->prev;
+    delete m_last;
+    m_last = tmp;
+    m_size--;
 }
 
-bool List::Iterator::operator==(const Iterator& rhs) const {
-   return this->list == rhs.list && this->index == rhs.index;
+void List::pop_front() {
+    if (m_first == nullptr) {
+        throw std::runtime_error("Cannot call pop_front on empty list!");
+    }
+    auto *tmp = m_first->next;
+    delete m_first;
+    m_first = tmp;
+    m_size--;
 }
 
-bool List::Iterator::operator!=(const Iterator& rhs) const {
-   return !(*this == rhs);
+const data_t &List::front() const {
+    if (m_first == nullptr) {
+        throw std::runtime_error("List is empty!");
+    }
+    return m_first->data;
 }
 
-Item* List::Iterator::operator*() const {
-   if(isIndexAtEnd()) {
-      throw std::runtime_error(ERR_MINUS_END);
-   }
-
-   return (*list)[index];
+const data_t &List::back() const {
+    if (m_last == nullptr) {
+        throw std::runtime_error("List is empty!");
+    }
+    return m_last->data;
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
-Item*& List::operator[](const SizeT& index) {
-   auto* tmp = first;
-   for(auto i = 0; i < index; ++i) {
-      tmp = tmp->next;
-   }
-
-   return tmp->item;
+data_t &List::front() {
+    if (m_first == nullptr) {
+        throw std::runtime_error("List is empty!");
+    }
+    return m_first->data;
 }
 
-List::~List() {
-   clear();
+data_t &List::back() {
+    if (m_last == nullptr) {
+        throw std::runtime_error("List is empty!");
+    }
+    return m_last->data;
 }
 
-bool List::isEmpty() const {
-   return first == nullptr;
+void List::remove(Item *item)
+{
+    Element* copy = m_first;
+    if(!copy) return;
+
+    while(copy) {
+        if(copy->data == item) {
+            //will be deleted in the end
+            Element* e = copy;
+            //check for potential nullptrs
+            //only one element, is now gone
+            if(copy->next == nullptr && copy->prev == nullptr) {
+                m_first = nullptr;
+                m_last = nullptr;
+            }
+            //prev is now new last element
+            else if(copy->next == nullptr)  {
+                m_last = copy->prev;
+                m_last->next = nullptr;
+            }
+            //prev is nullptr; next element is new first
+            else if(copy->prev == nullptr) {
+                m_first = copy->next;
+                m_first->prev = nullptr;
+            }else {
+                //prev pointer of following element is previous element
+                copy->next->prev = copy->prev;
+                //next pointer of previous element is next element
+                copy->prev->next = copy->next;
+            }
+            copy = copy->next;
+            delete e;
+        } else {
+            copy = copy->next;
+        }
+    }
 }
 
-void List::pushBack(Item* item) {
-   if(first == nullptr) {
-      first = createElement(item);
-      first->prev = nullptr;
-      first->next = nullptr;
-      last = first;
-   } else {
-      auto* tmp = createElement(item);
-      tmp->next = nullptr;
-      tmp->prev = last;
-      last->next = tmp;
-      last = tmp;
-   }
-   size++;
-}
-
-void List::pushFront(Item* item) {
-   if(first == nullptr) {
-      first = createElement(item);
-      first->prev = nullptr;
-      first->next = nullptr;
-      last = first;
-   } else {
-      auto* tmp = createElement(item);
-      tmp->next = first;
-      tmp->prev = nullptr;
-      first->prev = tmp;
-      first = tmp;
-   }
-   size++;
-}
-
-void List::popBack() {
-   if(last == nullptr) {
-      throw std::runtime_error("Cannot call pop_back on empty list!");
-   }
-   auto* tmp = last->prev;
-   delete last;
-   last = tmp;
-   size--;
-}
-
-void List::popFront() {
-   if(first == nullptr) {
-      throw std::runtime_error("Cannot call pop_front on empty list!");
-   }
-   auto* tmp = first->next;
-   delete first;
-   first = tmp;
-   size--;
-}
-
-const Item* List::getFront() const {
-   if(first == nullptr) {
-      throw std::runtime_error("List is empty!");
-   }
-   return first->item;
-}
-
-const Item* List::getBack() const {
-   if(last == nullptr) {
-      throw std::runtime_error("List is empty!");
-   }
-   return last->item;
-}
-
-Item* List::getFront() {
-   if(first == nullptr) {
-      throw std::runtime_error("List is empty!");
-   }
-   return first->item;
-}
-
-Item* List::getBack() {
-   if(last == nullptr) {
-      throw std::runtime_error("List is empty!");
-   }
-   return last->item;
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
 void List::clear() {
-   auto* current = first;
-   while(current != nullptr) {
-      auto* tmp = current;
-      current = current->next;
-      //delete tmp->item; // TODO: wtf
-      delete tmp;
-   }
+    auto *current = m_first;
+    while (current != nullptr) {
+        auto *tmp = current;
+        current = current->next;
+        delete tmp;
+    }
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
-bool List::remove(Item* item) {
-   auto* tmp = first;
-   while(tmp) {
-      if(tmp->item == item) {
-         if(tmp->prev) {
-            tmp->prev->next = tmp->next;
-            if(tmp->next) {
-               tmp->next->prev = tmp->prev;
-            } else {
-               last = tmp->prev;
-            }
-         } else {
-            first = tmp->next;
-            if(tmp->next) {
-               tmp->next->prev = nullptr;
-            } else {
-               last = tmp->prev;
-            }
-         }
+List::size_t List::size() const { return m_size; }
 
-         delete tmp;
-         size--;
-         return true;
-      }
-      tmp = tmp->next;
-   }
-
-   return false;
+List::Element *List::createElement(const data_t &data) {
+    auto *tmp = new Element;
+    tmp->data = data;
+    return tmp;
 }
 
-List::SizeT List::getSize() const {
-   return size;
+List::iterator::iterator(Element* e) : element(e) {
+
 }
 
-List::Iterator List::begin() {
-   return {this, 0};
+Item*& List::iterator::operator*() {
+    if(element == nullptr) throw std::runtime_error("cant deref invalid iterator");
+    return element->data;
 }
 
-List::Iterator List::end() {
-   return {this, size};
+List::iterator& List::iterator::operator++() {
+    if(element == nullptr) {
+        throw std::runtime_error("cant increment on illegal iterator");
+    }
+    element = element->next;
+    return *this;
 }
 
-List::Node* List::createElement(Item* data) {
-   auto* tmp = new Node;
-   tmp->item = data;
-   return tmp;
+List::iterator& List::iterator::operator--() {
+    if(element->prev == nullptr) {
+        throw std::runtime_error("cant decrement begin iterator");
+    }
+    element = element->prev;
+    return *this;
+}
+
+bool List::iterator::operator==(const iterator& i) {
+    return element == i.element;
+}
+
+
+bool List::iterator::operator!=(const iterator &i) {
+    return element != i.element;
 }

@@ -1,152 +1,116 @@
 #include "character.h"
 #include "tile.h"
 #include <ncurses.h>
-#include "logger.h"
+#include "weapon.h"
+#include "armor.h"
 
-Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina, const bool human) : m_controller(controller), m_level(level), m_icon(icon),
-    m_strenght(strenght), m_stamina(stamina), m_hitPoints(20 + (m_stamina*5)), m_Human(human){}
+Character::Character(char icon, int strength, int stamina, bool isNPC) : icon(icon), strength(strength), stamina(stamina), NPC(isNPC)
+{
+    hp = getMaxHP();
+    items = new List();
+}
 
-//delete Character
-Character::~Character(){
-    delete m_controller;
-    for(size_t i = 0; i < m_items.getSize(); i++){
-        delete m_items[i];
+Character::~Character() {
+
+    //delete all the item* in the list since delete list only deletes elements and not data in element struct
+    List::iterator it = items->begin();
+    List::iterator end = items->end();
+    while(it != end) {
+        delete *it; //delete data
+        ++it;
     }
-}
-
-int Character::move(){
-    return m_controller->move(this);
-}
-
-void Character::setTile(Tile *tile) {
-    m_position = tile;
-}
-
-Tile* Character::getTile() const{
-    return m_position;
-}
-
-Controller* Character::getController() const{
-    return m_controller;
-}
-
-void Character::setController(Controller *controller){
-    m_controller = controller;
+    delete items;
 }
 
 char Character::getIcon() const {
-    return m_icon;
+    return icon;
 }
 
-void Character::setIcon(const char icon){
-    m_icon = icon;
+void Character::setTile(Tile *tile) {
+    position = tile;
 }
 
-int Character::getStrenght() const{
-    return m_strenght;
+Tile* Character::getTile() {
+    return position;
 }
 
-void Character::setStrenght(const int strenght){
-    m_strenght = strenght;
+int Character::move() {
+    return controller->move();
 }
 
-
-int Character::getStamina() const{
-    return m_stamina;
+bool Character::isNPC() const
+{
+    return NPC;
 }
 
-void Character::setStamina(const int stamina){
-    m_stamina = stamina;
+bool Character::isAlive() const
+{
+    return alive;
 }
 
-
-int Character::getHitPoints() const{
-    return m_hitPoints;
+void Character::takeDamage(int dmg)
+{
+    hp -= dmg;
 }
 
-void Character::setHitPoints(const int hitPoints){
-    m_hitPoints = hitPoints;
+int Character::getStrength() const
+{
+    return strength;
 }
 
-
-int Character::getMaxHP() const{
-    return ((20 + (m_stamina*5)) * m_maxHpMultiplier) + m_maxHPBuffer;
+int Character::getStamina() const
+{
+    return stamina;
 }
 
-int Character::getMaxHPBuffer() const{
-    return m_maxHPBuffer;
+void Character::pickupItem(Item *item)
+{
+    items->push_back(item);
 }
 
-void Character::setMaxHpMultiplier(const double multiplier){
-    m_maxHpMultiplier = multiplier;
-    if(getHitPoints() > getMaxHP()){
-        setHitPoints(getMaxHP());
-    }
+List* Character::getItems() const
+{
+    return items;
 }
 
-void Character::setMaxHpBuffer(const int buffer){
-    m_maxHPBuffer = buffer;
+Controller *Character::getController() const
+{
+    return controller;
 }
 
-
-void Character::addToInventory(Item *item){
-    item->onEquip(this);
-    m_items.pushBack(item);
+void Character::addMaxHp(int val)
+{
+    baseHP += val;
 }
 
-
-int Character::getInventorySize() const{
-    return m_items.getSize();
+void Character::addCurrHp(int val)
+{
+    hp += val;
 }
 
-
-Level* Character::getLevel() const{
-    return m_level;
+void Character::addStrength(int val)
+{
+    strength += val;
 }
 
-bool Character::getHuman() const{
-    return m_Human;
+void Character::addStamina(int val)
+{
+    stamina += val;
 }
 
-bool Character::alive() const{
-    return m_hitPoints > 0;
+void Character::setAlive(bool value)
+{
+    alive = value;
 }
 
-void Character::Attack(Character *e){
-    e->Defense(this);
+void Character::setController(Controller *ctrl) {
+    controller = ctrl;
 }
 
-void Character::Defense(Character *e){
-    m_hitPoints = m_hitPoints - e->getStrenght();
+int Character::getMaxHP() const {
+    return baseHP + stamina * 5;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+int Character::getCurrentHP() const {
+    return hp;
+}
