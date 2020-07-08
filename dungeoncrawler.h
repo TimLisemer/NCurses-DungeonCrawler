@@ -1,22 +1,24 @@
 #ifndef DUNGEONCRAWLER_H
 #define DUNGEONCRAWLER_H
-#include "userinterface.h"
 #include <vector>
+#include <ncurses.h>
 
-class DungeonCrawler
-{
+#include "userinterface.h"
+#include "level.h"
+#include "logger.h"
+
+class Level;
+class UserInterface;
+
+class DungeonCrawler {
 public:
     DungeonCrawler();
     ~DungeonCrawler();
-
     void play();
-
-    void switchPosition(int row, int col, int dir);
     static void quit();
 private:
-    UserInterface* UI;
-    Level* current;
-    std::vector<Character*> characters;
+    UserInterface* m_ui;
+    vector<Level*> m_levels;
     static bool m_running;
 };
 

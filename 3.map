@@ -458,7 +458,7 @@ Floor
 Floor
 	- col: 9
 	- row: 7
-Wall
+Door
 	- col: 10
 	- row: 7
 Floor
@@ -476,7 +476,7 @@ Floor
 Switch
 	- col: 15
 	- destcols: 10 7
-	- destrows: 8 2
+	- destrows: 7 2
 	- row: 7
 Floor
 	- col: 16
@@ -520,7 +520,7 @@ Floor
 Floor
 	- col: 9
 	- row: 8
-Door
+Wall
 	- col: 10
 	- row: 8
 Floor

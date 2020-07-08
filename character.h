@@ -1,74 +1,77 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
-#include "controller.h"
-#include "list.h"
+#include <vector>
+using std::vector;
+#include "userinterface.h"
 #include "item.h"
+#include "level.h"
+#include "list.h"
+
+
+using std::string;
 
 class Tile;
+class Controller;
 class Item;
-class List;
+class Level;
 
-class Character
-{
+class Character{
+
 public:
-    Character(char icon, int strength, int stamina, bool isNPC = true);
 
+    Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina, const bool human);
+    Character(const Character &character) = delete;
     ~Character();
 
-    char getIcon() const;
-
-    Tile* getTile();
-
+    Tile* getTile() const;
     void setTile(Tile* tile);
-
-    void setController(Controller* ctrl);
-
-    int getMaxHP() const;
-
-    int getCurrentHP() const;
+    Controller* getController() const;
+    void setController(Controller* controller);
 
     int move();
 
-    bool isNPC() const;
+    char getIcon() const;
+    void setIcon(const char icon);
 
-    bool isAlive() const;
-
-    void takeDamage(int dmg);
-
-    int getStrength() const;
+    int getStrenght() const;
+    void setStrenght(const int strenght);
 
     int getStamina() const;
+    void setStamina(const int stamina);
 
-    void pickupItem(Item* item);
+    int getHitPoints() const;
+    void setHitPoints(const int hitPoints);
 
-    List* getItems() const;
+    int getMaxHP() const;
+    void setMaxHpMultiplier(const double multiplier);
 
-    Controller *getController() const;
+    int getMaxHPBuffer() const;
+    void setMaxHpBuffer(const int buffer);
 
-    void addMaxHp(int val);
+    void addToInventory(Item* item);
+    int getInventorySize() const;
+    List m_items;
+    Level* getLevel() const;
 
-    void addCurrHp(int val);
-
-    void addStrength(int val);
-
-    void addStamina(int val);
-
-    void setAlive(bool value);
+    bool getHuman() const;
+    bool alive() const;
+    void Attack(Character* e);
+    void Defense(Character* e);
 
 private:
-    const char icon;
-    Tile* position;
-    Controller* controller;
 
-    int baseHP = 20;
-    int hp;
-    int strength;
-    int stamina;
+    Tile* m_position;
+    Controller* m_controller;
+    Level* m_level;
 
-    bool NPC;
-    bool alive = true;
+    bool m_Human;
 
-    List* items;
+    int m_maxHPBuffer = 0;
+    double m_maxHpMultiplier = 1.0;
+    char m_icon;
+    int m_strenght = 0;
+    int m_stamina = 0;
+    int m_hitPoints = 0;
 };
 
 #endif // CHARACTER_H

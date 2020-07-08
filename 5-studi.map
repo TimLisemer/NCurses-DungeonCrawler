@@ -934,7 +934,7 @@ Character
 Character
 	- col: 15
 	- controller: AttackController
-	- icon: %
+	- icon: A
 	- row: 6
 	- stamina: 2
 	- strength: 2

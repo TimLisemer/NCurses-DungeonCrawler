@@ -1,45 +1,58 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 #include "tile.h"
-#include "vector"
+#include <fstream>
+#include <vector>
 #include <list>
+#include "node.h"
+#include "userinterface.h"
+#include "tile.h"
+#include "character.h"
 
-class Level
-{
+using std::string;
+using std::ifstream;
+
+
+class UserInterface;
+class Tile;
+class Character;
+
+class Level {
+
 public:
-    Level(); //creates a level by default!
-    Level(int hoehe, int breite);
+
+    Level(UserInterface* ui);
+    Level(int width, int height);
     Level(const Level &rhs) = delete;
     ~Level();
 
-    Tile* getTile(int row, int col);
-
-    const Tile *getTile(int row, int col) const;
-
-    int getHoehe() const;
-
-    int getBreite() const;
+    Tile* getTile(const int row, const int col);
 
     void createNodes();
 
     std::list<int> getPath(Tile* from, Tile* to);
 
+    const Tile *getTile(const int row, const int col) const;
+
     void updateGraph(Tile* location);
 
+    int getHeight() const;
+    int getWidth() const;
     void placeCharacter(Character *c, int row, int col);
 
-    void loadLevel(const string& lvl);
+    vector<Character*> getHumanCharacters();
+
+    vector<Character*> getCharacters() const;
 
 private:
-    struct GraphNode {
+    struct GraphNode{
         Tile* position;
-        std::list<GraphNode*>* adjazenz_liste;
+        std::list<GraphNode*> adjazenz_liste;
     };
     std::vector<GraphNode*> graph_nodes;
-    int hoehe, breite;
-    Tile*** welt;
-    //vector saves all the controller so we dont lose there reference if character controller ist changed
-    std::vector<Controller*> controller;
+    int m_height, m_width;
+    std::vector<Character*> m_characters;
+    Tile*** m_world;
 };
 
 #endif // LEVEL_H
