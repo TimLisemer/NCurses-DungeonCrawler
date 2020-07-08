@@ -25,6 +25,8 @@ private:
     const int m_row;
     const int m_col;
 
+    bool m_passable = false;
+
 public:
 
     explicit
@@ -33,8 +35,6 @@ public:
     Tile(int row, int col, Level* level, Item* item);
 
     virtual ~Tile();
-
-    bool clearPath();
 
     char getIcon() const;
     void setIcon(const char Icon);
@@ -62,6 +62,8 @@ public:
     bool hasItem() const;
     void pickupItem(Tile* toTile);
 
+    virtual bool clearPath();
+    virtual void setPassable(const bool passable);
 };
 
 

@@ -85,7 +85,6 @@ private:
 class AttackController : public Controller{
 public:
     AttackController(Level* level);
-    virtual ~AttackController();
     virtual int move(Character* c);
 private:
     Level* m_level;
