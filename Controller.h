@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-
+//Todo: Klasse Löschen
 class Controller{
 
 private:
