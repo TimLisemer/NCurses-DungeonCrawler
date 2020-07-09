@@ -2,7 +2,7 @@
 #include "tile.h"
 #include <ncurses.h>
 #include "logger.h"
-//TODO Add more Items
+//TODO: Add more Items
 
 Character::Character(Controller* controller, Level* level, const char icon, const int strenght, const int stamina, const bool human) : m_controller(controller), m_level(level), m_icon(icon),
     m_strenght(strenght), m_stamina(stamina), m_hitPoints(20 + (m_stamina*5)), m_Human(human){}
