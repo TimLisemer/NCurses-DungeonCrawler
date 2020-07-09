@@ -2,8 +2,14 @@
 #define LEVEL_H
 #include "tile.h"
 #include <fstream>
-#include <vector>
 #include <list>
+
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <math.h>
+
 #include "node.h"
 #include "userinterface.h"
 #include "tile.h"
@@ -22,33 +28,35 @@ class Level {
 public:
 
     Level(UserInterface* ui);
-    Level(int width, int height);
     Level(const Level &rhs) = delete;
     ~Level();
 
     Tile* getTile(const int row, const int col);
 
-    void createNodes();
-
-    std::list<int> getPath(Tile* from, Tile* to);
-
     const Tile *getTile(const int row, const int col) const;
-
-    void updateGraph(Tile* location);
 
     int getHeight() const;
     int getWidth() const;
     void placeCharacter(Character *c, int row, int col);
 
+    std::list<int> getPath(Tile* from, Tile* to);
+    void createNodes();
+    void updateGraph();
+
+
     vector<Character*> getHumanCharacters();
+
     vector<Character*> getCharacters() const;
 
+
 private:
+
     struct GraphNode{
-        Tile* m_position;
-        std::list<GraphNode*> *adjazenz_liste;
+        Tile* position;
+        std::list<GraphNode*>* adjazenz_liste;
     };
     std::vector<GraphNode*> graph_nodes;
+
     int m_height, m_width;
     std::vector<Character*> m_characters;
     Tile*** m_world;

@@ -1,8 +1,9 @@
 #include "userinterface.h"
+#include <list>
 
 Controller::Controller(){}
 
-int Controller::move(Character *c){
+int Controller::move([[maybe_unused]]Character *c){
     return getch();
 }
 
@@ -246,49 +247,12 @@ int GuardController::move(Character* c){
 
 AttackController::AttackController(Level* level) : m_level(level) {}
 
-AttackController::~AttackController(){
-    delete m_level;
-    Controller::~Controller();
-}
-
-
 int AttackController::move(Character *c){
-    Tile* currentTile = c->getTile();
-    Tile* destTile = m_level->getPath(currentTile, m_level->getHumanCharacters().at(0)->getTile()).at(0);
 
-    if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() == destTile->getCol()){
-        Controller::setTile(c, '8');
-        return '8';
-    }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() == destTile->getCol()){
-        Controller::setTile(c, '2');
-        return '2';
-    }else if(currentTile->getRow() == destTile->getRow() && currentTile->getCol() > destTile->getCol()){
-        Controller::setTile(c, '4');
-        return '4';
-    }else if(currentTile->getRow() == destTile->getRow() && currentTile->getCol() < destTile->getCol()){
-        Controller::setTile(c, '6');
-        return '6';
+    std::list<int> i = m_level->getPath(c->getTile(), m_level->getHumanCharacters().at(0)->getTile());
 
-
-    }else if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() > destTile->getCol()){
-        Controller::setTile(c, '7');
-        return '7';
-    }else if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() < destTile->getCol()){
-        Controller::setTile(c, '9');
-        return '9';
-    }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() > destTile->getCol()){
-        Controller::setTile(c, '1');
-        return '1';
-    }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() < destTile->getCol()){
-        Controller::setTile(c, '3');
-        return '3';
-
-
-    }else{
-        Controller::setTile(c, '5');
-        return '5';
-    }
-
+    Controller::setTile(c, i.front());
+    return i.front();
 
 }
 
