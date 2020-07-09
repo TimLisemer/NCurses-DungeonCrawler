@@ -921,8 +921,8 @@ Character
 	- controller: ConsoleController
 	- icon: @
 	- row: 5
-	- stamina: 10
-	- strength: 10
+	- stamina: 1
+	- strength: 1
 Character
 	- col: 2
 	- controller: GuardController
@@ -936,7 +936,7 @@ Character
 	- controller: AttackController
 	- icon: %
 	- row: 6
-	- stamina: 2
+	- stamina: 20
 	- strength: 2
 Character
 	- col: 7

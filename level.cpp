@@ -139,7 +139,10 @@ Level::~Level() {
     for(auto* c: m_characters){
         delete c;
     }
-    for(GraphNode* node : graph_nodes) delete node;
+    for(GraphNode* node : graph_nodes){
+        delete node->adjazenz_liste;
+        delete node;
+    }
 }
 
 int Level::getHeight() const {
@@ -172,7 +175,7 @@ vector<Character*> Level::getCharacters() const{
 
 std::list<int> Level::getPath(Tile* from, Tile* to){
 
-    //updateGraph();   <<<----- ̿̿ ̿̿ ̿'̿'̵͇̿̿з=༼ ▀̿̿Ĺ̯̿̿▀̿ ̿ ༽=ε/̵͇̿̿/’̿’̿ ̿ ̿̿[} ̿ ̿ ̿ ̿
+    //updateGraph();
 
     //trying to implement dijkstra
     std::vector<double> abstand(graph_nodes.size(),-1.0); //init with -1; counts as infinite
