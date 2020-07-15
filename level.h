@@ -14,6 +14,7 @@
 #include "userinterface.h"
 #include "tile.h"
 #include "character.h"
+#include "graphnode.h"
 
 using std::string;
 using std::ifstream;
@@ -22,6 +23,7 @@ using std::ifstream;
 class UserInterface;
 class Tile;
 class Character;
+class GraphNode;
 
 class Level {
 
@@ -39,7 +41,7 @@ public:
     int getWidth() const;
     void placeCharacter(Character *c, int row, int col);
 
-    std::list<int> getPath(Tile* from, Tile* to);
+    std::list<Tile*> getPath(Tile* from, Tile* to);
     void createNodes();
     void updateGraph();
 
@@ -50,11 +52,6 @@ public:
 
 
 private:
-
-    struct GraphNode{
-        Tile* position;
-        std::list<GraphNode*>* adjazenz_liste;
-    };
     std::vector<GraphNode*> graph_nodes;
 
     int m_height, m_width;

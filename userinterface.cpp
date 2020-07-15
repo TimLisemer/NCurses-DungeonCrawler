@@ -203,11 +203,9 @@ int UserInterface::move(Character* c) {
             }
         }
     }while (pause);
-
+    mvaddstr(1,1, std::string(std::to_string(c->getTile()->getRow()) + " : " + std::to_string(c->getTile()->getCol())).c_str());
     return key;
 }
-
-
 
 
 
@@ -249,10 +247,50 @@ AttackController::AttackController(Level* level) : m_level(level) {}
 
 int AttackController::move(Character *c){
 
-    std::list<int> i = m_level->getPath(c->getTile(), m_level->getHumanCharacters().at(0)->getTile());
+    mvaddstr(2,2, std::string(std::to_string(c->getHitPoints())).c_str());
 
-    Controller::setTile(c, i.front());
-    return i.front();
+    Tile* currentTile = c->getTile();
+    std::list<Tile*> path = m_level->getPath(currentTile, m_level->getHumanCharacters().at(0)->getTile());
+    if(path.size() > 0){
+        Tile* destTile = path.front();
+
+        if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() == destTile->getCol()){
+            Controller::setTile(c, '8');
+            return '8';
+        }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() == destTile->getCol()){
+            Controller::setTile(c, '2');
+            return '2';
+        }else if(currentTile->getRow() == destTile->getRow() && currentTile->getCol() > destTile->getCol()){
+            Controller::setTile(c, '4');
+            return '4';
+        }else if(currentTile->getRow() == destTile->getRow() && currentTile->getCol() < destTile->getCol()){
+            Controller::setTile(c, '6');
+            return '6';
+
+
+        }else if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() > destTile->getCol()){
+            Controller::setTile(c, '7');
+            return '7';
+        }else if(currentTile->getRow() > destTile->getRow() && currentTile->getCol() < destTile->getCol()){
+            Controller::setTile(c, '9');
+            return '9';
+        }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() > destTile->getCol()){
+            Controller::setTile(c, '1');
+            return '1';
+        }else if(currentTile->getRow() < destTile->getRow() && currentTile->getCol() < destTile->getCol()){
+            Controller::setTile(c, '3');
+            return '3';
+
+
+        }else{
+            Controller::setTile(c, '5');
+            return '5';
+        }
+    }else{                              //No Path
+        Controller::setTile(c, '5');
+        return '5';
+    }
+
 
 }
 
