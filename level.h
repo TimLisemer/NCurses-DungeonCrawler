@@ -24,6 +24,7 @@ class UserInterface;
 class Tile;
 class Character;
 class GraphNode;
+class Portal;
 
 class Level {
 
@@ -41,10 +42,11 @@ public:
     int getWidth() const;
     void placeCharacter(Character *c, int row, int col);
 
-    std::list<Tile*> getPath(Tile* from, Tile* to);
+    std::list<int> getPath(Tile* from, Tile* to);
     void createNodes();
     void updateGraph();
 
+    Portal* isPortal(Tile* t);
 
     vector<Character*> getHumanCharacters();
 

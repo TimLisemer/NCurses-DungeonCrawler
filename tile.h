@@ -64,6 +64,7 @@ public:
 
     virtual bool clearPath();
     virtual void setPassable(const bool passable);
+    virtual bool isPassable() const;
 };
 
 

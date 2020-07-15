@@ -173,7 +173,7 @@ vector<Character*> Level::getCharacters() const{
 
 
 
-std::list<Tile*> Level::getPath(Tile* from, Tile* to){
+std::list<int> Level::getPath(Tile* from, Tile* to){
 
     GraphNode* toNode = graph_nodes.at(to->getRow() * m_width + to->getCol());
     GraphNode* fromNode = graph_nodes.at(from->getRow() * m_width + from->getCol());
@@ -220,11 +220,10 @@ std::list<Tile*> Level::getPath(Tile* from, Tile* to){
             if((checkList->at(i)->distance == -1 || checkList->at(i)->distance > checkNode->distance+checkDistance->at(i)) && checkList->at(i) != checkNode && checkList->at(i) != checkList->at(i)->previous){
                 checkList->at(i)->distance = checkNode->distance+checkDistance->at(i);
                 checkList->at(i)->previous = checkNode;
+                checkList->at(i)->direction = checkNode->adjazenz_direction->at(i);
 
-                if(distantNodes->size() > checkList->at(i)->distance){
-                    if(distantNodes->at((int) checkList->at(i)->distance).size() == 0){
-                        distantNodes->at((int) checkList->at(i)->distance).push_back(checkList->at(i));
-                    }
+                if(distantNodes->size() >= checkList->at(i)->distance){
+                    distantNodes->at((int) checkList->at(i)->distance - 1).push_back(checkList->at(i));
                 }else{
                     distantNodes->push_back(vector<GraphNode*>{checkList->at(i)});
                 }
@@ -244,7 +243,7 @@ std::list<Tile*> Level::getPath(Tile* from, Tile* to){
             }else{
                 if(toNode->previous == nullptr){
                     //No Path
-                    return std::list<Tile*>{};
+                    return std::list<int>{'5'};
                 }else{
                     break;
                 }
@@ -255,22 +254,12 @@ std::list<Tile*> Level::getPath(Tile* from, Tile* to){
 
     }
 
-
-
-
-    //Keine Ahnung warum das so komplex muss alles andere stürtzt einfach ab
-    std::list<Tile*> path;
-    path.push_front(toNode->position);
-    if(toNode->previous != nullptr){
-        GraphNode* nextNode = toNode->previous;
-        while(true){
-            if(nextNode == fromNode || nextNode != nullptr)
-                break;
-            path.push_front(nextNode->position);
-            nextNode = nextNode->previous;      //wegen dieser zeile
-        }
+    std::list<int> path;
+    GraphNode* nextNode = toNode;
+    while(nextNode != fromNode){
+        path.push_front(nextNode->direction);
+        nextNode = nextNode->previous;
     }
-
 
     return path;
 
@@ -284,29 +273,29 @@ void Level::updateGraph(){
 
             graph_nodes.at(i * m_width + d)->distance = -1;
             graph_nodes.at(i * m_width + d)->previous = nullptr;
+            graph_nodes.at(i * m_width + d)->direction = 0;
 
-            graph_nodes.at(i * m_width + d)->adjazenz_list->clear();
-            graph_nodes.at(i * m_width + d)->adjazenz_distance->clear();
-
-            std::vector<GraphNode*>* myNodeList = graph_nodes.at(i * m_width + d)->adjazenz_list;
-            std::vector<double>* myDistanceList = graph_nodes.at(i * m_width + d)->adjazenz_distance;
+            std::vector<GraphNode*>* nL = new std::vector<GraphNode*>();    //nodeList
+            std::vector<double>* dL = new std::vector<double>();            //distanceList
+            std::vector<int>* dD = new std::vector<int>();                  //distantDirection
 
 
             //check whether we can enter tile and if yes we push in adjacency list
             //add the graphNodes, we calculate the index in the vector
 
-            if(d < m_width-1){                      int index = i * m_width + d+1;      if(m_world[i][d+1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(d > 0){                              int index = i * m_width + d-1;      if(m_world[i][d-1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(i < m_height-1){                     int index = (i+1) * m_width + d;    if(m_world[i+1][d]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(i > 0){                              int index = (i-1) * m_width + d;    if(m_world[i-1][d]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(i < m_height-1 && d < m_width-1){    int index = (i+1) * m_width + d+1;  if(m_world[i+1][d+1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
-            if(i > 0 && d < m_width-1){             int index = (i-1) * m_width + d+1;  if(m_world[i-1][d+1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
-            if(i < m_height-1 && d > 0){            int index = (i+1) * m_width + d-1;  if(m_world[i+1][d-1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
-            if(i > 0 && d > 0){                     int index = (i-1) * m_width + d-1;  if(m_world[i-1][d-1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
+            if(i < m_height-1 && d < m_width-1){    int index = (i+1) * m_width + d+1;  if(m_world[i+1][d+1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('3');}}
+            if(i > 0 && d < m_width-1){             int index = (i-1) * m_width + d+1;  if(m_world[i-1][d+1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('9');}}
+            if(i < m_height-1 && d > 0){            int index = (i+1) * m_width + d-1;  if(m_world[i+1][d-1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('1');}}
+            if(i > 0 && d > 0){                     int index = (i-1) * m_width + d-1;  if(m_world[i-1][d-1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('7');}}
+            if(d != m_width-1){                      int index = i * m_width + d+1;      if(m_world[i][d+1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('6');}}
+            if(d != 0){                              int index = i * m_width + d-1;      if(m_world[i][d-1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('4');}}
+            if(i != m_height-1){                     int index = (i+1) * m_width + d;    if(m_world[i+1][d]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('2');}}
+            if(i != 0){                              int index = (i-1) * m_width + d;    if(m_world[i-1][d]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('8');}}
 
             //add list to Nodes
-            graph_nodes.at(i * m_width + d)->adjazenz_list = myNodeList;
-            graph_nodes.at(i * m_width + d)->adjazenz_distance = myDistanceList;
+            graph_nodes.at(i * m_width + d)->adjazenz_list = nL;
+            graph_nodes.at(i * m_width + d)->adjazenz_distance = dL;
+            graph_nodes.at(i * m_width + d)->adjazenz_direction = dD;
         }
     }
 }
@@ -326,28 +315,41 @@ void Level::createNodes(){
     for(int i = 0; i < m_height; i++) {
         for(int d = 0; d < m_width; d++) {
 
-            std::vector<GraphNode*>* myNodeList = new std::vector<GraphNode*>();
-            std::vector<double>* myDistanceList = new std::vector<double>();
+            std::vector<GraphNode*>* nL = new std::vector<GraphNode*>();    //nodeList
+            std::vector<double>* dL = new std::vector<double>();            //distanceList
+            std::vector<int>* dD = new std::vector<int>();                  //distantDirection
 
 
             //check whether we can enter tile and if yes we push in adjacency list
             //add the graphNodes, we calculate the index in the vector
 
-            if(d < m_width-1){                      int index = i * m_width + d+1;      if(m_world[i][d+1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(d > 0){                              int index = i * m_width + d-1;      if(m_world[i][d-1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(i < m_height-1){                     int index = (i+1) * m_width + d;    if(m_world[i+1][d]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(i > 0){                              int index = (i-1) * m_width + d;    if(m_world[i-1][d]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1);}}
-            if(i < m_height-1 && d < m_width-1){    int index = (i+1) * m_width + d+1;  if(m_world[i+1][d+1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
-            if(i > 0 && d < m_width-1){             int index = (i-1) * m_width + d+1;  if(m_world[i-1][d+1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
-            if(i < m_height-1 && d > 0){            int index = (i+1) * m_width + d-1;  if(m_world[i+1][d-1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
-            if(i > 0 && d > 0){                     int index = (i-1) * m_width + d-1;  if(m_world[i-1][d-1]->clearPath()){ myNodeList->push_back(graph_nodes.at(index)); myDistanceList->push_back(1.1);}}
+            int in; Tile* t;
+
+            if(i < m_height-1 && d < m_width-1){    in = (i+1) * m_width + d+1;  t = m_world[i+1][d+1];   Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1.1); dD->push_back('3');}}
+            if(i > 0 && d < m_width-1){             in = (i-1) * m_width + d+1;  t = m_world[i-1][d+1];   Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1.1); dD->push_back('9');}}
+            if(i < m_height-1 && d > 0){            in = (i+1) * m_width + d-1;  t = m_world[i+1][d-1];   Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1.1); dD->push_back('1');}}
+            if(i > 0 && d > 0){                     in = (i-1) * m_width + d-1;  t = m_world[i-1][d-1];   Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1.1); dD->push_back('7');}}
+            if(d < m_width-1){                      in = i * m_width + d+1;      t = m_world[i][d+1];     Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1); dD->push_back('6');}}
+            if(d > 0){                              in = i * m_width + d-1;      t = m_world[i][d-1];     Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1); dD->push_back('4');}}
+            if(i < m_height-1){                     in = (i+1) * m_width + d;    t = m_world[i+1][d];     Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1); dD->push_back('2');}}
+            if(i > 0){                              in = (i-1) * m_width + d;    t = m_world[i-1][d];     Portal* p = isPortal(t); if(p != nullptr){t=p->getDestination(); in = t->getRow()*m_width+t->getCol();} if(t->clearPath()){ nL->push_back(graph_nodes.at(in)); dL->push_back(1); dD->push_back('8');}}
+
+
 
             //add list to Nodes
-            graph_nodes.at(i * m_width + d)->adjazenz_list = myNodeList;
-            graph_nodes.at(i * m_width + d)->adjazenz_distance = myDistanceList;
+            graph_nodes.at(i * m_width + d)->adjazenz_list = nL;
+            graph_nodes.at(i * m_width + d)->adjazenz_distance = dL;
+            graph_nodes.at(i * m_width + d)->adjazenz_direction = dD;
         }
     }
+}
 
+
+Portal* Level::isPortal(Tile* t){
+    Portal* p = dynamic_cast<Portal*>(t);
+    if(p != nullptr)
+        return p;
+    return nullptr;
 }
 
 

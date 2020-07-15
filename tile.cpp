@@ -136,13 +136,18 @@ void Tile::pickupItem(Tile* toTile){
 
 
 bool Tile::clearPath(){
-    if(hasCharacter() || !m_passable) return false;
+    if(!m_passable) return false;
+    if(hasCharacter()) if(!getCharacter()->getHuman()) return false;
     return true;
 }
 
 
 void Tile::setPassable(const bool passable){
     m_passable = passable;
+}
+
+bool Tile::isPassable() const{
+    return m_passable;
 }
 
 

@@ -920,15 +920,31 @@ Character
 	- col: 1
 	- controller: ConsoleController
 	- icon: @
-	- row: 1
-	- stamina: 500
-	- strength: 1
+	- row: 5
+	- stamina: 10
+	- strength: 10
+Character
+	- col: 2
+	- controller: GuardController
+	- icon: %
+	- pattern: 664446
+	- row: 2
+	- stamina: 2
+	- strength: 2
 Character
 	- col: 15
 	- controller: AttackController
 	- icon: %
 	- row: 6
 	- stamina: 20
+	- strength: 2
+Character
+	- col: 7
+	- controller: GuardController
+	- icon: %
+	- pattern: 36987412
+	- row: 4
+	- stamina: 2
 	- strength: 2
 Item
 	- col: 8

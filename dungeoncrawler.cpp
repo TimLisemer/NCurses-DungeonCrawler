@@ -36,6 +36,7 @@ void DungeonCrawler::play() {
 
                 if(c->alive()){
                     c->move();
+                    level->updateGraph();
                 }
             }
         }

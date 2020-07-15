@@ -13,9 +13,11 @@ public:
     ~GraphNode();
     Tile* position;
     double distance = -1.0;
+    int direction = 0;
     GraphNode* previous = nullptr;
     std::vector<GraphNode*>* adjazenz_list;
     std::vector<double>* adjazenz_distance;  //sowas wie ne java hashmap wäre hier besser aber keine lust zu schauen obts das in c++ gibt
+    std::vector<int>* adjazenz_direction;
 };
 
 #endif // GRAPHNODE_H
