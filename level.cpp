@@ -219,6 +219,7 @@ std::list<int> Level::getPath(Tile* from, Tile* to){
         vector<GraphNode*>* checkList = checkNode->adjazenz_list;
         vector<double>* checkDistance = checkNode->adjazenz_distance;
         for(size_t i = 0; i < checkList->size(); i++){
+
             if(toNode->previous != nullptr) if(toNode->previous->distance < checkNode->distance+checkDistance->at(i)) continue;     //Cancel if there already is a shorter Path
             if((checkList->at(i)->distance == -1 || checkList->at(i)->distance > checkNode->distance+checkDistance->at(i)) && checkList->at(i) != checkNode && checkList->at(i) != checkList->at(i)->previous){
                 checkList->at(i)->distance = checkNode->distance+checkDistance->at(i);
@@ -278,14 +279,25 @@ void Level::updateGraph(){
             //check whether we can enter tile and if yes we push in adjacency list
             //add the graphNodes, we calculate the index in the vector
 
-            if(i < m_height-1 && d < m_width-1){    int index = (i+1) * m_width + d+1;  if(m_world[i+1][d+1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('3');}}
-            if(i > 0 && d < m_width-1){             int index = (i-1) * m_width + d+1;  if(m_world[i-1][d+1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('9');}}
-            if(i < m_height-1 && d > 0){            int index = (i+1) * m_width + d-1;  if(m_world[i+1][d-1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('1');}}
-            if(i > 0 && d > 0){                     int index = (i-1) * m_width + d-1;  if(m_world[i-1][d-1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1.1); dD->push_back('7');}}
-            if(d != m_width-1){                      int index = i * m_width + d+1;      if(m_world[i][d+1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('6');}}
-            if(d != 0){                              int index = i * m_width + d-1;      if(m_world[i][d-1]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('4');}}
-            if(i != m_height-1){                     int index = (i+1) * m_width + d;    if(m_world[i+1][d]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('2');}}
-            if(i != 0){                              int index = (i-1) * m_width + d;    if(m_world[i-1][d]->clearPath()){ nL->push_back(graph_nodes.at(index)); dL->push_back(1); dD->push_back('8');}}
+            for(Tile* t : getNeighbours(m_world[i][d])){
+                if(m_world[t->getRow()][t->getCol()]->clearPath()){
+                    Portal* p = isPortal(t);
+                    if(p != nullptr){
+                        if(!p->getDestination()->clearPath()) continue;
+                        nL->push_back(graph_nodes.at(p->getDestination()->getRow() * m_width + p->getDestination()->getCol()));     //Portal Destination for Djikstra
+                    }else{
+                        nL->push_back(graph_nodes.at(t->getRow() * m_width + t->getCol()));
+                    }
+                }
+            }
+            if(d != m_width-1){                     if(m_world[i][d+1]->clearPath()){ dL->push_back(1);  dD->push_back('6');}}
+            if(d != 0){                             if(m_world[i][d-1]->clearPath()){ dL->push_back(1);  dD->push_back('4');}}
+            if(i != m_height-1){                    if(m_world[i+1][d]->clearPath()){ dL->push_back(1);  dD->push_back('2');}}
+            if(i != 0){                             if(m_world[i-1][d]->clearPath()){ dL->push_back(1);  dD->push_back('8');}}
+            if(i < m_height-1 && d < m_width-1){    if(m_world[i+1][d+1]->clearPath()){ dL->push_back(1.4);  dD->push_back('3');}}
+            if(i > 0 && d < m_width-1){             if(m_world[i-1][d+1]->clearPath()){ dL->push_back(1.4);  dD->push_back('9');}}
+            if(i < m_height-1 && d > 0){            if(m_world[i+1][d-1]->clearPath()){ dL->push_back(1.4);  dD->push_back('1');}}
+            if(i > 0 && d > 0){                     if(m_world[i-1][d-1]->clearPath()){ dL->push_back(1.4);  dD->push_back('7');}}
 
             //add list to Nodes
             graph_nodes.at(i * m_width + d)->adjazenz_list = nL;
@@ -301,12 +313,28 @@ void Level::createNodes(){
     graph_nodes = std::vector<GraphNode*>();
     for(int i = 0; i < m_height; i++) {
         for(int j = 0; j < m_width; j++) {
-            //initial node creation without adjacency list
-            graph_nodes.push_back(new GraphNode(m_world[i][j]));
+            GraphNode* g = new GraphNode(); g->position = m_world[i][j];
+            graph_nodes.push_back(g);
         }
     }
     updateGraph();
 }
+
+vector<Tile*> Level::getNeighbours(Tile* t){
+    vector<Tile*> neighbours = vector<Tile*>();
+    int i = t->getRow(), d = t->getCol();
+    if(d != m_width-1){                     neighbours.push_back(m_world[i][d+1]);}
+    if(d != 0){                             neighbours.push_back(m_world[i][d-1]);}
+    if(i != m_height-1){                    neighbours.push_back(m_world[i+1][d]);}
+    if(i != 0){                             neighbours.push_back(m_world[i-1][d]);}
+    if(i < m_height-1 && d < m_width-1){    neighbours.push_back(m_world[i+1][d+1]);}
+    if(i > 0 && d < m_width-1){             neighbours.push_back(m_world[i-1][d+1]);}
+    if(i < m_height-1 && d > 0){            neighbours.push_back(m_world[i+1][d-1]);}
+    if(i > 0 && d > 0){                     neighbours.push_back(m_world[i-1][d-1]);}
+    return neighbours;
+}
+
+
 
 
 Portal* Level::isPortal(Tile* t){

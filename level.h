@@ -14,7 +14,6 @@
 #include "userinterface.h"
 #include "tile.h"
 #include "character.h"
-#include "graphnode.h"
 
 using std::string;
 using std::ifstream;
@@ -47,6 +46,7 @@ public:
     void updateGraph();
 
     Portal* isPortal(Tile* t);
+    vector<Tile*> getNeighbours(Tile* t);
 
     vector<Character*> getHumanCharacters();
 
@@ -54,6 +54,18 @@ public:
 
 
 private:
+
+    struct GraphNode{
+        Tile* position;
+        double distance = -1.0;
+        int direction = 0;
+        GraphNode* previous = nullptr;
+
+        std::vector<GraphNode*>* adjazenz_list;
+        std::vector<double>* adjazenz_distance;
+        std::vector<int>* adjazenz_direction;
+    };
+
     std::vector<GraphNode*> graph_nodes;
 
     int m_height, m_width;
