@@ -61,7 +61,7 @@ private:
         int direction = 0;
         GraphNode* previous = nullptr;
 
-        std::vector<GraphNode*>* adjazenz_list;
+        std::vector<GraphNode*>* adjazenz_nodes;
         std::vector<double>* adjazenz_distance;
         std::vector<int>* adjazenz_direction;
     };

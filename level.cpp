@@ -140,7 +140,9 @@ Level::~Level() {
         delete c;
     }
     for(GraphNode* node : graph_nodes){
-        delete node->adjazenz_list;
+        delete node->adjazenz_nodes;
+        delete node->adjazenz_distance;
+        delete node->adjazenz_direction;
         delete node;
     }
 }
@@ -180,34 +182,34 @@ std::list<int> Level::getPath(Tile* from, Tile* to){
     fromNode->distance = 0;
 
     GraphNode* checkNode = fromNode;
-    vector<vector<GraphNode*>>* distantNodes = new vector<vector<GraphNode*>>{};
+    vector<vector<GraphNode*>> distantNodes = vector<vector<GraphNode*>>{};
     vector<vector<GraphNode*>> newDistantNodes;
 
     while(true){
 
         //remove checkNode from shortestDistanceNodes to avoid loop
         newDistantNodes = vector<vector<GraphNode*>>{};
-        for(size_t i = 0; i < distantNodes->size(); i++){
-            for(size_t d = 0; d < distantNodes->at(i).size(); d++){
-                if(distantNodes->at(i).at(d) != checkNode){
+        for(size_t i = 0; i < distantNodes.size(); i++){
+            for(size_t d = 0; d < distantNodes.at(i).size(); d++){
+                if(distantNodes.at(i).at(d) != checkNode){
                     if(newDistantNodes.size() > i){
-                        newDistantNodes.at(i).push_back(distantNodes->at(i).at(d));
+                        newDistantNodes.at(i).push_back(distantNodes.at(i).at(d));
                     }else{
-                        newDistantNodes.push_back(vector<GraphNode*>{distantNodes->at(i).at(d)});
+                        newDistantNodes.push_back(vector<GraphNode*>{distantNodes.at(i).at(d)});
                     }
                 }
             }
         }
-        distantNodes->clear();
+        distantNodes.clear();
         int maxDistance = newDistantNodes.size();
         if(toNode->previous != nullptr && toNode->previous->distance < maxDistance) maxDistance = toNode->previous->distance;   //Cancel if there already is a shorter Path
         for(int i = 0; i < maxDistance; i++){
             for(size_t d = 0; d < newDistantNodes.at(i).size(); d++){
                 if(newDistantNodes.at(i).at(d) != checkNode){
-                    if((int) distantNodes->size() > i){
-                        distantNodes->at(i).push_back(newDistantNodes.at(i).at(d));
+                    if((int) distantNodes.size() > i){
+                        distantNodes.at(i).push_back(newDistantNodes.at(i).at(d));
                     }else{
-                        distantNodes->push_back(vector<GraphNode*>{newDistantNodes.at(i).at(d)});
+                        distantNodes.push_back(vector<GraphNode*>{newDistantNodes.at(i).at(d)});
                     }
                 }
             }
@@ -216,7 +218,7 @@ std::list<int> Level::getPath(Tile* from, Tile* to){
         //Djikstra
         GraphNode* nextCheckNode = nullptr;
 
-        vector<GraphNode*>* checkList = checkNode->adjazenz_list;
+        vector<GraphNode*>* checkList = checkNode->adjazenz_nodes;
         vector<double>* checkDistance = checkNode->adjazenz_distance;
         for(size_t i = 0; i < checkList->size(); i++){
 
@@ -226,14 +228,14 @@ std::list<int> Level::getPath(Tile* from, Tile* to){
                 checkList->at(i)->previous = checkNode;
                 checkList->at(i)->direction = checkNode->adjazenz_direction->at(i);
 
-                if(distantNodes->size() >= checkList->at(i)->distance){
-                    distantNodes->at((int) checkList->at(i)->distance - 1).push_back(checkList->at(i));
+                if(distantNodes.size() >= checkList->at(i)->distance){
+                    distantNodes.at((int) checkList->at(i)->distance - 1).push_back(checkList->at(i));
                 }else{
-                    distantNodes->push_back(vector<GraphNode*>{checkList->at(i)});
+                    distantNodes.push_back(vector<GraphNode*>{checkList->at(i)});
                 }
 
 
-                if(checkList->at(i)->distance <= distantNodes->at(0).at(0)->distance){
+                if(checkList->at(i)->distance <= distantNodes.at(0).at(0)->distance){
                     nextCheckNode = checkList->at(i);
                 }
             }
@@ -241,14 +243,14 @@ std::list<int> Level::getPath(Tile* from, Tile* to){
 
         if(nextCheckNode != nullptr){
             checkNode = nextCheckNode;              //Check Neighbour
-        }else if(distantNodes->size() == 0){
+        }else if(distantNodes.size() == 0){
             if(toNode->previous == nullptr){        //No Path --> return '5'
                 return std::list<int>{'5'};
             }else{
                 break;
             }
         }else{
-            checkNode = distantNodes->at(0).at(0);  //Neighbour is too far away -> check a closer node
+            checkNode = distantNodes.at(0).at(0);  //Neighbour is too far away -> check a closer node
         }
 
     }
@@ -272,9 +274,9 @@ void Level::updateGraph(){
             graph_nodes.at(i * m_width + d)->previous = nullptr;
             graph_nodes.at(i * m_width + d)->direction = 0;
 
-            std::vector<GraphNode*>* nL = new std::vector<GraphNode*>();    //nodeList
-            std::vector<double>* dL = new std::vector<double>();            //distanceList
-            std::vector<int>* dD = new std::vector<int>();                  //distantDirection
+            std::vector<GraphNode*>* nL = graph_nodes.at(i * m_width + d)->adjazenz_nodes;          //nodeList
+            std::vector<double>* dL = graph_nodes.at(i * m_width + d)->adjazenz_distance;           //distanceList
+            std::vector<int>* dD = graph_nodes.at(i * m_width + d)->adjazenz_direction;             //distantDirection
 
             //check whether we can enter tile and if yes we push in adjacency list
             //add the graphNodes, we calculate the index in the vector
@@ -298,11 +300,6 @@ void Level::updateGraph(){
             if(i > 0 && d < m_width-1){             if(m_world[i-1][d+1]->clearPath()){ dL->push_back(1.4);  dD->push_back('9');}}
             if(i < m_height-1 && d > 0){            if(m_world[i+1][d-1]->clearPath()){ dL->push_back(1.4);  dD->push_back('1');}}
             if(i > 0 && d > 0){                     if(m_world[i-1][d-1]->clearPath()){ dL->push_back(1.4);  dD->push_back('7');}}
-
-            //add list to Nodes
-            graph_nodes.at(i * m_width + d)->adjazenz_list = nL;
-            graph_nodes.at(i * m_width + d)->adjazenz_distance = dL;
-            graph_nodes.at(i * m_width + d)->adjazenz_direction = dD;
         }
     }
 }
@@ -312,8 +309,13 @@ void Level::updateGraph(){
 void Level::createNodes(){
     graph_nodes = std::vector<GraphNode*>();
     for(int i = 0; i < m_height; i++) {
-        for(int j = 0; j < m_width; j++) {
-            GraphNode* g = new GraphNode(); g->position = m_world[i][j];
+        for(int d = 0; d < m_width; d++) {
+            GraphNode* g = new GraphNode(); g->position = m_world[i][d];
+
+            g->adjazenz_nodes = new std::vector<GraphNode*>();          //nodeList
+            g->adjazenz_distance = new std::vector<double>();           //distanceList
+            g->adjazenz_direction = new std::vector<int>();             //distantDirection
+
             graph_nodes.push_back(g);
         }
     }
