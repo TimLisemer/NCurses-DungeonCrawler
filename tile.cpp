@@ -195,21 +195,22 @@ Tile* Wall::onEnter([[maybe_unused]]Tile *fromTile){
 ///
 /// \brief Portal::Portal
 ///
-Portal::Portal(const int row, const int col, Level* level) : Tile('O', row, col, level, nullptr){Tile::setPassable(false);}
-Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level) : Tile('O', row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(false);}
+Portal::Portal(const int row, const int col, Level* level) : Tile('O', row, col, level, nullptr){Tile::setPassable(true);}
+Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level) : Tile('O', row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(true);}
 
-Portal::Portal(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){Tile::setPassable(false);}
-Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level) : Tile(icon, row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(false);}
+Portal::Portal(const char icon, const int row, const int col, Level* level) : Tile(icon, row, col, level, nullptr){Tile::setPassable(true);}
+Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level) : Tile(icon, row, col, level, nullptr), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(true);}
 
 
-Portal::Portal(const int row, const int col, Level* level, Item* item) : Tile('O', row, col, level, item){Tile::setPassable(false);}
-Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile('O', row, col, level, item), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(false);}
+Portal::Portal(const int row, const int col, Level* level, Item* item) : Tile('O', row, col, level, item){Tile::setPassable(true);}
+Portal::Portal(const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile('O', row, col, level, item), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(true);}
 
-Portal::Portal(const char icon, const int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){Tile::setPassable(false);}
-Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile(icon, row, col, level, item), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(false);}
+Portal::Portal(const char icon, const int row, const int col, Level* level, Item* item) : Tile(icon, row, col, level, item){Tile::setPassable(true);}
+Portal::Portal(const char icon, const int row, const int col, const int destRow, const int destCol, Level* level, Item* item) : Tile(icon, row, col, level, item), m_destRow(destRow), m_destCol(destCol){Tile::setPassable(true);}
 
 
 Tile* Portal::onEnter([[maybe_unused]]Tile *fromTile){
+    if(getDestination()->hasCharacter()) return nullptr;
     return getDestination();
 }
 

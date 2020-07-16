@@ -82,6 +82,7 @@ void UserInterface::setGameMenu(const int menu, Character* c){
         wrefresh(m_HeaderWindow);
         delwin(m_HeaderWindow);
     }
+    mvaddstr(0,0, std::string(std::to_string(c->getTile()->getRow()) + ":" + std::to_string(c->getTile()->getCol()) + "    ").c_str());
 
     if(menu == 0){
         //Game Header
@@ -203,7 +204,6 @@ int UserInterface::move(Character* c) {
             }
         }
     }while (pause);
-    mvaddstr(1,1, std::string(std::to_string(c->getTile()->getRow()) + " : " + std::to_string(c->getTile()->getCol())).c_str());
     return key;
 }
 
