@@ -1,76 +1,88 @@
 #ifndef LIST_H
 #define LIST_H
-#include <string>
+#include <iterator>
 
 class Item;
 
-const std::string ERR_PLUS_END = "Can't call ++ on end iterator!";
-const std::string ERR_MINUS_END = "Can't call -- on end iterator!";
-const std::string ERR_MINUS_BEGIN = "Can't call -- on begin iterator!";
-const std::string ERR_DEREFERENCE_END = "Can't dereference end iterator!";
+using data_t=Item*;
+
 
 class List {
-public:
-   using SizeT = unsigned long;
 
-   class Iterator {
-   private:
-      List* list;
-      SizeT index;
-
-      bool isIndexAtEnd() const;
-
-   public:
-      Iterator(List* list, const SizeT& index);
-
-      Iterator& operator++();
-      Iterator& operator--();
-      bool operator==(const Iterator& rhs) const;
-      bool operator!=(const Iterator& rhs) const;
-      Item* operator*() const;
-   };
-
-   Item* &operator[](const SizeT& index);
-
-   List() = default;
-   ~List();
-
-   bool isEmpty() const;
-
-   void pushBack(Item* item);
-   void pushFront(Item* item);
-
-   void popBack();
-   void popFront();
-
-   const Item* getFront() const;
-   const Item* getBack() const;
-
-   Item* getFront();
-   Item* getBack();
-
-   void clear();
-
-   bool remove(Item* item);
-
-   SizeT getSize() const;
-
-   Iterator begin();
-   Iterator end();
+using size_t = unsigned long;
 
 private:
-   struct Node {
-      Item* item = nullptr;
-      Node* next = nullptr;
-      Node* prev = nullptr;
-   };
+    struct Node{
+        data_t data;
+        Node* next = nullptr;
+        Node* prev = nullptr;
+    };
 
-   Node* createElement(Item* data);
+    static Node *createElement(const data_t &data);
 
-   Node* first = nullptr;
-   Node* last = nullptr;
 
-   SizeT size = 0;
+    Node* m_first = nullptr;
+    Node* m_last = nullptr;
+
+    size_t m_size = 0;
+
+public:
+
+    List();
+   ~List();
+
+    bool empty() const;
+    void pushBack(const data_t& value);
+    void pushFront(const data_t& value);
+
+    void popBack();
+    void popFront();
+
+    data_t &operator[](const size_t& m_node);
+    const data_t& back() const;
+    const data_t& front() const;
+
+    data_t& front();
+    data_t& back();
+
+    void clear();
+
+    // @TODO: Remove as Bool
+    void remove(data_t& data);
+
+    size_t getSize() const;
+
+
+    class Iterator{
+    private:
+        List* m_list;
+        Node* m_node;
+public:
+        Iterator(List* l, Node* n);
+        virtual ~Iterator(){};
+        Iterator& operator++();
+        Iterator& operator++(int);
+        Iterator& operator--();
+        Iterator& operator--(int);
+        Item*& operator*();
+        bool operator==(const Iterator& rhs);
+        bool operator!=(const Iterator& rhs);
+    };
+
+    Iterator begin(){
+        return{
+            this, m_first
+        };
+    }
+
+    Iterator end(){
+        return{
+            this, nullptr
+        };
+    }
+
 };
 
+
 #endif // LIST_H
+
