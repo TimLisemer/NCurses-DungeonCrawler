@@ -8,7 +8,7 @@ inline bool instanceof(const T*) {
 Level::Level(UserInterface* ui) {
 
     //Map Insert
-    string LevelPath = "/home/linus/Documents/Ncurses-DungeonCrawler/5-studi.map";
+    string LevelPath = "../Ncurses-DungeonCrawler-master/5-studi.map";
     ifstream file(LevelPath);
     if (!file.good()) {
         throw std::invalid_argument("Level File not found! --- Path = " + LevelPath);
